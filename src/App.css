@@ -86,64 +86,110 @@
   transform: scale(1.04);
 }
 
-/* Fullscreen Menu Drawer */
-.menu-overlay {
+/* =================== SPLIT WHITE MENU DRAWER =================== */
+.menu-container {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(15px);
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
+  z-index: 500;
+  pointer-events: auto;
 }
 
-.menu-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
+.menu-backdrop-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50vw;
+  height: 100vh;
+  cursor: pointer;
+  background: transparent;
+}
+
+.menu-white-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50vw;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: clamp(65px, 12vh, 120px);
+  padding-left: clamp(40px, 7vw, 120px);
+  padding-right: clamp(30px, 5vw, 60px);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.45);
+  z-index: 501;
 }
 
 .menu-close-btn {
   position: absolute;
-  top: 35px;
-  right: 55px;
+  top: clamp(35px, 5vh, 55px);
+  right: clamp(24px, 5vw, 65px);
   background: none;
   border: none;
-  color: #ffffff;
-  font-size: 28px;
+  color: #000000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.2s;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  transition: color 0.25s ease, transform 0.25s ease;
 }
 
 .menu-close-btn:hover {
-  transform: rotate(90deg);
+  color: #6F00FF;
+  transform: scale(1.04);
 }
 
-.menu-links {
-  list-style: none;
-  text-align: center;
+.menu-nav-list {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: clamp(24px, 4.5vh, 44px);
+  padding: 0;
+  margin: 0;
 }
 
-.menu-link {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(32px, 5vw, 60px);
-  font-weight: 800;
-  color: #888888;
+.menu-nav-item {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 14px;
   text-decoration: none;
-  transition: color 0.3s, transform 0.3s;
+  color: #000000;
   cursor: pointer;
+  width: fit-content;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.menu-link:hover {
-  color: #ffffff;
-  transform: translateX(10px);
+.menu-nav-item:hover {
+  color: #6F00FF;
+  transform: translateX(12px);
+}
+
+.nav-item-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 4px;
+  transition: color 0.25s ease;
+}
+
+.nav-item-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(48px, 5.5vw, 76px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.menu-nav-item:hover .nav-item-num,
+.menu-nav-item:hover .nav-item-title {
+  color: #6F00FF;
 }
 
 /* =================== HERO SECTION =================== */
@@ -157,6 +203,34 @@
   justify-content: center;
   overflow: hidden;
   background-color: #000000;
+}
+
+.app-header {
+  position: absolute;
+  top: clamp(35px, 5vh, 55px);
+  right: 6%;
+  width: auto;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  z-index: 100;
+  transition: opacity 0.4s ease;
+}
+
+.hero-text-left,
+.hero-text-right,
+.marquee-bar {
+  transition: opacity 0.4s ease;
+}
+
+/* Trạng thái khi mở Menu: làm mờ dần chữ hero */
+.hero-section.menu-active .hero-text-left,
+.hero-section.menu-active .hero-text-right,
+.hero-section.menu-active .marquee-bar,
+.hero-section.menu-active .app-header {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Tiêu đề bên trái: PORT / FOLIO */
@@ -235,6 +309,14 @@
   pointer-events: none;
   overflow: visible;
   z-index: 10;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+}
+
+/* Khi mở menu: toàn bộ người & cụm ảnh nhòe mờ dần và trượt sang chính giữa nửa màn hình bên trái */
+.hero-section.menu-active .visual-stage {
+  transform: translateX(calc(-50% - 25vw));
+  filter: blur(14px);
+  opacity: 0.95;
 }
 
 .visual-layer {
@@ -255,6 +337,12 @@
   pointer-events: none;
   z-index: 1;
   opacity: 1;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-section.menu-active .hero-fullscreen-bg {
+  transform: translateX(-12vw) scale(1.05);
+  filter: blur(12px);
 }
 
 /* Layer 2: Hoa sen pha lê hồng (hạ thấp đỉnh hoa xuống vừa vặn sau gáy/vai nhân vật) */
@@ -559,6 +647,15 @@
   }
   .product-section {
     padding: 70px 5% 100px;
+  }
+  .menu-backdrop-left {
+    display: none;
+  }
+  .menu-white-drawer {
+    width: 100vw;
+  }
+  .hero-section.menu-active .visual-stage {
+    transform: translateX(-50%);
   }
 }
 

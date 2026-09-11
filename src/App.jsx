@@ -16,9 +16,10 @@ function App() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Hiệu ứng Parallax 3D tương tác theo chuột
+  // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
   useEffect(() => {
     const handleMouseMove = (e) => {
+      if (menuOpen) return
       const { innerWidth, innerHeight } = window
       const x = (e.clientX - innerWidth / 2) / (innerWidth / 2)
       const y = (e.clientY - innerHeight / 2) / (innerHeight / 2)
@@ -27,7 +28,13 @@ function App() {
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (menuOpen) {
+      setMousePos({ x: 0, y: 0 })
+    }
+  }, [menuOpen])
 
   // Danh mục sản phẩm dạng Thẻ Folder
   const folderProjects = [
@@ -73,10 +80,8 @@ function App() {
           <motion.div 
             className="intro-curtain"
             initial={{ y: 0 }}
-            exit={{ 
-              y: '-100%', 
-              transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1] } 
-            }}
+            exit={{ y: '-100%' }}
+            transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
             <motion.span 
               className="intro-tag"
@@ -108,7 +113,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* ================= HEADER & MENU ================= */}
+      {/* ================= HEADER & MENU TRIGGER ================= */}
       <header className="app-header">
         <motion.button 
           className="menu-trigger" 
@@ -124,25 +129,65 @@ function App() {
         </motion.button>
       </header>
 
-      {/* Menu Overlay Drawer */}
-      <div className={`menu-overlay ${menuOpen ? 'open' : ''}`}>
-        <button 
-          className="menu-close-btn" 
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close Menu"
-        >
-          ✕
-        </button>
-        <ul className="menu-links">
-          <li><a className="menu-link" href="#hero" onClick={() => setMenuOpen(false)}>HOME</a></li>
-          <li><a className="menu-link" href="#product" onClick={() => setMenuOpen(false)}>PRODUCT</a></li>
-          <li><a className="menu-link" href="#about" onClick={() => setMenuOpen(false)}>ABOUT</a></li>
-          <li><a className="menu-link" href="#contact" onClick={() => setMenuOpen(false)}>CONTACT</a></li>
-        </ul>
-      </div>
+      {/* ================= SPLIT WHITE MENU DRAWER ================= */}
+      <AnimatePresence>
+        {menuOpen && (
+          <div className="menu-container">
+            {/* Vùng mờ bên trái để bấm đóng menu */}
+            <motion.div 
+              className="menu-backdrop-left"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            {/* Bảng Menu trắng 50% trượt vào từ bên phải */}
+            <motion.div 
+              className="menu-white-drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Nút Close X ở góc phải trên */}
+              <button 
+                className="menu-close-btn" 
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close Menu"
+              >
+                Close X
+              </button>
+
+              {/* Danh sách Menu: 01 HOME, 02 ABOUT, 03 CONTACT */}
+              <nav className="menu-nav-list">
+                {[
+                  { num: '01', title: 'HOME', href: '#hero' },
+                  { num: '02', title: 'ABOUT', href: '#product' },
+                  { num: '03', title: 'CONTACT', href: '#product' }
+                ].map((item, index) => (
+                  <motion.a 
+                    key={item.num}
+                    href={item.href}
+                    className="menu-nav-item"
+                    onClick={() => setMenuOpen(false)}
+                    initial={{ opacity: 0, x: 35 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.45, delay: 0.15 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <span className="nav-item-num">{item.num}</span>
+                    <span className="nav-item-title">{item.title}</span>
+                  </motion.a>
+                ))}
+              </nav>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="hero-section" id="hero">
+      <section className={`hero-section ${menuOpen ? 'menu-active' : ''}`} id="hero">
         {/* Nền tím gradient tràn toàn màn hình */}
         <motion.img 
           src="/assets/purple-glow.png" 
