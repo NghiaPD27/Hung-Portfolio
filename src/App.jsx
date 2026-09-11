@@ -143,108 +143,108 @@ function App() {
 
       {/* ================= HERO SECTION ================= */}
       <section className="hero-section" id="hero">
-        {/* Nền tím gradient tràn màn hình phủ kín từ header đến đáy */}
+        {/* Nền tím gradient tràn toàn màn hình */}
         <motion.img 
           src="/assets/purple-glow.png" 
           alt="Purple Atmospheric Glow" 
           className="hero-fullscreen-bg"
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.8, delay: 0.4, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
         />
 
-        {/* Tiêu đề góc trái: Xuất hiện ấn tượng */}
+        {/* Tiêu đề góc trái: Bằng hàng với Menu + */}
         <div className="hero-text-left">
           <motion.h1 
             className="title-port"
-            initial={{ opacity: 0, x: -70, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: -25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             PORT
           </motion.h1>
           
           <motion.h2 
             className="title-folio"
-            initial={{ opacity: 0, y: 35, letterSpacing: '14px' }}
-            animate={{ opacity: 1, y: 0, letterSpacing: '6px' }}
-            transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             FOLIO
           </motion.h2>
         </div>
 
-        {/* Cụm Visual Collage với chuyển động từng lớp */}
+        {/* Cụm Visual Collage giữ chuẩn 100% bố cục gốc & Parallax chuyển động theo chuột mượt mà */}
         <div className="visual-stage">
-          {/* Lớp 2: Hoa sen pha lê hồng bung nở sau lưng & vai */}
+          {/* Lớp 2: Hoa sen pha lê hồng */}
           <motion.img 
             src="/assets/crystal-lotus.png" 
             alt="Pink Iridescent Crystal Lotus" 
             className="visual-layer layer-lotus"
-            initial={{ opacity: 0, scale: 0.65, rotate: -4 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.3 }}
             style={{
-              transform: `translate(calc(-50% + ${mousePos.x * -8}px), ${mousePos.y * -6}px)`
+              transform: `translate(calc(-50% + ${mousePos.x * -16}px), ${mousePos.y * -10}px)`
             }}
           />
 
-          {/* Lớp 3: Chân dung chàng trai trồi lên vững chãi từ đáy */}
+          {/* Lớp 3: Chân dung chàng trai đứng liền sát đáy */}
           <motion.img 
             src="/assets/person.png" 
             alt="Young Designer Silhouette Portrait" 
             className="visual-layer layer-person"
-            initial={{ opacity: 0, y: 90 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.4 }}
             style={{
-              transform: `translateX(calc(-48% + ${mousePos.x * 5}px))`
+              transform: `translateX(calc(-48% + ${mousePos.x * 8}px))`
             }}
           />
 
-          {/* Lớp 4: Hoa dâm bụt xanh lướt nhẹ từ góc trái dưới vào */}
+          {/* Lớp 4: Hoa dâm bụt xanh ôm sát lưng bên trái */}
           <motion.img 
             src="/assets/blue-flower.png" 
             alt="Blue Glass Hibiscus Flower" 
             className="visual-layer layer-blue-flower"
-            initial={{ opacity: 0, scale: 0.7, x: -60, y: 40 }}
-            animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.5 }}
             style={{
-              transform: `translate(${mousePos.x * 8}px, ${mousePos.y * 6}px)`
+              transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
             }}
           />
 
-          {/* Lớp 5: Hoa hồng hổ phách lướt nhẹ từ góc phải dưới vào */}
+          {/* Lớp 5: Hoa hồng hổ phách ôm sát vạt áo bên phải */}
           <motion.img 
             src="/assets/amber-rose.png" 
             alt="Amber Crystal Rose" 
             className="visual-layer layer-amber-rose"
-            initial={{ opacity: 0, scale: 0.7, x: 60, y: 40 }}
-            animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-            transition={{ duration: 1.2, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.55 }}
             style={{
-              transform: `translate(${mousePos.x * 8}px, ${mousePos.y * 6}px)`
+              transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
             }}
           />
         </div>
 
-        {/* Tiêu đề góc phải: Trượt vào thanh lịch */}
+        {/* Tiêu đề góc phải */}
         <div className="hero-text-right">
           <motion.h2 
             className="title-freedom"
-            initial={{ opacity: 0, x: 70, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             FREEDOM
           </motion.h2>
           
           <motion.h3 
             className="title-designer"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             DESIGNER
           </motion.h3>
@@ -253,9 +253,9 @@ function App() {
         {/* Dải Marquee Chữ Chạy Vô Tận */}
         <motion.div 
           className="marquee-bar"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.3, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.7 }}
         >
           <div className="marquee-inner">
             <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
