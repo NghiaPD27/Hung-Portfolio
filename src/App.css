@@ -338,19 +338,19 @@
 
 /* =================== PRODUCT SECTION =================== */
 .product-section {
-  padding: 100px 8% 140px;
+  padding: 60px 8% 100px;
   background-color: #000000;
   position: relative;
   z-index: 10;
 }
 
 .product-title-group {
-  margin-bottom: 60px;
+  margin-bottom: 36px;
 }
 
 .product-main-title {
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: clamp(42px, 5.5vw, 75px);
+  font-size: clamp(38px, 4.5vw, 64px);
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0;
@@ -360,87 +360,105 @@
 
 .product-sub-title {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  letter-spacing: 5px;
+  font-size: 18px;
+  letter-spacing: 4px;
   color: #d6d6d6;
-  margin-top: 12px;
+  margin-top: 8px;
   text-transform: uppercase;
 }
 
 /* Product Grid */
 .folder-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 40px;
-  max-width: 1300px;
+  grid-template-columns: repeat(4, minmax(0, 260px));
+  gap: 24px;
+  max-width: 1180px;
+}
+
+@media (max-width: 1200px) {
+  .folder-grid {
+    grid-template-columns: repeat(auto-fit, minmax(210px, 250px));
+    gap: 20px;
+  }
 }
 
 /* Folder Card Component */
 .folder-card-wrapper {
   position: relative;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 260 / 220;
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.2, 1, 0.3, 1), filter 0.35s ease;
   user-select: none;
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .folder-card-wrapper:hover {
-  transform: translateY(-12px);
-  filter: drop-shadow(0 20px 30px rgba(255, 255, 255, 0.08));
+  transform: translateY(-8px);
+  filter: drop-shadow(0 14px 24px rgba(255, 255, 255, 0.08));
 }
 
-.folder-tab {
-  width: 100px;
-  height: 26px;
-  background-color: #f1eae2;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  position: relative;
-  margin-left: 2px;
-}
-
-.folder-box {
+.folder-back-layer {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  background-color: #faf6f0;
-  border-radius: 0 22px 22px 22px;
-  padding: 65px 26px 30px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.folder-back-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.folder-back-svg path {
+  transition: fill 0.3s ease;
+}
+
+.folder-card-wrapper:hover .folder-back-svg path {
+  fill: #f5ece2;
+}
+
+.folder-front-card {
+  position: absolute;
+  top: clamp(28px, 13.6%, 32px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f9f5f0;
+  border-radius: 18px;
+  padding: 18px 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 210px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.folder-card-wrapper:hover .folder-box {
+.folder-card-wrapper:hover .folder-front-card {
   background-color: #ffffff;
-}
-
-.folder-tag {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: #888888;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .folder-heading {
   color: #000000;
   font-family: 'Dela Gothic One', sans-serif;
   font-weight: 400;
-  font-size: 22px;
+  font-size: clamp(17px, 1.6vw, 21px);
   letter-spacing: 0;
   line-height: 1.1;
   text-transform: uppercase;
+  margin: 0;
 }
 
 .folder-vietnamese {
-  color: #333333;
+  color: #222222;
   font-family: 'Playfair Display', serif;
-  font-size: 13.5px;
-  letter-spacing: 0.5px;
-  margin-top: 8px;
+  font-size: clamp(11px, 1vw, 12.5px);
+  letter-spacing: 0.3px;
+  margin-top: 6px;
+  text-transform: uppercase;
 }
 
 /* Modal Popup khi click vào Folder */
@@ -490,9 +508,9 @@
 }
 
 .modal-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 32px;
-  font-weight: 900;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
   margin-bottom: 8px;
 }
 

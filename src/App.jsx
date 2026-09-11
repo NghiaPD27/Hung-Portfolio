@@ -292,12 +292,27 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.12 }}
-              whileHover={{ y: -12, scale: 1.02 }}
+              whileHover={{ y: -8 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="folder-tab"></div>
-              <div className="folder-box">
-                <span className="folder-tag">{project.tag}</span>
+              {/* Lớp folder tab phía sau: Tab cao bên trái và vai thấp bên phải */}
+              <div className="folder-back-layer">
+                <svg 
+                  className="folder-back-svg" 
+                  viewBox="0 0 260 220" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="none"
+                >
+                  <path 
+                    d="M 0,220 L 0,20 A 20,20 0 0,1 20,0 L 88,0 C 98,0 102,3 105,7 C 108,11 112,15 120,15 L 242,15 A 18,18 0 0,1 260,33 L 260,202 A 18,18 0 0,1 242,220 L 20,220 A 20,20 0 0,1 0,200 Z" 
+                    fill="#F1E7DD"
+                  />
+                </svg>
+              </div>
+
+              {/* Lớp thân thẻ phía trước: Màu kem sáng bo tròn 4 góc 18px */}
+              <div className="folder-front-card">
                 <h3 className="folder-heading">{project.title}</h3>
                 <p className="folder-vietnamese">{project.vietnamese}</p>
               </div>
