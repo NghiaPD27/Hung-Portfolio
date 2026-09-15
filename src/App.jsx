@@ -1,26 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ArtClownProject from './ArtClownProject'
 import './App.css'
-
-function ArtClownProject({ onBack }) {
-  return (
-    <main className="art-clown-project" aria-label="Art Clown branding project">
-      <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay lại danh sách sản phẩm">
-        <span className="sr-only">Quay lại</span>
-      </button>
-      <img
-        className="art-clown-project-image"
-        src="/assets/art-clown/art-clown-page.png"
-        alt="Art Clown — bộ nhận diện thương hiệu, mascot, logo, social và stationery"
-      />
-    </main>
-  )
-}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
-  const [isArtClownOpen, setIsArtClownOpen] = useState(false)
+  const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash === '#art-clown')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
   const productScrollPosition = useRef(0)
@@ -54,16 +40,22 @@ function App() {
   }, [menuOpen])
 
   useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape' && isArtClownOpen) {
-        setIsArtClownOpen(false)
-        requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
-      }
+    const syncProjectRoute = () => {
+      const projectIsOpen = window.location.hash === '#art-clown'
+      setIsArtClownOpen(projectIsOpen)
+      requestAnimationFrame(() => window.scrollTo({
+        top: projectIsOpen ? 0 : productScrollPosition.current,
+        behavior: 'auto'
+      }))
     }
 
-    window.addEventListener('keydown', handleEscape)
-    return () => window.removeEventListener('keydown', handleEscape)
-  }, [isArtClownOpen])
+    window.addEventListener('popstate', syncProjectRoute)
+    window.addEventListener('hashchange', syncProjectRoute)
+    return () => {
+      window.removeEventListener('popstate', syncProjectRoute)
+      window.removeEventListener('hashchange', syncProjectRoute)
+    }
+  }, [])
 
   // Danh mục sản phẩm dạng Thẻ Folder
   const folderProjects = [
@@ -105,14 +97,30 @@ function App() {
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
+    window.history.pushState({ artClown: true }, '', '#art-clown')
     setIsArtClownOpen(true)
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
   }
 
   const closeArtClownProject = () => {
+    if (window.history.state?.artClown) {
+      window.history.back()
+      return
+    }
+
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
     setIsArtClownOpen(false)
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isArtClownOpen) closeArtClownProject()
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  })
 
   if (isArtClownOpen) {
     return <ArtClownProject onBack={closeArtClownProject} />
@@ -450,5 +458,3 @@ function App() {
 }
 
 export default App
-
-
