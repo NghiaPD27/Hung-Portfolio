@@ -1,12 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './App.css'
+
+function ArtClownProject({ onBack }) {
+  return (
+    <main className="art-clown-project" aria-label="Art Clown branding project">
+      <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay lại danh sách sản phẩm">
+        <span className="sr-only">Quay lại</span>
+      </button>
+      <img
+        className="art-clown-project-image"
+        src="/assets/art-clown/art-clown-page.png"
+        alt="Art Clown — bộ nhận diện thương hiệu, mascot, logo, social và stationery"
+      />
+    </main>
+  )
+}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
+  const [isArtClownOpen, setIsArtClownOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
+  const productScrollPosition = useRef(0)
 
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
@@ -35,6 +52,18 @@ function App() {
       setMousePos({ x: 0, y: 0 })
     }
   }, [menuOpen])
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isArtClownOpen) {
+        setIsArtClownOpen(false)
+        requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isArtClownOpen])
 
   // Danh mục sản phẩm dạng Thẻ Folder
   const folderProjects = [
@@ -71,6 +100,23 @@ function App() {
       year: '2025'
     }
   ]
+
+  const openArtClownProject = () => {
+    productScrollPosition.current = window.scrollY
+    setMenuOpen(false)
+    setSelectedProject(null)
+    setIsArtClownOpen(true)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
+  const closeArtClownProject = () => {
+    setIsArtClownOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+  }
+
+  if (isArtClownOpen) {
+    return <ArtClownProject onBack={closeArtClownProject} />
+  }
 
   return (
     <div className="portfolio-app">
@@ -329,10 +375,11 @@ function App() {
         {/* Danh sách thẻ dạng Folder với Motion */}
         <div className="folder-grid">
           {folderProjects.map((project, index) => (
-            <motion.div 
+            <motion.button
               key={project.id} 
               className="folder-card-wrapper"
-              onClick={() => setSelectedProject(project)}
+              type="button"
+              onClick={() => project.id === 'branding' ? openArtClownProject() : setSelectedProject(project)}
               initial={{ opacity: 0, y: 45 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -361,7 +408,7 @@ function App() {
                 <h3 className="folder-heading">{project.title}</h3>
                 <p className="folder-vietnamese">{project.vietnamese}</p>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </section>

@@ -23,7 +23,9 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // ESLint treats lower-case JSX member expressions such as <motion.div>
+      // as intrinsic elements, so it cannot detect this Framer Motion import.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|^motion$' }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
