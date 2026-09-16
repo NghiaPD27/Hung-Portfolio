@@ -1,4 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/pagination'
 import './ArtClownProject.css'
 
 const ASSET = '/assets/art-clown/source'
@@ -60,7 +64,7 @@ const sparkAnimate = {
   opacity: [0, 0, 1, 1, 0, 0],
   scaleX: [0.55, 0.55, 1, 1.45, 0.4, 0.55],
   scaleY: [0.55, 0.55, 1, 1.45, 0.4, 0.55],
-  y: [210, 210, 0, -6, 210],
+  y: ['14.583cqw', '14.583cqw', '0cqw', '-0.417cqw', '14.583cqw'],
 }
 
 function Firework({ className, src, timing, reducedMotion }) {
@@ -90,19 +94,11 @@ function PeakGlow({ className, src, timing, reducedMotion }) {
 }
 
 function LaunchSpark({ className, src, timing, reducedMotion }) {
-  const layoutScale = Math.min(window.innerWidth, 1440) / 1440
-  const launchDistance = 210 * layoutScale
-  const launchOvershoot = -6 * layoutScale
-  const responsiveSparkAnimate = {
-    ...sparkAnimate,
-    y: [launchDistance, launchDistance, 0, launchOvershoot, launchDistance],
-  }
-
   return (
     <motion.div
       className={`art-launch-spark ${className}`}
-      initial={reducedMotion ? false : { opacity: 0, scaleX: 0.55, scaleY: 0.55, y: launchDistance }}
-      animate={reducedMotion ? { opacity: 1, scaleX: 1, scaleY: 1, y: 0 } : responsiveSparkAnimate}
+      initial={reducedMotion ? false : { opacity: 0, scaleX: 0.55, scaleY: 0.55, y: '14.583cqw' }}
+      animate={reducedMotion ? { opacity: 1, scaleX: 1, scaleY: 1, y: 0 } : sparkAnimate}
       transition={reducedMotion ? { duration: 0 } : sparkTransitions[timing]}
     >
       <img src={`${ASSET}/${src}`} alt="" />
@@ -126,98 +122,145 @@ export default function ArtClownProject({ onBack }) {
 
   return (
     <main className="art-clown-project" aria-label="Art Clown branding project">
-      <div className="art-clown-canvas">
-        <section className="art-hero" aria-labelledby="art-clown-title">
-          <img className="art-hero-sky" src={`${ASSET}/hero-sky.png`} alt="" />
-          <div className="art-fireworks" aria-hidden="true">
-            <Firework className="art-firework-left" src="firework-gold-stars.png" timing="side" reducedMotion={reducedMotion} />
-            <Firework className="art-firework-middle" src="firework-blue-orange.png" timing="middle" reducedMotion={reducedMotion} />
-            <Firework className="art-firework-right" src="firework-gold-burst.png" timing="side" reducedMotion={reducedMotion} />
-            <PeakGlow className="art-glow-middle" src="peak-middle.svg" timing="middle" reducedMotion={reducedMotion} />
-            <PeakGlow className="art-glow-left" src="peak-left.svg" timing="side" reducedMotion={reducedMotion} />
-            <PeakGlow className="art-glow-right" src="peak-right.svg" timing="side" reducedMotion={reducedMotion} />
-            <LaunchSpark className="art-spark-middle" src="spark-middle.svg" timing="middle" reducedMotion={reducedMotion} />
-            <LaunchSpark className="art-spark-left" src="spark-left.svg" timing="side" reducedMotion={reducedMotion} />
-            <LaunchSpark className="art-spark-right" src="spark-right.svg" timing="side" reducedMotion={reducedMotion} />
-          </div>
-          <img className="art-hero-tent" src={`${ASSET}/hero-tent.png`} alt="Rạp xiếc Art Clown" />
-          <h1 id="art-clown-title" className="art-hero-title">ART CLOWN</h1>
-          <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang chủ">
-            <img src={`${ASSET}/back.svg`} alt="" />
-          </button>
-        </section>
+      <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
+        <img src={`${ASSET}/back.svg`} alt="" />
+      </button>
 
-        <section className="art-values" aria-label="Giá trị thương hiệu Art Clown">
-          <p className="art-value art-value-one">Cảm Xúc Thăng Hoa</p>
-          <p className="art-value art-value-two">Trân trọng<br />cảm xúc con người</p>
-          <p className="art-value art-value-three">Xây Dựng Đam Mê</p>
-          <img
-            className="art-balloons"
-            src={`${ASSET}/balloons.png`}
-            alt="Chùm bóng bay đỏ"
-          />
-        </section>
-
-        <section className="art-brand-system" aria-label="Hệ thống nhận diện Art Clown">
-          <div className="art-uniform-wrap">
-            <img src={`${ASSET}/uniform.png`} alt="Đồng phục Art Clown" loading="lazy" />
-          </div>
-          <div className="art-marquee" aria-label="Welcome to Art Clown">
-            <div className="art-marquee-track">
-              <span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span>
+      <Swiper
+        className="art-clown-swiper"
+        modules={[Mousewheel, Keyboard, Pagination, A11y]}
+        direction="vertical"
+        slidesPerView={1}
+        speed={reducedMotion ? 0 : 800}
+        preventInteractionOnTransition
+        mousewheel={{
+          forceToAxis: true,
+          releaseOnEdges: false,
+          sensitivity: 1,
+          thresholdDelta: 12,
+          thresholdTime: 800,
+        }}
+        keyboard={{ enabled: true, onlyInViewport: true, pageUpDown: true }}
+        pagination={{ clickable: true }}
+        a11y={{
+          enabled: true,
+          prevSlideMessage: 'Màn trước',
+          nextSlideMessage: 'Màn tiếp theo',
+          paginationBulletMessage: 'Đi đến màn {{index}}',
+        }}
+      >
+        <SwiperSlide tag="section" aria-label="Màn 1 trên 7: Hero Art Clown">
+          <div className="art-slide-frame art-slide-frame-burgundy">
+            <section className="art-design-canvas art-hero" aria-labelledby="art-clown-title">
+            <img className="art-hero-sky" src={`${ASSET}/hero-sky.png`} alt="" />
+            <div className="art-fireworks" aria-hidden="true">
+              <Firework className="art-firework-left" src="firework-gold-stars.png" timing="side" reducedMotion={reducedMotion} />
+              <Firework className="art-firework-middle" src="firework-blue-orange.png" timing="middle" reducedMotion={reducedMotion} />
+              <Firework className="art-firework-right" src="firework-gold-burst.png" timing="side" reducedMotion={reducedMotion} />
+              <PeakGlow className="art-glow-middle" src="peak-middle.svg" timing="middle" reducedMotion={reducedMotion} />
+              <PeakGlow className="art-glow-left" src="peak-left.svg" timing="side" reducedMotion={reducedMotion} />
+              <PeakGlow className="art-glow-right" src="peak-right.svg" timing="side" reducedMotion={reducedMotion} />
+              <LaunchSpark className="art-spark-middle" src="spark-middle.svg" timing="middle" reducedMotion={reducedMotion} />
+              <LaunchSpark className="art-spark-left" src="spark-left.svg" timing="side" reducedMotion={reducedMotion} />
+              <LaunchSpark className="art-spark-right" src="spark-right.svg" timing="side" reducedMotion={reducedMotion} />
             </div>
+            <img className="art-hero-tent" src={`${ASSET}/hero-tent.png`} alt="Rạp xiếc Art Clown" />
+            <h1 id="art-clown-title" className="art-hero-title">ART CLOWN</h1>
+            </section>
           </div>
-          <div className="art-logo-grid">
-            {logos.map((logo) => (
-              <div className={`art-logo-card art-logo-${logo.card}`} key={logo.card}>
-                <img src={`${ASSET}/${logo.src}`} alt={logo.label} loading="lazy" />
+        </SwiperSlide>
+
+        <SwiperSlide tag="section" aria-label="Màn 2 trên 7: Giá trị thương hiệu">
+          <div className="art-slide-frame art-slide-frame-cream">
+            <section className="art-design-canvas art-values" aria-label="Giá trị thương hiệu Art Clown">
+              <p className="art-value art-value-one">Cảm Xúc Thăng Hoa</p>
+              <p className="art-value art-value-two">Trân trọng<br />cảm xúc con người</p>
+              <p className="art-value art-value-three">Xây Dựng Đam Mê</p>
+              <img className="art-balloons" src={`${ASSET}/balloons.png`} alt="Chùm bóng bay đỏ" />
+            </section>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide tag="section" aria-label="Màn 3 trên 7: Hệ thống nhận diện">
+          <div className="art-slide-frame art-slide-frame-burgundy">
+            <section className="art-design-canvas art-brand-system" aria-label="Hệ thống nhận diện Art Clown">
+            <div className="art-uniform-wrap">
+              <img src={`${ASSET}/uniform.png`} alt="Đồng phục Art Clown" loading="lazy" />
+            </div>
+            <div className="art-marquee" aria-label="Welcome to Art Clown">
+              <div className="art-marquee-track">
+                <span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span><span>WELCOM TO ARTCLOWN</span>
               </div>
-            ))}
-          </div>
-          <div className="art-mascot-panel">
-            <h2>MASCOT ARTCLOWN</h2>
-            <div className="art-mascot-row">
-              {mascots.map((src, index) => (
-                <img key={src} src={`${ASSET}/${src}`} alt={`Mascot Art Clown dáng ${index + 1}`} loading="lazy" />
+            </div>
+            <div className="art-logo-grid">
+              {logos.map((logo) => (
+                <div className={`art-logo-card art-logo-${logo.card}`} key={logo.card}>
+                  <img src={`${ASSET}/${logo.src}`} alt={logo.label} loading="lazy" />
+                </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        <div className="art-section-gap" aria-hidden="true" />
-
-        <section className="art-showcase" aria-label="Ứng dụng logo và mạng xã hội Art Clown">
-          <div className="art-logo-applications">
-            <img src={`${ASSET}/logo-applications.png`} alt="Các ứng dụng logo Art Clown" loading="lazy" />
-          </div>
-          <h2 className="art-social-title">SOCIAL</h2>
-          <div className="art-social-grid">
-            {socialPosts.map((src, index) => (
-              <div className="art-media-card" key={src}>
-                <img src={`${ASSET}/${src}`} alt={`Thiết kế social Art Clown ${index + 1}`} loading="lazy" />
+            <div className="art-mascot-panel">
+              <h2>MASCOT ARTCLOWN</h2>
+              <div className="art-mascot-row">
+                {mascots.map((src, index) => (
+                  <img key={src} src={`${ASSET}/${src}`} alt={`Mascot Art Clown dáng ${index + 1}`} loading="lazy" />
+                ))}
               </div>
-            ))}
+            </div>
+            </section>
           </div>
-          <div className="art-billboard art-media-card">
-            <img src={`${ASSET}/billboard.png`} alt="Billboard Art Clown" loading="lazy" />
-          </div>
-        </section>
+        </SwiperSlide>
 
-        <div className="art-section-gap" aria-hidden="true" />
-
-        <section className="art-stationary" aria-labelledby="stationary-title">
-          <h2 id="stationary-title">STATIONARY</h2>
-          <div className="art-stationary-grid">
-            {stationary.map((src, index) => (
-              <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}>
-                <img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" />
+        <SwiperSlide tag="section" aria-label="Màn 4 trên 7: Logo Applications">
+          <div className="art-slide-frame art-slide-frame-cream">
+            <section className="art-design-canvas art-logo-applications-screen" aria-label="Ứng dụng logo Art Clown">
+              <div className="art-product-image-card">
+                <img src={`${ASSET}/logo-applications.png`} alt="Các ứng dụng logo Art Clown" loading="lazy" />
               </div>
-            ))}
+            </section>
           </div>
-        </section>
+        </SwiperSlide>
 
-        <footer className="art-footer" aria-label="Kết thúc dự án Art Clown" />
-      </div>
+        <SwiperSlide tag="section" aria-label="Màn 5 trên 7: Social">
+          <div className="art-slide-frame art-slide-frame-burgundy">
+            <section className="art-design-canvas art-social" aria-labelledby="art-social-title">
+              <h2 id="art-social-title">SOCIAL</h2>
+              <div className="art-social-grid">
+                {socialPosts.map((src, index) => (
+                  <div className="art-media-card" key={src}>
+                    <img src={`${ASSET}/${src}`} alt={`Thiết kế social Art Clown ${index + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide tag="section" aria-label="Màn 6 trên 7: Billboard">
+          <div className="art-slide-frame art-slide-frame-burgundy">
+            <section className="art-design-canvas art-billboard-screen" aria-label="Billboard Art Clown">
+              <div className="art-billboard art-media-card">
+                <img src={`${ASSET}/billboard.png`} alt="Billboard Art Clown" loading="lazy" />
+              </div>
+            </section>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide tag="section" aria-label="Màn 7 trên 7: Stationary">
+          <div className="art-slide-frame art-slide-frame-cream">
+            <section className="art-design-canvas art-stationary" aria-labelledby="stationary-title">
+              <h2 id="stationary-title">STATIONARY</h2>
+              <div className="art-stationary-grid">
+                {stationary.map((src, index) => (
+                  <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}>
+                    <img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </SwiperSlide>
+      </Swiper>
     </main>
   )
 }
