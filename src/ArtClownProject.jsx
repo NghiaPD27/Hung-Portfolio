@@ -124,6 +124,22 @@ function ArtClownTitle() {
   )
 }
 
+function ValuesWordmark({ reducedMotion }) {
+  return (
+    <motion.div
+      className="art-values-wordmark"
+      aria-hidden="true"
+      initial={reducedMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.55 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <span className="art-values-wordmark-art">ART</span>
+      <span className="art-values-wordmark-clown">CLOWN</span>
+    </motion.div>
+  )
+}
+
 const brandValues = [
   {
     className: 'art-value-one',
@@ -195,6 +211,7 @@ export default function ArtClownProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 2 trên 8: Giá trị thương hiệu">
           <SlideFrame className="art-slide-cream">
             <section className="art-design-canvas art-values" aria-label="Giá trị thương hiệu Art Clown">
+              <ValuesWordmark reducedMotion={reducedMotion} />
               {brandValues.map((value, index) => {
                 const isOpen = openValue === index
                 return (

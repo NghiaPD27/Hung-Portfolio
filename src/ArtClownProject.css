@@ -259,10 +259,46 @@
 }
 
 /* Values — Figma frame 302:77 */
-.art-values { background: #f7f3eb; }
+.art-values {
+  isolation: isolate;
+  background: #f7f3eb;
+}
+
+.art-values-wordmark {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  color: rgba(128, 0, 32, 0.11);
+  font-family: 'Dela Gothic One', sans-serif;
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.075em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.art-values-wordmark span {
+  position: absolute;
+  display: block;
+  white-space: nowrap;
+}
+
+.art-values-wordmark-art {
+  top: 18%;
+  left: 1.5%;
+  font-size: 22cqw;
+}
+
+.art-values-wordmark-clown {
+  right: 1.8%;
+  bottom: 9%;
+  font-size: 20.5cqw;
+}
 
 .art-balloons {
   position: absolute;
+  z-index: 1;
   top: 16.699%;
   left: 50%;
   width: 28.472%;
