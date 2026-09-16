@@ -189,7 +189,6 @@ export default function ArtClownProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 1 trên 8: Hero Art Clown">
           <SlideFrame className="art-slide-hero">
             <section className="art-design-canvas art-hero" aria-labelledby="art-clown-title">
-              <img className="art-hero-sky" src={`${ASSET}/hero-sky.png`} alt="" />
               <div className="art-fireworks" aria-hidden="true">
                 <Firework className="art-firework-left" src="firework-gold-stars.png" timing="side" reducedMotion={reducedMotion} />
                 <Firework className="art-firework-middle" src="firework-blue-orange.png" timing="middle" reducedMotion={reducedMotion} />
