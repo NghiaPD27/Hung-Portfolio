@@ -106,6 +106,60 @@ function LaunchSpark({ className, src, timing, reducedMotion }) {
   )
 }
 
+function ArtClownTitle({ reducedMotion }) {
+  const echoTransition = reducedMotion
+    ? { duration: 0 }
+    : {
+        duration: 4.8,
+        times: [0, 0.2917, 0.5, 0.7917, 1],
+        ease: ['linear', 'easeOut', 'linear', 'easeOut'],
+        repeat: Infinity,
+      }
+
+  return (
+    <h1 id="art-clown-title" className="art-hero-title" aria-label="ART CLOWN">
+      <span className="art-title-main" aria-hidden="true">ART CLOWN</span>
+      <motion.span
+        className="art-title-echo"
+        aria-hidden="true"
+        initial={false}
+        animate={reducedMotion ? { opacity: 0, y: 0 } : { opacity: [0, 0, 0.63, 0.63, 0], y: ['0cqw', '0cqw', '3.056cqw', '3.056cqw', '0cqw'] }}
+        transition={echoTransition}
+      >
+        ART CLOWN
+      </motion.span>
+      <motion.span
+        className="art-title-echo"
+        aria-hidden="true"
+        initial={false}
+        animate={reducedMotion ? { opacity: 0, y: 0 } : { opacity: [0, 0, 0.63, 0.63, 0], y: ['0cqw', '0cqw', '4.792cqw', '4.792cqw', '0cqw'] }}
+        transition={echoTransition}
+      >
+        ART CLOWN
+      </motion.span>
+    </h1>
+  )
+}
+
+const brandValues = [
+  {
+    className: 'art-value-one',
+    title: 'Cảm Xúc Thăng Hoa',
+    description: 'Những hành động ngốc nghếch, dáng đi lẩn thẩn của chú hề xưa sẽ mang đến tiếng cười đầy cảm xúc, sống lại trong tương lai.',
+  },
+  {
+    className: 'art-value-two',
+    title: <>Trân trọng<br />cảm xúc con người</>,
+    label: 'Trân trọng cảm xúc con người',
+    description: 'Art Clown tạo không gian vui nhộn, gắn kết cộng đồng và đưa mọi người đến gần hơn với nghề chú hề.',
+  },
+  {
+    className: 'art-value-three',
+    title: 'Xây Dựng Đam Mê',
+    description: 'Art Clown ra đời để mang lại niềm vui tuổi thơ và không gian giải trí cho mọi thế hệ, từ Gen Z, ông bà, cô chú đến các em nhỏ — những người yêu thích rạp xiếc và chú hề.',
+  },
+]
+
 const logos = [
   { card: 'white', src: 'logo-black.svg', label: 'Art Clown logo màu đen' },
   { card: 'black', src: 'logo-white.svg', label: 'Art Clown logo màu trắng' },
@@ -150,7 +204,7 @@ export default function ArtClownProject({ onBack }) {
         }}
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 7: Hero Art Clown">
-          <div className="art-slide-frame art-slide-frame-burgundy">
+          <div className="art-slide-frame art-slide-frame-burgundy art-slide-frame-hero">
             <section className="art-design-canvas art-hero" aria-labelledby="art-clown-title">
             <img className="art-hero-sky" src={`${ASSET}/hero-sky.png`} alt="" />
             <div className="art-fireworks" aria-hidden="true">
@@ -165,7 +219,7 @@ export default function ArtClownProject({ onBack }) {
               <LaunchSpark className="art-spark-right" src="spark-right.svg" timing="side" reducedMotion={reducedMotion} />
             </div>
             <img className="art-hero-tent" src={`${ASSET}/hero-tent.png`} alt="Rạp xiếc Art Clown" />
-            <h1 id="art-clown-title" className="art-hero-title">ART CLOWN</h1>
+            <ArtClownTitle reducedMotion={reducedMotion} />
             </section>
           </div>
         </SwiperSlide>
@@ -173,16 +227,24 @@ export default function ArtClownProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 2 trên 7: Giá trị thương hiệu">
           <div className="art-slide-frame art-slide-frame-cream">
             <section className="art-design-canvas art-values" aria-label="Giá trị thương hiệu Art Clown">
-              <p className="art-value art-value-one">Cảm Xúc Thăng Hoa</p>
-              <p className="art-value art-value-two">Trân trọng<br />cảm xúc con người</p>
-              <p className="art-value art-value-three">Xây Dựng Đam Mê</p>
+              {brandValues.map((value) => (
+                <div
+                  className={`art-value ${value.className}`}
+                  key={value.className}
+                  tabIndex={0}
+                  aria-label={`${value.label || value.title}. ${value.description}`}
+                >
+                  <p className="art-value-title">{value.title}</p>
+                  <p className="art-value-description">{value.description}</p>
+                </div>
+              ))}
               <img className="art-balloons" src={`${ASSET}/balloons.png`} alt="Chùm bóng bay đỏ" />
             </section>
           </div>
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 3 trên 7: Hệ thống nhận diện">
-          <div className="art-slide-frame art-slide-frame-burgundy">
+          <div className="art-slide-frame art-slide-frame-burgundy art-slide-frame-brand">
             <section className="art-design-canvas art-brand-system" aria-label="Hệ thống nhận diện Art Clown">
             <div className="art-uniform-wrap">
               <img src={`${ASSET}/uniform.png`} alt="Đồng phục Art Clown" loading="lazy" />
@@ -247,7 +309,7 @@ export default function ArtClownProject({ onBack }) {
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 7 trên 7: Stationary">
-          <div className="art-slide-frame art-slide-frame-cream">
+          <div className="art-slide-frame art-slide-frame-stationary">
             <section className="art-design-canvas art-stationary" aria-labelledby="stationary-title">
               <h2 id="stationary-title">STATIONARY</h2>
               <div className="art-stationary-grid">
