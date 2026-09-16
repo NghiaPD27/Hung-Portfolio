@@ -107,43 +107,18 @@ function LaunchSpark({ className, src, timing, reducedMotion }) {
   )
 }
 
-function ArtClownTitle({ reducedMotion }) {
-  const echoTransition = reducedMotion
-    ? { duration: 0 }
-    : {
-        duration: 4.8,
-        times: [0, 0.2917, 0.5, 0.7917, 1],
-        ease: ['linear', 'easeOut', 'linear', 'easeOut'],
-        repeat: Infinity,
-      }
-
+function ArtClownTitle() {
   return (
     <h1 id="art-clown-title" className="art-hero-title" aria-label="ART CLOWN">
       <span className="art-title-main" aria-hidden="true">ART CLOWN</span>
-      {[44, 69].map((offset) => (
-        <motion.span
-          className="art-title-echo"
+      {['near', 'far'].map((layer) => (
+        <span
+          className={`art-title-echo art-title-echo-${layer}`}
           aria-hidden="true"
-          key={offset}
-          initial={false}
-          animate={reducedMotion
-            ? { opacity: offset === 44 ? 0.42 : 0.28, y: `${offset / 14.4}cqw` }
-            : {
-                opacity: offset === 44
-                  ? [0.28, 0.28, 0.62, 0.62, 0.28]
-                  : [0.18, 0.18, 0.42, 0.42, 0.18],
-                y: [
-                  `${offset / 57.6}cqw`,
-                  `${offset / 57.6}cqw`,
-                  `${offset / 14.4}cqw`,
-                  `${offset / 14.4}cqw`,
-                  `${offset / 57.6}cqw`,
-                ],
-              }}
-          transition={echoTransition}
+          key={layer}
         >
           ART CLOWN
-        </motion.span>
+        </span>
       ))}
     </h1>
   )
@@ -212,7 +187,7 @@ export default function ArtClownProject({ onBack }) {
                 <LaunchSpark className="art-spark-right" src="spark-right.svg" timing="side" reducedMotion={reducedMotion} />
               </div>
               <img className="art-hero-tent" src={`${ASSET}/hero-tent.png`} alt="Rạp xiếc Art Clown" />
-              <ArtClownTitle reducedMotion={reducedMotion} />
+              <ArtClownTitle />
             </section>
           </SlideFrame>
         </SwiperSlide>

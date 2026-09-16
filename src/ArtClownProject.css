@@ -220,7 +220,43 @@
 }
 
 .art-title-main { z-index: 2; }
-.art-title-echo { z-index: 1; pointer-events: none; will-change: transform, opacity; }
+.art-title-echo {
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(0);
+  will-change: transform, opacity;
+  animation: art-title-smart-animate 4.8s infinite;
+}
+
+.art-title-echo-near {
+  --art-title-echo-offset: 44px;
+  --art-title-echo-opacity: 0.62;
+}
+
+.art-title-echo-far {
+  --art-title-echo-offset: 69px;
+  --art-title-echo-opacity: 0.42;
+}
+
+@keyframes art-title-smart-animate {
+  0%, 29.166% {
+    opacity: 0;
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  50%, 79.166% {
+    opacity: var(--art-title-echo-opacity);
+    transform: translateY(var(--art-title-echo-offset));
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
 
 /* Values — Figma frame 302:77 */
 .art-values { background: #f7f3eb; }
@@ -487,5 +523,11 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .art-title-echo {
+    opacity: var(--art-title-echo-opacity);
+    transform: translateY(var(--art-title-echo-offset));
+    animation: none !important;
   }
 }
