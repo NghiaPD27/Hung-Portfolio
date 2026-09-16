@@ -43,7 +43,7 @@
   background-image: url('/assets/art-clown/source/hero-sky.png');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .art-slide-cream { background: #f7f3eb; }
@@ -140,7 +140,10 @@
 }
 
 /* Hero — Figma frame 204:47, 1440 × 1024 */
-.art-hero { background: transparent; }
+.art-hero {
+  overflow: visible;
+  background: transparent;
+}
 
 .art-fireworks {
   position: absolute;
@@ -167,9 +170,9 @@
 }
 
 .art-firework { mix-blend-mode: screen; }
-.art-firework-left { left: 2.431%; top: 32.715%; width: 36.111%; height: 35.938%; }
-.art-firework-middle { left: 30.903%; top: 22.656%; width: 38.194%; height: 37.988%; }
-.art-firework-right { left: 60.972%; top: 31.055%; width: 36.111%; height: 35.938%; }
+.art-firework-left { left: -1.5%; top: 29%; width: 44%; height: 43.78%; }
+.art-firework-middle { left: 27.5%; top: 18%; width: 45%; height: 44.76%; }
+.art-firework-right { left: 57.5%; top: 27.5%; width: 44%; height: 43.78%; }
 
 .art-peak-glow { width: 2.083cqw; aspect-ratio: 1; }
 .art-glow-middle { left: 48.958%; top: 40.234%; }
@@ -184,11 +187,11 @@
 .art-hero-tent {
   position: absolute;
   z-index: 2;
-  top: 9.375%;
-  left: 0;
-  width: 100%;
-  height: 93.75%;
-  object-fit: cover;
+  top: 18%;
+  left: -15%;
+  width: 130%;
+  max-width: none;
+  height: auto;
 }
 
 .art-hero-title {
@@ -455,7 +458,7 @@
 }
 
 .art-billboard { background: #5b6470; }
-.art-billboard > img { display: block; width: 100%; height: 100%; object-fit: fill; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease; }
+.art-billboard > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease; }
 .art-billboard:hover > img { filter: saturate(1.04) contrast(1.02); transform: scale(1.015); }
 
 @media (max-width: 640px) {
