@@ -127,8 +127,19 @@ function ArtClownTitle({ reducedMotion }) {
           key={offset}
           initial={false}
           animate={reducedMotion
-            ? { opacity: 0, y: 0 }
-            : { opacity: [0, 0, 0.63, 0.63, 0], y: ['0cqw', '0cqw', `${offset / 14.4}cqw`, `${offset / 14.4}cqw`, '0cqw'] }}
+            ? { opacity: offset === 44 ? 0.42 : 0.28, y: `${offset / 14.4}cqw` }
+            : {
+                opacity: offset === 44
+                  ? [0.28, 0.28, 0.62, 0.62, 0.28]
+                  : [0.18, 0.18, 0.42, 0.42, 0.18],
+                y: [
+                  `${offset / 57.6}cqw`,
+                  `${offset / 57.6}cqw`,
+                  `${offset / 14.4}cqw`,
+                  `${offset / 14.4}cqw`,
+                  `${offset / 57.6}cqw`,
+                ],
+              }}
           transition={echoTransition}
         >
           ART CLOWN
