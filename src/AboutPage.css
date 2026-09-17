@@ -20,22 +20,20 @@
 
 .about-artboard {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 1440px;
-  height: 1024px;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
   overflow: hidden;
-  transform-origin: center center;
   background: #d7d7d7;
 }
 
 .about-background-layer {
   position: absolute;
-  left: 0;
-  top: -28px;
-  width: 1440px;
-  height: 1080px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center center;
   pointer-events: none;
 }
 
@@ -98,14 +96,14 @@
 .about-hello {
   position: absolute;
   z-index: 3;
-  left: 142px;
-  top: 11px;
-  width: 730px;
-  height: 246px;
+  left: 9.8611vw;
+  top: 1.0742dvh;
+  width: 50.6944vw;
+  height: 24.0234dvh;
   margin: 0;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: 170px;
+  font-size: min(11.8056vw, 16.6016dvh);
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
@@ -114,25 +112,25 @@
 .about-ff-layer {
   position: absolute;
   z-index: 4;
-  left: 0;
-  top: 28px;
-  width: 1440px;
-  height: 1024px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center center;
   pointer-events: none;
 }
 
 .about-bio {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 234px;
-  width: 637px;
-  height: 226px;
+  left: 54.0972vw;
+  top: 22.8516dvh;
+  width: 44.2361vw;
+  height: 22.0703dvh;
   margin: 0;
   color: #000;
   font-family: 'Montserrat', sans-serif;
-  font-size: 24px;
+  font-size: min(1.6667vw, 2.3438dvh);
   font-weight: 500;
   line-height: normal;
   text-align: justify;
@@ -141,27 +139,27 @@
 .about-skill-title {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 476px;
-  width: 312px;
-  height: 58px;
+  left: 54.0972vw;
+  top: 46.4844dvh;
+  width: 21.6667vw;
+  height: 5.6641dvh;
   margin: 0;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: 40px;
+  font-size: min(2.7778vw, 3.9063dvh);
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -2px;
+  letter-spacing: max(-0.1389vw, -0.1953dvh);
 }
 
 .about-skill-icons {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 552px;
+  left: 54.0972vw;
+  top: 53.9063dvh;
   display: flex;
   align-items: center;
-  gap: 23px;
+  gap: min(1.5972vw, 2.2461dvh);
 }
 
 .about-skill-icon {
@@ -179,17 +177,17 @@
 .about-education {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 656px;
-  padding: 10px;
+  left: 54.0972vw;
+  top: 64.0625dvh;
+  padding: min(0.6944vw, 0.9766dvh);
   color: #fff;
 }
 
 .about-education h2 {
-  margin: 0 0 50px;
+  margin: 0 0 min(3.4722vw, 4.8828dvh);
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: 40px;
+  font-size: min(2.7778vw, 3.9063dvh);
   font-weight: 400;
   line-height: normal;
 }
@@ -197,7 +195,7 @@
 .about-education p {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  font-size: 24px;
+  font-size: min(1.6667vw, 2.3438dvh);
   font-weight: 500;
   line-height: normal;
   white-space: nowrap;
@@ -206,33 +204,33 @@
 .about-name {
   position: absolute;
   z-index: 5;
-  left: 142px;
-  top: 816px;
+  left: 9.8611vw;
+  top: 79.6875dvh;
   display: flex;
   flex-direction: column;
-  width: 707px;
-  height: 144px;
+  width: 49.0972vw;
+  height: 14.0625dvh;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: 50px;
+  font-size: min(3.4722vw, 4.8828dvh);
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -2.5px;
+  letter-spacing: max(-0.1736vw, -0.2441dvh);
   white-space: nowrap;
 }
 
 .about-name span:last-child {
-  letter-spacing: -3px;
+  letter-spacing: max(-0.2083vw, -0.293dvh);
 }
 
 .about-back {
   position: absolute;
   z-index: 6;
-  left: 88px;
-  top: 59px;
+  left: 6.1111vw;
+  top: 5.7617dvh;
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: min(3.75vw, 5.2734dvh);
+  height: min(3.75vw, 5.2734dvh);
   margin: 0;
   padding: 0;
   place-items: center;
@@ -243,8 +241,8 @@
 
 .about-back img {
   display: block;
-  width: 36px;
-  height: 31.503px;
+  width: min(2.5vw, 3.5156dvh);
+  height: min(2.1877vw, 3.0765dvh);
 }
 
 .about-back:focus-visible {
