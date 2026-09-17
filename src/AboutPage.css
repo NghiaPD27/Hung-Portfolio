@@ -18,22 +18,50 @@
   filter: saturate(1.02);
 }
 
+.about-edge-filler {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about-edge-filler-left {
+  left: 0;
+}
+
+.about-edge-filler-right {
+  right: 0;
+}
+
+.about-edge-filler img {
+  display: block;
+  width: calc(100% + 1px);
+  height: 100%;
+  object-fit: fill;
+  transform: scaleX(-1);
+}
+
 .about-artboard {
   position: absolute;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 1440px;
+  height: 1024px;
   overflow: hidden;
+  transform-origin: center;
   background: #d7d7d7;
 }
 
 .about-background-layer {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  top: -28px;
+  width: 1440px;
+  height: 1080px;
   object-fit: cover;
-  object-position: center center;
   pointer-events: none;
 }
 
@@ -96,14 +124,14 @@
 .about-hello {
   position: absolute;
   z-index: 3;
-  left: 9.8611vw;
-  top: 1.0742dvh;
-  width: 50.6944vw;
-  height: 24.0234dvh;
+  left: 142px;
+  top: 11px;
+  width: 730px;
+  height: 246px;
   margin: 0;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: min(11.8056vw, 16.6016dvh);
+  font-size: 170px;
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
@@ -112,25 +140,25 @@
 .about-ff-layer {
   position: absolute;
   z-index: 4;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  top: 28px;
+  width: 1440px;
+  height: 1024px;
   object-fit: cover;
-  object-position: center center;
   pointer-events: none;
 }
 
 .about-bio {
   position: absolute;
   z-index: 5;
-  left: 54.0972vw;
-  top: 22.8516dvh;
-  width: 44.2361vw;
-  height: 22.0703dvh;
+  left: 779px;
+  top: 234px;
+  width: 637px;
+  height: 226px;
   margin: 0;
   color: #000;
   font-family: 'Montserrat', sans-serif;
-  font-size: min(1.6667vw, 2.3438dvh);
+  font-size: 24px;
   font-weight: 500;
   line-height: normal;
   text-align: justify;
@@ -139,27 +167,27 @@
 .about-skill-title {
   position: absolute;
   z-index: 5;
-  left: 54.0972vw;
-  top: 46.4844dvh;
-  width: 21.6667vw;
-  height: 5.6641dvh;
+  left: 779px;
+  top: 476px;
+  width: 312px;
+  height: 58px;
   margin: 0;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: min(2.7778vw, 3.9063dvh);
+  font-size: 40px;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: max(-0.1389vw, -0.1953dvh);
+  letter-spacing: -2px;
 }
 
 .about-skill-icons {
   position: absolute;
   z-index: 5;
-  left: 54.0972vw;
-  top: 53.9063dvh;
+  left: 779px;
+  top: 552px;
   display: flex;
   align-items: center;
-  gap: min(1.5972vw, 2.2461dvh);
+  gap: 23px;
 }
 
 .about-skill-icon {
@@ -177,17 +205,17 @@
 .about-education {
   position: absolute;
   z-index: 5;
-  left: 54.0972vw;
-  top: 64.0625dvh;
-  padding: min(0.6944vw, 0.9766dvh);
+  left: 779px;
+  top: 656px;
+  padding: 10px;
   color: #fff;
 }
 
 .about-education h2 {
-  margin: 0 0 min(3.4722vw, 4.8828dvh);
+  margin: 0 0 50px;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: min(2.7778vw, 3.9063dvh);
+  font-size: 40px;
   font-weight: 400;
   line-height: normal;
 }
@@ -195,7 +223,7 @@
 .about-education p {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  font-size: min(1.6667vw, 2.3438dvh);
+  font-size: 24px;
   font-weight: 500;
   line-height: normal;
   white-space: nowrap;
@@ -204,33 +232,33 @@
 .about-name {
   position: absolute;
   z-index: 5;
-  left: 9.8611vw;
-  top: 79.6875dvh;
+  left: 142px;
+  top: 816px;
   display: flex;
   flex-direction: column;
-  width: 49.0972vw;
-  height: 14.0625dvh;
+  width: 707px;
+  height: 144px;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: min(3.4722vw, 4.8828dvh);
+  font-size: 50px;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: max(-0.1736vw, -0.2441dvh);
+  letter-spacing: -2.5px;
   white-space: nowrap;
 }
 
 .about-name span:last-child {
-  letter-spacing: max(-0.2083vw, -0.293dvh);
+  letter-spacing: -3px;
 }
 
 .about-back {
   position: absolute;
   z-index: 6;
-  left: 6.1111vw;
-  top: 5.7617dvh;
+  left: 88px;
+  top: 59px;
   display: grid;
-  width: min(3.75vw, 5.2734dvh);
-  height: min(3.75vw, 5.2734dvh);
+  width: 54px;
+  height: 54px;
   margin: 0;
   padding: 0;
   place-items: center;
@@ -241,8 +269,45 @@
 
 .about-back img {
   display: block;
-  width: min(2.5vw, 3.5156dvh);
-  height: min(2.1877vw, 3.0765dvh);
+  width: 36px;
+  height: 31.503px;
+}
+
+.about-hello,
+.about-skill-title,
+.about-education h2,
+.about-name span {
+  transition: color 280ms ease, text-shadow 280ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+}
+
+.about-hello:hover,
+.about-skill-title:hover,
+.about-education:hover h2,
+.about-name:hover span {
+  color: #fff4a8;
+  text-shadow: 8px 8px 0 rgba(255, 223, 14, 0.2);
+  transform: translateX(8px);
+}
+
+.about-bio,
+.about-education p {
+  transition: color 260ms ease, text-shadow 260ms ease;
+}
+
+.about-bio:hover,
+.about-education:hover p {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.32);
+}
+
+.about-skill-icon {
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), filter 280ms ease;
+}
+
+.about-skill-icon:hover {
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.24));
+  transform: translateY(-8px) scale(1.08);
 }
 
 .about-back:focus-visible {

@@ -152,23 +152,23 @@ const withTimeline = (propertyTransition) => ({
   ...propertyTransition,
 })
 
-function AirParticle({ particle, index, reducedMotion, metrics }) {
+function AirParticle({ particle, index, reducedMotion }) {
   const animate = reducedMotion
     ? { opacity: particle.opacity[0], x: 0, y: 0 }
     : {
         opacity: particle.opacity,
-        x: particle.mx.map((value) => value * metrics.scaleX),
-        y: particle.my.map((value) => value * metrics.scaleY),
+        x: particle.mx,
+        y: particle.my,
       }
 
   return (
     <motion.div
       className="about-particle"
       style={{
-        left: particle.x * metrics.scaleX,
-        top: particle.y * metrics.scaleY,
-        width: particle.size * metrics.unit,
-        height: particle.size * metrics.unit,
+        left: particle.x,
+        top: particle.y,
+        width: particle.size,
+        height: particle.size,
       }}
       initial={reducedMotion ? false : { opacity: particle.opacity[0], x: 0, y: 0 }}
       animate={animate}
@@ -188,26 +188,16 @@ function AirParticle({ particle, index, reducedMotion, metrics }) {
   )
 }
 
-function Dandelion({ item, reducedMotion, metrics }) {
-  const scaledInitial = {
-    ...item.initial,
-    x: item.initial.x * metrics.scaleX,
-    y: item.initial.y * metrics.scaleY,
-  }
-  const scaledAnimate = {
-    ...item.animate,
-    x: item.animate.x.map((value) => value * metrics.scaleX),
-    y: item.animate.y.map((value) => value * metrics.scaleY),
-  }
+function Dandelion({ item, reducedMotion }) {
   const staticImage = (
     <img
       className="about-dandelion-image"
       src="/assets/about/dandelion.png"
       alt=""
       style={{
-        width: item.imageWidth * metrics.unit,
-        height: item.imageHeight * metrics.unit,
-        filter: `blur(${item.blur * metrics.unit}px)`,
+        width: item.imageWidth,
+        height: item.imageHeight,
+        filter: `blur(${item.blur}px)`,
         transform: `rotate(${item.baseRotate}deg)`,
       }}
     />
@@ -218,13 +208,13 @@ function Dandelion({ item, reducedMotion, metrics }) {
       <motion.div
         className="about-dandelion about-dandelion-direct"
         style={{
-          left: item.x * metrics.scaleX,
-          top: item.y * metrics.scaleY,
-          width: item.width * metrics.unit,
-          height: item.height * metrics.unit,
+          left: item.x,
+          top: item.y,
+          width: item.width,
+          height: item.height,
         }}
-        initial={reducedMotion ? false : scaledInitial}
-        animate={reducedMotion ? { opacity: 0.8, rotate: 0, x: 0, y: 0 } : scaledAnimate}
+        initial={reducedMotion ? false : item.initial}
+        animate={reducedMotion ? { opacity: 0.8, rotate: 0, x: 0, y: 0 } : item.animate}
         transition={reducedMotion ? { duration: 0 } : Object.fromEntries(
           Object.entries(item.transition).map(([key, value]) => [key, withTimeline(value)]),
         )}
@@ -235,17 +225,17 @@ function Dandelion({ item, reducedMotion, metrics }) {
     )
   }
 
-  const { opacity: initialOpacity, ...wrapperInitial } = scaledInitial
-  const { opacity: opacityFrames, ...wrapperAnimate } = scaledAnimate
+  const { opacity: initialOpacity, ...wrapperInitial } = item.initial
+  const { opacity: opacityFrames, ...wrapperAnimate } = item.animate
 
   return (
     <motion.div
       className="about-dandelion"
       style={{
-        left: item.x * metrics.scaleX,
-        top: item.y * metrics.scaleY,
-        width: item.width * metrics.unit,
-        height: item.height * metrics.unit,
+        left: item.x,
+        top: item.y,
+        width: item.width,
+        height: item.height,
       }}
       initial={reducedMotion ? false : wrapperInitial}
       animate={reducedMotion ? { rotate: 0, x: 0, y: 0 } : wrapperAnimate}
@@ -268,32 +258,45 @@ function Dandelion({ item, reducedMotion, metrics }) {
   )
 }
 
-function useViewportMetrics() {
-  const getMetrics = () => {
-    const scaleX = window.innerWidth / 1440
-    const scaleY = window.innerHeight / 1024
-    return { scaleX, scaleY, unit: Math.min(scaleX, scaleY) }
+function useArtboardLayout() {
+  const getLayout = () => {
+    const scale = Math.min(window.innerWidth / 1440, window.innerHeight / 1024)
+    return {
+      scale,
+      gutterX: Math.max(0, (window.innerWidth - 1440 * scale) / 2),
+    }
   }
-  const [metrics, setMetrics] = useState(getMetrics)
+  const [layout, setLayout] = useState(getLayout)
 
   useEffect(() => {
-    const updateMetrics = () => setMetrics(getMetrics())
-    window.addEventListener('resize', updateMetrics)
-    return () => window.removeEventListener('resize', updateMetrics)
+    const updateLayout = () => setLayout(getLayout())
+    window.addEventListener('resize', updateLayout)
+    return () => window.removeEventListener('resize', updateLayout)
   }, [])
 
-  return metrics
+  return layout
 }
 
 function AboutPage({ onBack }) {
   const reducedMotion = useReducedMotion()
-  const metrics = useViewportMetrics()
+  const layout = useArtboardLayout()
 
   return (
     <main className="about-page" aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
-      <section className="about-artboard">
+      {layout.gutterX > 0 && (
+        <>
+          <div className="about-edge-filler about-edge-filler-left" style={{ width: layout.gutterX }} aria-hidden="true">
+            <img src="/assets/about/edge-left.png" alt="" />
+          </div>
+          <div className="about-edge-filler about-edge-filler-right" style={{ width: layout.gutterX }} aria-hidden="true">
+            <img src="/assets/about/edge-right.png" alt="" />
+          </div>
+        </>
+      )}
+
+      <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
         <img className="about-background-layer" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
         <div className="about-atmosphere" aria-hidden="true">
@@ -304,7 +307,6 @@ function AboutPage({ onBack }) {
                 particle={particle}
                 index={index}
                 reducedMotion={reducedMotion}
-                metrics={metrics}
               />
             ))}
           </div>
@@ -313,7 +315,6 @@ function AboutPage({ onBack }) {
               key={`dandelion-${index + 1}`}
               item={item}
               reducedMotion={reducedMotion}
-              metrics={metrics}
             />
           ))}
         </div>
@@ -331,7 +332,7 @@ function AboutPage({ onBack }) {
             <div
               className="about-skill-icon"
               key={`skill-${index + 1}`}
-              style={{ width: icon.width * metrics.unit, height: icon.height * metrics.unit }}
+              style={{ width: icon.width, height: icon.height }}
             >
               <img
                 src={`/assets/about/skill-${icon.file}.png`}
