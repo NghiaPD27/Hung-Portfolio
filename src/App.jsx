@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
+import AboutPage from './AboutPage'
 import './App.css'
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash === '#art-clown')
+  const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash === '#about')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
   const productScrollPosition = useRef(0)
@@ -42,9 +44,11 @@ function App() {
   useEffect(() => {
     const syncProjectRoute = () => {
       const projectIsOpen = window.location.hash === '#art-clown'
+      const aboutIsOpen = window.location.hash === '#about'
       setIsArtClownOpen(projectIsOpen)
+      setIsAboutOpen(aboutIsOpen)
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen ? 0 : productScrollPosition.current,
+        top: projectIsOpen || aboutIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
       }))
     }
@@ -113,9 +117,31 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
 
+  const openAboutPage = () => {
+    productScrollPosition.current = window.scrollY
+    setMenuOpen(false)
+    setSelectedProject(null)
+    window.history.pushState({ about: true }, '', '#about')
+    setIsArtClownOpen(false)
+    setIsAboutOpen(true)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
+  const closeAboutPage = () => {
+    if (window.history.state?.about) {
+      window.history.back()
+      return
+    }
+
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
+    setIsAboutOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+  }
+
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && isArtClownOpen) closeArtClownProject()
+      if (event.key === 'Escape' && isAboutOpen) closeAboutPage()
     }
 
     window.addEventListener('keydown', handleEscape)
@@ -124,6 +150,10 @@ function App() {
 
   if (isArtClownOpen) {
     return <ArtClownProject onBack={closeArtClownProject} />
+  }
+
+  if (isAboutOpen) {
+    return <AboutPage onBack={closeAboutPage} />
   }
 
   return (
@@ -218,14 +248,21 @@ function App() {
               <nav className="menu-nav-list">
                 {[
                   { num: '01', title: 'HOME', href: '#hero' },
-                  { num: '02', title: 'ABOUT', href: '#product' },
+                  { num: '02', title: 'ABOUT', href: '#about' },
                   { num: '03', title: 'CONTACT', href: '#product' }
                 ].map((item, index) => (
                   <motion.a 
                     key={item.num}
                     href={item.href}
                     className="menu-nav-item"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={(event) => {
+                      if (item.title === 'ABOUT') {
+                        event.preventDefault()
+                        openAboutPage()
+                        return
+                      }
+                      setMenuOpen(false)
+                    }}
                     initial={{ opacity: 0, x: 35 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.45, delay: 0.15 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}

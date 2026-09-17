@@ -1,0 +1,261 @@
+.about-page {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #1296f4;
+  color: #000;
+}
+
+.about-viewport-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.02);
+}
+
+.about-artboard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1440px;
+  height: 1024px;
+  overflow: hidden;
+  transform-origin: center center;
+  background: #d7d7d7;
+}
+
+.about-background-layer {
+  position: absolute;
+  left: 0;
+  top: -28px;
+  width: 1440px;
+  height: 1080px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.about-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0.79;
+  pointer-events: none;
+}
+
+.about-air-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.about-particle {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.about-particle img {
+  position: absolute;
+  width: auto;
+  height: auto;
+  max-width: none;
+  display: block;
+}
+
+.about-dandelion {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.about-dandelion-visual {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+}
+
+.about-dandelion-direct .about-dandelion-image {
+  transform: none !important;
+}
+
+.about-dandelion-image {
+  display: block;
+  flex: none;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.about-hello {
+  position: absolute;
+  z-index: 3;
+  left: 142px;
+  top: 11px;
+  width: 730px;
+  height: 246px;
+  margin: 0;
+  color: #ffdf0e;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 170px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.about-ff-layer {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 28px;
+  width: 1440px;
+  height: 1024px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.about-bio {
+  position: absolute;
+  z-index: 5;
+  left: 779px;
+  top: 234px;
+  width: 637px;
+  height: 226px;
+  margin: 0;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: normal;
+  text-align: justify;
+}
+
+.about-skill-title {
+  position: absolute;
+  z-index: 5;
+  left: 779px;
+  top: 476px;
+  width: 312px;
+  height: 58px;
+  margin: 0;
+  color: #ffdf0e;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -2px;
+}
+
+.about-skill-icons {
+  position: absolute;
+  z-index: 5;
+  left: 779px;
+  top: 552px;
+  display: flex;
+  align-items: center;
+  gap: 23px;
+}
+
+.about-skill-icon {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+}
+
+.about-skill-icon img {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+}
+
+.about-education {
+  position: absolute;
+  z-index: 5;
+  left: 779px;
+  top: 656px;
+  padding: 10px;
+  color: #fff;
+}
+
+.about-education h2 {
+  margin: 0 0 50px;
+  color: #ffdf0e;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.about-education p {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.about-name {
+  position: absolute;
+  z-index: 5;
+  left: 142px;
+  top: 816px;
+  display: flex;
+  flex-direction: column;
+  width: 707px;
+  height: 144px;
+  color: #ffdf0e;
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: 50px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -2.5px;
+  white-space: nowrap;
+}
+
+.about-name span:last-child {
+  letter-spacing: -3px;
+}
+
+.about-back {
+  position: absolute;
+  z-index: 6;
+  left: 88px;
+  top: 59px;
+  display: grid;
+  width: 54px;
+  height: 54px;
+  margin: 0;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.about-back img {
+  display: block;
+  width: 36px;
+  height: 31.503px;
+}
+
+.about-back:focus-visible {
+  outline: 3px solid #ffdf0e;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-particle,
+  .about-dandelion,
+  .about-dandelion-visual {
+    will-change: auto;
+  }
+}
