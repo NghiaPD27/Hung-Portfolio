@@ -18,31 +18,6 @@
   filter: saturate(1.02);
 }
 
-.about-edge-filler {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.about-edge-filler-left {
-  left: 0;
-}
-
-.about-edge-filler-right {
-  right: 0;
-}
-
-.about-edge-filler img {
-  display: block;
-  width: calc(100% + 1px);
-  height: 100%;
-  object-fit: fill;
-  transform: scaleX(-1);
-}
-
 .about-artboard {
   position: absolute;
   left: 50%;
@@ -137,6 +112,61 @@
   white-space: nowrap;
 }
 
+.about-localized {
+  cursor: default;
+  outline: none;
+}
+
+.about-localized-copy {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+}
+
+.about-localized-fast .about-localized-copy {
+  transition-duration: 200ms;
+}
+
+.about-localized-slow .about-localized-copy {
+  transition-duration: 300ms;
+}
+
+.about-localized-en {
+  opacity: 1;
+}
+
+.about-localized-vi {
+  opacity: 0;
+}
+
+.about-localized:hover .about-localized-en,
+.about-localized:focus-visible .about-localized-en {
+  opacity: 0;
+}
+
+.about-localized:hover .about-localized-vi,
+.about-localized:focus-visible .about-localized-vi {
+  opacity: 1;
+}
+
+.about-localized:focus-visible {
+  outline: 3px solid rgba(255, 223, 14, 0.9);
+  outline-offset: 5px;
+}
+
+.about-hello .about-localized-copy,
+.about-skill-title .about-localized-copy,
+.about-bio .about-localized-copy,
+.about-name .about-localized-copy,
+.about-education .about-localized-copy {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.about-hello .about-localized-vi {
+  width: 1095px;
+}
+
 .about-ff-layer {
   position: absolute;
   z-index: 4;
@@ -162,6 +192,19 @@
   font-weight: 500;
   line-height: normal;
   text-align: justify;
+}
+
+.about-bio .about-localized-copy {
+  font: inherit;
+  text-align: inherit;
+}
+
+.about-bio .about-localized-vi {
+  width: 529px;
+}
+
+.about-skill-title .about-localized-vi {
+  width: 427px;
 }
 
 .about-skill-title {
@@ -207,8 +250,18 @@
   z-index: 5;
   left: 779px;
   top: 656px;
-  padding: 10px;
+  width: 395px;
+  height: 232px;
   color: #fff;
+}
+
+.about-education-copy {
+  padding: 10px;
+}
+
+.about-education .about-localized-vi {
+  width: 516px;
+  height: 232px;
 }
 
 .about-education h2 {
@@ -247,7 +300,16 @@
   white-space: nowrap;
 }
 
-.about-name span:last-child {
+.about-name-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-name .about-localized-vi {
+  width: 715px;
+}
+
+.about-name-copy span:last-child {
   letter-spacing: -3px;
 }
 
@@ -273,43 +335,6 @@
   height: 31.503px;
 }
 
-.about-hello,
-.about-skill-title,
-.about-education h2,
-.about-name span {
-  transition: color 280ms ease, text-shadow 280ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: left center;
-}
-
-.about-hello:hover,
-.about-skill-title:hover,
-.about-education:hover h2,
-.about-name:hover span {
-  color: #fff4a8;
-  text-shadow: 8px 8px 0 rgba(255, 223, 14, 0.2);
-  transform: translateX(8px);
-}
-
-.about-bio,
-.about-education p {
-  transition: color 260ms ease, text-shadow 260ms ease;
-}
-
-.about-bio:hover,
-.about-education:hover p {
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.32);
-}
-
-.about-skill-icon {
-  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), filter 280ms ease;
-}
-
-.about-skill-icon:hover {
-  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.24));
-  transform: translateY(-8px) scale(1.08);
-}
-
 .about-back:focus-visible {
   outline: 3px solid #ffdf0e;
   outline-offset: 4px;
@@ -320,5 +345,9 @@
   .about-dandelion,
   .about-dandelion-visual {
     will-change: auto;
+  }
+
+  .about-localized-copy {
+    transition-duration: 0ms !important;
   }
 }

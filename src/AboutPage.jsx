@@ -261,10 +261,7 @@ function Dandelion({ item, reducedMotion }) {
 function useArtboardLayout() {
   const getLayout = () => {
     const scale = Math.min(window.innerWidth / 1440, window.innerHeight / 1024)
-    return {
-      scale,
-      gutterX: Math.max(0, (window.innerWidth - 1440 * scale) / 2),
-    }
+    return { scale }
   }
   const [layout, setLayout] = useState(getLayout)
 
@@ -284,17 +281,6 @@ function AboutPage({ onBack }) {
   return (
     <main className="about-page" aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background.png" alt="" aria-hidden="true" />
-
-      {layout.gutterX > 0 && (
-        <>
-          <div className="about-edge-filler about-edge-filler-left" style={{ width: layout.gutterX }} aria-hidden="true">
-            <img src="/assets/about/edge-left.png" alt="" />
-          </div>
-          <div className="about-edge-filler about-edge-filler-right" style={{ width: layout.gutterX }} aria-hidden="true">
-            <img src="/assets/about/edge-right.png" alt="" />
-          </div>
-        </>
-      )}
 
       <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
         <img className="about-background-layer" src="/assets/about/background.png" alt="" aria-hidden="true" />
@@ -319,14 +305,25 @@ function AboutPage({ onBack }) {
           ))}
         </div>
 
-        <h1 className="about-hello">HELLO</h1>
+        <h1 className="about-hello about-localized about-localized-fast" tabIndex="0" aria-label="Hello, Xin chào">
+          <span className="about-localized-copy about-localized-en" lang="en">HELLO</span>
+          <span className="about-localized-copy about-localized-vi" lang="vi">XIN CHÀO</span>
+        </h1>
         <img className="about-ff-layer" src="/assets/about/ff.png" alt="Portrait of Hung Truong" />
 
-        <p className="about-bio">
-          I’m 21 years old, based in Saigon, and currently working as a freelance web and visual designer. I love traveling, capturing moments through my camera, and turning those experiences into inspiration for my projects. I’m easygoing, friendly, and open-minded, always aiming to create work with personality, meaning, and a sense of soul.
-        </p>
+        <div className="about-bio about-localized about-localized-fast" tabIndex="0">
+          <p className="about-localized-copy about-localized-en" lang="en">
+            I’m 21 years old, based in Saigon, and currently working as a freelance web and visual designer. I love traveling, capturing moments through my camera, and turning those experiences into inspiration for my projects. I’m easygoing, friendly, and open-minded, always aiming to create work with personality, meaning, and a sense of soul.
+          </p>
+          <p className="about-localized-copy about-localized-vi" lang="vi">
+            21 tuổi, sống ở Sài Gòn và làm freelancer trong mảng web &amp; phim ảnh. Mình yêu du lịch, thích ghi lại trải nghiệm bằng máy ảnh và biến chúng thành cảm hứng cho các dự án. Tính cách thoải mái, hòa đồng, cởi mở và luôn hướng đến những sản phẩm có cá tính, có “hồn”.
+          </p>
+        </div>
 
-        <h2 className="about-skill-title">SKILL</h2>
+        <h2 className="about-skill-title about-localized about-localized-slow" tabIndex="0" aria-label="Skill, Kĩ năng">
+          <span className="about-localized-copy about-localized-en" lang="en">SKILL</span>
+          <span className="about-localized-copy about-localized-vi" lang="vi">KĨ&nbsp;&nbsp;NĂNG</span>
+        </h2>
         <div className="about-skill-icons" aria-label="Design software skills">
           {SKILL_ICONS.map((icon, index) => (
             <div
@@ -348,16 +345,30 @@ function AboutPage({ onBack }) {
           ))}
         </div>
 
-        <div className="about-education">
-          <h2>EDUCATION</h2>
-          <p>12/12</p>
-          <p>Van Hien University 2022 -2027</p>
-          <p>English B2</p>
+        <div className="about-education about-localized about-localized-slow" tabIndex="0">
+          <div className="about-education-copy about-localized-copy about-localized-en" lang="en">
+            <h2>EDUCATION</h2>
+            <p>12/12</p>
+            <p>Van Hien University 2022 -2027</p>
+            <p>English B2</p>
+          </div>
+          <div className="about-education-copy about-localized-copy about-localized-vi" lang="vi">
+            <h2>TRÌNH ĐỘ HỌC VẤN</h2>
+            <p>12/12</p>
+            <p>Đại Học Văn Hiến 2026 - 2027</p>
+            <p>Tiếng Anh B2</p>
+          </div>
         </div>
 
-        <div className="about-name" aria-label="I'm Hung Truong">
-          <span>I’M</span>
-          <span>HUNG TRUONG</span>
+        <div className="about-name about-localized about-localized-fast" tabIndex="0" aria-label="I'm Hung Truong, Tôi là Hùng Trương">
+          <div className="about-name-copy about-localized-copy about-localized-en" lang="en">
+            <span>I’M</span>
+            <span>HUNG TRUONG</span>
+          </div>
+          <div className="about-name-copy about-localized-copy about-localized-vi" lang="vi">
+            <span>TÔI LÀ</span>
+            <span>HÙNG TRƯƠNG</span>
+          </div>
         </div>
 
         <button className="about-back" type="button" onClick={onBack} aria-label="Back to portfolio">
