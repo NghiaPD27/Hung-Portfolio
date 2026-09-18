@@ -187,9 +187,9 @@
 .art-hero-tent {
   position: absolute;
   z-index: 2;
-  top: 9.375%;
+  top: 4%;
   left: 50%;
-  width: max(103.4483%, 100vw);
+  width: max(106%, 100vw);
   max-width: none;
   height: auto;
   transform: translateX(-50%);
