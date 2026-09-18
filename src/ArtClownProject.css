@@ -187,11 +187,13 @@
 .art-hero-tent {
   position: absolute;
   z-index: 2;
-  top: 14%;
-  left: -15%;
-  width: 130%;
+  top: 9.375%;
+  left: 50%;
+  width: max(103.4483%, 100vw);
   max-width: none;
   height: auto;
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
 }
 
 .art-hero-title {
