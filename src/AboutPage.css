@@ -110,6 +110,8 @@
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
+  transform-origin: 0% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-localized {
@@ -167,15 +169,56 @@
   width: 1095px;
 }
 
-.about-ff-layer {
+.about-ff-left {
   position: absolute;
   z-index: 4;
   left: 0;
   top: 28px;
+  width: 960px;
+  height: 1024px;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 80%, transparent 100%);
+}
+
+.about-ff-left img {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 1440px;
   height: 1024px;
+  max-width: none;
   object-fit: cover;
   pointer-events: none;
+  transform-origin: 0% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
+}
+
+.about-ff-right {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  top: 28px;
+  width: 480px;
+  height: 1024px;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to left, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 70%, transparent 100%);
+}
+
+.about-ff-right img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1440px;
+  height: 1024px;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+  transform-origin: 100% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-bio {
@@ -192,6 +235,8 @@
   font-weight: 500;
   line-height: normal;
   text-align: justify;
+  transform-origin: 0% 0%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-bio .about-localized-copy {
@@ -221,6 +266,8 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: -2px;
+  transform-origin: 0% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-skill-icons {
@@ -231,6 +278,8 @@
   display: flex;
   align-items: center;
   gap: 23px;
+  transform-origin: 0% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-skill-icon {
@@ -253,6 +302,8 @@
   width: 395px;
   height: 232px;
   color: #fff;
+  transform-origin: 0% 0%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-education-copy {
@@ -298,6 +349,8 @@
   line-height: normal;
   letter-spacing: -2.5px;
   white-space: nowrap;
+  transform-origin: 0% 50%;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-name-copy {
@@ -327,6 +380,8 @@
   border: 0;
   background: transparent;
   cursor: pointer;
+  transform-origin: center;
+  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-back img {

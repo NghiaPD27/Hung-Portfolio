@@ -260,8 +260,10 @@ function Dandelion({ item, reducedMotion }) {
 
 function useArtboardLayout() {
   const getLayout = () => {
-    const scale = Math.min(window.innerWidth / 1440, window.innerHeight / 1024)
-    return { scale }
+    const scaleX = window.innerWidth / 1440
+    const scaleY = window.innerHeight / 1024
+    const aspectStretch = Math.max(1, scaleX / scaleY)
+    return { scaleX, scaleY, aspectStretch }
   }
   const [layout, setLayout] = useState(getLayout)
 
@@ -282,7 +284,13 @@ function AboutPage({ onBack }) {
     <main className="about-page" aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
-      <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
+      <section
+        className="about-artboard"
+        style={{
+          transform: `translate(-50%, -50%) scale(${layout.scaleX}, ${layout.scaleY})`,
+          '--aspect-stretch': layout.aspectStretch,
+        }}
+      >
         <img className="about-background-layer" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
         <div className="about-atmosphere" aria-hidden="true">
@@ -309,7 +317,13 @@ function AboutPage({ onBack }) {
           <span className="about-localized-copy about-localized-en" lang="en">HELLO</span>
           <span className="about-localized-copy about-localized-vi" lang="vi">XIN CHÀO</span>
         </h1>
-        <img className="about-ff-layer" src="/assets/about/ff.png" alt="Portrait of Hung Truong" />
+
+        <div className="about-ff-left">
+          <img src="/assets/about/ff.png" alt="Portrait of Hung Truong" />
+        </div>
+        <div className="about-ff-right" aria-hidden="true">
+          <img src="/assets/about/ff.png" alt="" />
+        </div>
 
         <div className="about-bio about-localized about-localized-fast" tabIndex="0">
           <p className="about-localized-copy about-localized-en" lang="en">

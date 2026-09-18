@@ -141,6 +141,7 @@
 
 /* Hero — Figma frame 204:47, 1440 × 1024 */
 .art-hero {
+  --art-hero-lift: -15%;
   overflow: visible;
   background: transparent;
 }
@@ -170,24 +171,24 @@
 }
 
 .art-firework { mix-blend-mode: screen; }
-.art-firework-left { left: -1.5%; top: 29%; width: 44%; height: 43.78%; }
-.art-firework-middle { left: 27.5%; top: 18%; width: 45%; height: 44.76%; }
-.art-firework-right { left: 57.5%; top: 27.5%; width: 44%; height: 43.78%; }
+.art-firework-left { left: -1.5%; top: calc(29% + var(--art-hero-lift) * 0.7); width: 44%; height: 43.78%; }
+.art-firework-middle { left: 27.5%; top: calc(18% + var(--art-hero-lift) * 0.7); width: 45%; height: 44.76%; }
+.art-firework-right { left: 57.5%; top: calc(27.5% + var(--art-hero-lift) * 0.7); width: 44%; height: 43.78%; }
 
 .art-peak-glow { width: 2.083cqw; aspect-ratio: 1; }
-.art-glow-middle { left: 48.958%; top: 40.234%; }
-.art-glow-left { left: 23.056%; top: 50.684%; }
-.art-glow-right { left: 77.986%; top: 47.559%; }
+.art-glow-middle { left: 48.958%; top: calc(40.234% + var(--art-hero-lift)); }
+.art-glow-left { left: 23.056%; top: calc(50.684% + var(--art-hero-lift)); }
+.art-glow-right { left: 77.986%; top: calc(47.559% + var(--art-hero-lift)); }
 
 .art-launch-spark { width: 0.972cqw; aspect-ratio: 1; }
-.art-spark-middle { left: 49.514%; top: 41.016%; }
-.art-spark-left { left: 23.611%; top: 51.465%; }
-.art-spark-right { left: 78.542%; top: 48.34%; }
+.art-spark-middle { left: 49.514%; top: calc(41.016% + var(--art-hero-lift)); }
+.art-spark-left { left: 23.611%; top: calc(51.465% + var(--art-hero-lift)); }
+.art-spark-right { left: 78.542%; top: calc(48.34% + var(--art-hero-lift)); }
 
 .art-hero-tent {
   position: absolute;
   z-index: 2;
-  top: 4%;
+  top: calc(4% + var(--art-hero-lift));
   left: 50%;
   width: max(106%, 100vw);
   max-width: none;
@@ -531,9 +532,139 @@
   aspect-ratio: auto;
 }
 
-.art-billboard { background: #5b6470; }
-.art-billboard > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease; }
+.art-billboard { background: #5b6470; position: relative; }
+.art-billboard > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms ease; }
 .art-billboard:hover > img { filter: saturate(1.04) contrast(1.02); transform: scale(1.015); }
+
+/* ==========================================================================
+   Skeleton Loading System
+   ========================================================================== */
+
+@keyframes art-skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes art-skeleton-pulse {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.art-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: art-skeleton-pulse 2.2s ease-in-out infinite;
+  transition: opacity 380ms ease-out, visibility 380ms;
+}
+
+.art-skeleton::after {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--skeleton-shimmer, rgba(255, 255, 255, 0.45)) 50%,
+    transparent 100%
+  );
+  animation: art-skeleton-shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  content: '';
+}
+
+.art-skeleton.is-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+/* Skeleton color variants matched to slide contexts */
+.art-skeleton-light {
+  background-color: #f1f2f5;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.85);
+}
+
+.art-skeleton-cream {
+  background-color: #ede6da;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.65);
+}
+
+.art-skeleton-yellow {
+  background-color: #edd57d;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.65);
+}
+
+.art-skeleton-slate {
+  background-color: #4b5460;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.22);
+}
+
+.art-skeleton-dark {
+  background-color: #1a1a1a;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.18);
+}
+
+.art-skeleton-hero {
+  background-color: rgba(255, 255, 255, 0.08);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+}
+
+/* Specific component skeletons */
+.art-hero-tent-skeleton {
+  position: absolute;
+  z-index: 1;
+  top: calc(4% + var(--art-hero-lift));
+  left: 50%;
+  width: max(106%, 100vw);
+  max-width: none;
+  aspect-ratio: 1440 / 928;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 0 0 / 38% 38% 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.art-balloons-skeleton {
+  position: absolute;
+  z-index: 1;
+  top: 16.699%;
+  left: 50%;
+  width: 28.472%;
+  height: 96.777%;
+  border-radius: 999px 999px 40px 40px;
+  transform: translateX(-50%);
+}
+
+.art-mascot-main-skeleton {
+  position: absolute;
+  z-index: 1;
+  top: 13.867%;
+  left: 6.042%;
+  width: 35.417%;
+  height: 74.707%;
+  border-radius: 3cqw;
+}
+
+/* Image smooth fade */
+.art-img-fade {
+  opacity: 0;
+  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1), transform 650ms cubic-bezier(0.16, 1, 0.3, 1), filter 650ms ease;
+}
+
+.art-img-fade.is-loaded {
+  opacity: 1;
+}
 
 @media (max-width: 640px) {
   .art-clown-back { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); width: 40px; }

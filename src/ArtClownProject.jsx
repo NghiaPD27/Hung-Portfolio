@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -7,6 +7,34 @@ import 'swiper/css/pagination'
 import './ArtClownProject.css'
 
 const ASSET = '/assets/art-clown/source'
+
+function useImageSkeleton() {
+  const [loadedKeys, setLoadedKeys] = useState(() => new Set())
+
+  const markLoaded = useCallback((key) => {
+    setLoadedKeys((prev) => {
+      if (prev.has(key)) return prev
+      const next = new Set(prev)
+      next.add(key)
+      return next
+    })
+  }, [])
+
+  const registerRef = useCallback((key) => (element) => {
+    if (element && element.complete && element.naturalWidth > 0) {
+      setLoadedKeys((prev) => {
+        if (prev.has(key)) return prev
+        const next = new Set(prev)
+        next.add(key)
+        return next
+      })
+    }
+  }, [])
+
+  const isLoaded = useCallback((key) => loadedKeys.has(key), [loadedKeys])
+
+  return { isLoaded, markLoaded, registerRef }
+}
 
 const burstTransitions = {
   side: {
@@ -169,6 +197,7 @@ function SlideFrame({ className = '', children }) {
 export default function ArtClownProject({ onBack }) {
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
+  const { isLoaded, markLoaded, registerRef } = useImageSkeleton()
 
   return (
     <main className="art-clown-project" aria-label="Art Clown branding project">
@@ -202,7 +231,14 @@ export default function ArtClownProject({ onBack }) {
                 <LaunchSpark className="art-spark-left" src="spark-left.svg" timing="side" reducedMotion={reducedMotion} />
                 <LaunchSpark className="art-spark-right" src="spark-right.svg" timing="side" reducedMotion={reducedMotion} />
               </div>
-              <img className="art-hero-tent" src={`${ASSET}/hero-tent.png`} alt="Rạp xiếc Art Clown" />
+              <div className={`art-skeleton art-skeleton-hero art-hero-tent-skeleton ${isLoaded('hero-tent') ? 'is-hidden' : ''}`} aria-hidden="true" />
+              <img
+                ref={registerRef('hero-tent')}
+                className={`art-hero-tent art-img-fade ${isLoaded('hero-tent') ? 'is-loaded' : ''}`}
+                src={`${ASSET}/hero-tent.png`}
+                alt="Rạp xiếc Art Clown"
+                onLoad={() => markLoaded('hero-tent')}
+              />
               <ArtClownTitle />
             </section>
           </SlideFrame>
@@ -228,7 +264,14 @@ export default function ArtClownProject({ onBack }) {
                   </button>
                 )
               })}
-              <img className="art-balloons" src={`${ASSET}/balloons.png`} alt="Chùm bóng bay đỏ" />
+              <div className={`art-skeleton art-skeleton-cream art-balloons-skeleton ${isLoaded('balloons') ? 'is-hidden' : ''}`} aria-hidden="true" />
+              <img
+                ref={registerRef('balloons')}
+                className={`art-balloons art-img-fade ${isLoaded('balloons') ? 'is-loaded' : ''}`}
+                src={`${ASSET}/balloons.png`}
+                alt="Chùm bóng bay đỏ"
+                onLoad={() => markLoaded('balloons')}
+              />
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -236,7 +279,17 @@ export default function ArtClownProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 3 trên 8: Đồng phục và các dạng logo">
           <SlideFrame className="art-slide-white">
             <section className="art-design-canvas art-logo-system" aria-label="Đồng phục và các dạng logo Art Clown">
-              <div className="art-uniform-wrap"><img src={`${ASSET}/uniform.png`} alt="Đồng phục Art Clown" loading="lazy" /></div>
+              <div className="art-uniform-wrap">
+                <div className={`art-skeleton art-skeleton-light ${isLoaded('uniform') ? 'is-hidden' : ''}`} aria-hidden="true" />
+                <img
+                  ref={registerRef('uniform')}
+                  src={`${ASSET}/uniform.png`}
+                  alt="Đồng phục Art Clown"
+                  loading="lazy"
+                  onLoad={() => markLoaded('uniform')}
+                  className={`art-img-fade ${isLoaded('uniform') ? 'is-loaded' : ''}`}
+                />
+              </div>
               <div className="art-marquee" aria-label="Welcome to Art Clown">
                 <div className="art-marquee-track">
                   {[0, 1].map((group) => (
@@ -247,8 +300,14 @@ export default function ArtClownProject({ onBack }) {
                 </div>
               </div>
               <div className="art-logo-types">
-                <div className="art-logo-tile art-logo-tile-black"><img src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown màu trắng trên nền đen" /></div>
-                <div className="art-logo-tile art-logo-tile-white"><img src={`${ASSET}/logo-red-standalone.svg`} alt="Logo Art Clown màu đen trên nền trắng" /></div>
+                <div className="art-logo-tile art-logo-tile-black">
+                  <div className={`art-skeleton art-skeleton-dark ${isLoaded('logo-black') ? 'is-hidden' : ''}`} aria-hidden="true" />
+                  <img ref={registerRef('logo-black')} src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown màu trắng trên nền đen" onLoad={() => markLoaded('logo-black')} className={`art-img-fade ${isLoaded('logo-black') ? 'is-loaded' : ''}`} />
+                </div>
+                <div className="art-logo-tile art-logo-tile-white">
+                  <div className={`art-skeleton art-skeleton-light ${isLoaded('logo-red') ? 'is-hidden' : ''}`} aria-hidden="true" />
+                  <img ref={registerRef('logo-red')} src={`${ASSET}/logo-red-standalone.svg`} alt="Logo Art Clown màu đen trên nền trắng" onLoad={() => markLoaded('logo-red')} className={`art-img-fade ${isLoaded('logo-red') ? 'is-loaded' : ''}`} />
+                </div>
                 <img className="art-logo-standalone" src={`${ASSET}/logo-on-white.svg`} alt="Logo Art Clown màu đỏ" />
               </div>
               <img className="art-logo-types-label" src={`${ASSET}/logo-types-label.svg`} alt="Các dạng logo" />
@@ -259,7 +318,17 @@ export default function ArtClownProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 4 trên 8: Logo Applications">
           <SlideFrame className="art-slide-cream">
             <section className="art-design-canvas art-logo-applications" aria-label="Ứng dụng logo Art Clown">
-              <div className="art-logo-applications-art"><img src={`${ASSET}/logo-applications.png`} alt="Các ứng dụng logo Art Clown" loading="lazy" /></div>
+              <div className="art-logo-applications-art">
+                <div className={`art-skeleton art-skeleton-cream ${isLoaded('logo-applications') ? 'is-hidden' : ''}`} aria-hidden="true" />
+                <img
+                  ref={registerRef('logo-applications')}
+                  src={`${ASSET}/logo-applications.png`}
+                  alt="Các ứng dụng logo Art Clown"
+                  loading="lazy"
+                  onLoad={() => markLoaded('logo-applications')}
+                  className={`art-img-fade ${isLoaded('logo-applications') ? 'is-loaded' : ''}`}
+                />
+              </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -269,14 +338,46 @@ export default function ArtClownProject({ onBack }) {
             <section className="art-design-canvas art-mascot" aria-labelledby="art-mascot-title">
               <div className="art-mascot-wordmark" aria-hidden="true"><img src={`${ASSET}/mascot-wordmark-top.svg`} alt="" /><img src={`${ASSET}/mascot-wordmark-bottom.svg`} alt="" /></div>
               <h2 id="art-mascot-title">MASCOT</h2>
-              <img className="art-mascot-main art-hover-character" src={`${ASSET}/mascot-main.png`} alt="Mascot Art Clown chính diện" loading="lazy" />
-              {[1, 2, 3, 4].map((number) => (
-                <div className={`art-mascot-large art-mascot-large-${number}`} key={number}>
-                  <img className="art-hover-character" src={`${ASSET}/${number === 3 ? 'mascot-3.png' : `mascot-pose-${number}.png`}`} alt={`Mascot Art Clown dáng ${number}`} loading="lazy" />
-                </div>
-              ))}
+              <div className={`art-skeleton art-skeleton-yellow art-mascot-main-skeleton ${isLoaded('mascot-main') ? 'is-hidden' : ''}`} aria-hidden="true" />
+              <img
+                ref={registerRef('mascot-main')}
+                className={`art-mascot-main art-hover-character art-img-fade ${isLoaded('mascot-main') ? 'is-loaded' : ''}`}
+                src={`${ASSET}/mascot-main.png`}
+                alt="Mascot Art Clown chính diện"
+                loading="lazy"
+                onLoad={() => markLoaded('mascot-main')}
+              />
+              {[1, 2, 3, 4].map((number) => {
+                const key = `mascot-${number}`
+                return (
+                  <div className={`art-mascot-large art-mascot-large-${number}`} key={number}>
+                    <div className={`art-skeleton art-skeleton-yellow ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
+                    <img
+                      ref={registerRef(key)}
+                      className={`art-hover-character art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
+                      src={`${ASSET}/${number === 3 ? 'mascot-3.png' : `mascot-pose-${number}.png`}`}
+                      alt={`Mascot Art Clown dáng ${number}`}
+                      loading="lazy"
+                      onLoad={() => markLoaded(key)}
+                    />
+                  </div>
+                )
+              })}
               <div className="art-mascot-small" aria-label="Các tư thế mascot Art Clown">
-                {[8, 6, 3, 5, 7].map((number) => <img className="art-hover-character" key={number} src={`${ASSET}/mascot-pose-${number}.png`} alt={`Mascot Art Clown dáng nhỏ ${number}`} loading="lazy" />)}
+                {[8, 6, 3, 5, 7].map((number) => {
+                  const key = `mascot-small-${number}`
+                  return (
+                    <img
+                      className={`art-hover-character art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
+                      key={number}
+                      ref={registerRef(key)}
+                      src={`${ASSET}/mascot-pose-${number}.png`}
+                      alt={`Mascot Art Clown dáng nhỏ ${number}`}
+                      loading="lazy"
+                      onLoad={() => markLoaded(key)}
+                    />
+                  )
+                })}
               </div>
             </section>
           </SlideFrame>
@@ -286,7 +387,22 @@ export default function ArtClownProject({ onBack }) {
           <SlideFrame className="art-slide-white">
             <section className="art-design-canvas art-campaign" aria-labelledby="art-campaign-title">
               <div className="art-campaign-grid">
-                {campaignPosters.map((src, index) => <div className="art-media-card" key={src}><img src={`${ASSET}/${src}`} alt={`Campaign poster Art Clown ${index + 1}`} loading="lazy" /></div>)}
+                {campaignPosters.map((src, index) => {
+                  const key = `poster-${src}`
+                  return (
+                    <div className="art-media-card" key={src}>
+                      <div className={`art-skeleton art-skeleton-light ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
+                      <img
+                        ref={registerRef(key)}
+                        src={`${ASSET}/${src}`}
+                        alt={`Campaign poster Art Clown ${index + 1}`}
+                        loading="lazy"
+                        onLoad={() => markLoaded(key)}
+                        className={`art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
+                      />
+                    </div>
+                  )
+                })}
               </div>
               <h2 id="art-campaign-title"><span>CAMPAIGN</span><span>POSTERS</span></h2>
             </section>
@@ -298,7 +414,22 @@ export default function ArtClownProject({ onBack }) {
             <section className="art-design-canvas art-stationary" aria-labelledby="stationary-title">
               <h2 id="stationary-title">STATIONARY</h2>
               <div className="art-stationary-grid">
-                {stationary.map((src, index) => <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}><img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" /></div>)}
+                {stationary.map((src, index) => {
+                  const key = `stationary-${src}`
+                  return (
+                    <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}>
+                      <div className={`art-skeleton art-skeleton-yellow ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
+                      <img
+                        ref={registerRef(key)}
+                        src={`${ASSET}/${src}`}
+                        alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`}
+                        loading="lazy"
+                        onLoad={() => markLoaded(key)}
+                        className={`art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
+                      />
+                    </div>
+                  )
+                })}
               </div>
             </section>
           </SlideFrame>
@@ -306,7 +437,17 @@ export default function ArtClownProject({ onBack }) {
 
         <SwiperSlide tag="section" aria-label="Màn 8 trên 8: Billboard">
           <SlideFrame className="art-slide-billboard">
-            <section className="art-design-canvas art-billboard" aria-label="Billboard Art Clown"><img src={`${ASSET}/billboard-new.png`} alt="Billboard Art Clown" loading="lazy" /></section>
+            <section className="art-design-canvas art-billboard" aria-label="Billboard Art Clown">
+              <div className={`art-skeleton art-skeleton-slate ${isLoaded('billboard') ? 'is-hidden' : ''}`} aria-hidden="true" />
+              <img
+                ref={registerRef('billboard')}
+                src={`${ASSET}/billboard-new.png`}
+                alt="Billboard Art Clown"
+                loading="lazy"
+                onLoad={() => markLoaded('billboard')}
+                className={`art-img-fade ${isLoaded('billboard') ? 'is-loaded' : ''}`}
+              />
+            </section>
           </SlideFrame>
         </SwiperSlide>
       </Swiper>
