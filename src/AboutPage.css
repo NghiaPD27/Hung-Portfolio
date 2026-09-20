@@ -225,7 +225,7 @@
 
 .about-name {
   position: absolute;
-  z-index: 5;
+  z-index: 7;
   left: 175px;
   top: 669px;
   display: flex;
@@ -234,10 +234,11 @@
   height: 144px;
   color: #ffdf0e;
   font-family: 'Dela Gothic One', sans-serif;
-  font-size: 50px;
+  font-size: 58px;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -2.5px;
+  letter-spacing: -2.9px;
+  text-shadow: 0 4px 0 rgba(133, 0, 25, 0.72), 0 10px 24px rgba(30, 0, 8, 0.22);
   white-space: nowrap;
 }
 

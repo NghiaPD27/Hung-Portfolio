@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -189,9 +190,89 @@ const brandValues = [
 
 const campaignPosters = ['campaign-1.png', 'campaign-2.png', 'campaign-3.png', 'campaign-4.png']
 const stationary = ['stationary-new-1.png', 'stationary-new-2.png', 'stationary-new-3.png']
+const mascotShowcase = [
+  { src: 'mascot-main.png', alt: 'Mascot Art Clown chính diện' },
+  { src: 'mascot-pose-1.png', alt: 'Mascot Art Clown vẫy tay' },
+  { src: 'mascot-pose-2.png', alt: 'Mascot Art Clown đang vẽ' },
+  { src: 'mascot-pose-3.png', alt: 'Mascot Art Clown chống tay tạo dáng' },
+  { src: 'mascot-pose-4.png', alt: 'Mascot Art Clown trình bày tác phẩm' },
+  { src: 'mascot-pose-5.png', alt: 'Mascot Art Clown nhảy vui vẻ' },
+  { src: 'mascot-pose-6.png', alt: 'Mascot Art Clown cười vui' },
+  { src: 'mascot-pose-7.png', alt: 'Mascot Art Clown cúi chào' },
+  { src: 'mascot-pose-8.png', alt: 'Mascot Art Clown suy nghĩ' },
+]
 
 function SlideFrame({ className = '', children }) {
   return <div className={`art-slide-frame ${className}`}>{children}</div>
+}
+
+function MascotExperience({ reducedMotion }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % mascotShowcase.length)
+    }, 3200)
+    return () => window.clearInterval(timer)
+  }, [reducedMotion])
+
+  const changeMascot = (direction) => {
+    setActiveIndex((current) => (current + direction + mascotShowcase.length) % mascotShowcase.length)
+  }
+
+  return (
+    <section className="art-mascot-experience" aria-labelledby="art-mascot-title">
+      <div className="art-mascot-experience-panel">
+        <header className="art-mascot-experience-topbar">
+          <span>ART CLOWN / 05</span>
+          <span>AUTO PLAY · 3.2S</span>
+        </header>
+
+        <div className="art-mascot-experience-body">
+          <div className="art-mascot-experience-copy">
+            <p>LAYERED / PARALLAX</p>
+            <h2 id="art-mascot-title">PLAYFUL<br />DEPTH</h2>
+            <span>Nhân vật và nền nằm trên các mặt phẳng khác nhau, tạo chuyển động có chiều sâu tự nhiên.</span>
+            <strong>RÊ CHUỘT TRÊN ẢNH<br />ĐỂ CẢM NHẬN CHIỀU SÂU</strong>
+          </div>
+
+          <Tilt
+            className="art-mascot-experience-tilt"
+            perspective={1400}
+            scale={1.012}
+            transitionSpeed={850}
+            tiltMaxAngleX={8}
+            tiltMaxAngleY={10}
+            glareEnable={false}
+            tiltEnable={!reducedMotion}
+          >
+            <div className="art-mascot-experience-media">
+              <div className="art-mascot-experience-halo" aria-hidden="true" />
+              {mascotShowcase.map((mascot, index) => (
+                <img
+                  className={index === activeIndex ? 'is-active' : ''}
+                  key={mascot.src}
+                  src={`${ASSET}/${mascot.src}`}
+                  alt={index === activeIndex ? mascot.alt : ''}
+                  aria-hidden={index !== activeIndex}
+                  loading="eager"
+                  decoding="async"
+                />
+              ))}
+              <span className="art-mascot-experience-badge">AUTO</span>
+            </div>
+          </Tilt>
+
+          <div className="art-mascot-experience-controls">
+            <button type="button" onClick={() => changeMascot(-1)} aria-label="Mascot trước">← PREV</button>
+            <span>{String(activeIndex + 1).padStart(2, '0')} / {String(mascotShowcase.length).padStart(2, '0')}</span>
+            <button type="button" onClick={() => changeMascot(1)} aria-label="Mascot tiếp theo">NEXT →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }
 
 export default function ArtClownProject({ onBack }) {
@@ -334,53 +415,7 @@ export default function ArtClownProject({ onBack }) {
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 5 trên 8: Mascot">
-          <SlideFrame className="art-slide-yellow">
-            <section className="art-design-canvas art-mascot" aria-labelledby="art-mascot-title">
-              <div className="art-mascot-wordmark" aria-hidden="true"><img src={`${ASSET}/mascot-wordmark-top.svg`} alt="" /><img src={`${ASSET}/mascot-wordmark-bottom.svg`} alt="" /></div>
-              <h2 id="art-mascot-title">MASCOT</h2>
-              <div className={`art-skeleton art-skeleton-yellow art-mascot-main-skeleton ${isLoaded('mascot-main') ? 'is-hidden' : ''}`} aria-hidden="true" />
-              <img
-                ref={registerRef('mascot-main')}
-                className={`art-mascot-main art-hover-character art-img-fade ${isLoaded('mascot-main') ? 'is-loaded' : ''}`}
-                src={`${ASSET}/mascot-main.png`}
-                alt="Mascot Art Clown chính diện"
-                loading="lazy"
-                onLoad={() => markLoaded('mascot-main')}
-              />
-              {[1, 2, 3, 4].map((number) => {
-                const key = `mascot-${number}`
-                return (
-                  <div className={`art-mascot-large art-mascot-large-${number}`} key={number}>
-                    <div className={`art-skeleton art-skeleton-yellow ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
-                    <img
-                      ref={registerRef(key)}
-                      className={`art-hover-character art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
-                      src={`${ASSET}/${number === 3 ? 'mascot-3.png' : `mascot-pose-${number}.png`}`}
-                      alt={`Mascot Art Clown dáng ${number}`}
-                      loading="lazy"
-                      onLoad={() => markLoaded(key)}
-                    />
-                  </div>
-                )
-              })}
-              <div className="art-mascot-small" aria-label="Các tư thế mascot Art Clown">
-                {[8, 6, 3, 5, 7].map((number) => {
-                  const key = `mascot-small-${number}`
-                  return (
-                    <img
-                      className={`art-hover-character art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
-                      key={number}
-                      ref={registerRef(key)}
-                      src={`${ASSET}/mascot-pose-${number}.png`}
-                      alt={`Mascot Art Clown dáng nhỏ ${number}`}
-                      loading="lazy"
-                      onLoad={() => markLoaded(key)}
-                    />
-                  )
-                })}
-              </div>
-            </section>
-          </SlideFrame>
+          <MascotExperience reducedMotion={reducedMotion} />
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 6 trên 8: Campaign Posters">

@@ -13,6 +13,7 @@
     "framer-motion": "^13.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-parallax-tilt": "^1.7.341",
     "swiper": "14.2.0"
   },
   "devDependencies": {
