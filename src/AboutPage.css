@@ -118,10 +118,10 @@
 .about-person-layer {
   position: absolute;
   z-index: 4;
-  left: 205px;
+  left: 195px;
   top: 116px;
-  width: 470px;
-  height: 746px;
+  width: 490px;
+  height: 778px;
   object-fit: contain;
   pointer-events: none;
 }
@@ -253,7 +253,7 @@
 .about-back {
   position: absolute;
   z-index: 6;
-  left: 64px;
+  left: 40px;
   top: 59px;
   display: grid;
   width: 54px;
