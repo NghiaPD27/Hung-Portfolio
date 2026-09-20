@@ -191,15 +191,15 @@ const brandValues = [
 const campaignPosters = ['campaign-1.png', 'campaign-2.png', 'campaign-3.png', 'campaign-4.png']
 const stationary = ['stationary-new-1.png', 'stationary-new-2.png', 'stationary-new-3.png']
 const mascotShowcase = [
-  { src: 'mascot-main.png', alt: 'Mascot Art Clown chính diện' },
-  { src: 'mascot-pose-1.png', alt: 'Mascot Art Clown vẫy tay' },
-  { src: 'mascot-pose-2.png', alt: 'Mascot Art Clown đang vẽ' },
-  { src: 'mascot-pose-3.png', alt: 'Mascot Art Clown chống tay tạo dáng' },
-  { src: 'mascot-pose-4.png', alt: 'Mascot Art Clown trình bày tác phẩm' },
-  { src: 'mascot-pose-5.png', alt: 'Mascot Art Clown nhảy vui vẻ' },
-  { src: 'mascot-pose-6.png', alt: 'Mascot Art Clown cười vui' },
-  { src: 'mascot-pose-7.png', alt: 'Mascot Art Clown cúi chào' },
-  { src: 'mascot-pose-8.png', alt: 'Mascot Art Clown suy nghĩ' },
+  { src: 'mascot-main.png', alt: 'Mascot Art Clown chính diện', scale: 0.91 },
+  { src: 'mascot-pose-1.png', alt: 'Mascot Art Clown vẫy tay', scale: 1.52 },
+  { src: 'mascot-pose-2.png', alt: 'Mascot Art Clown đang vẽ', scale: 1.39 },
+  { src: 'mascot-pose-3.png', alt: 'Mascot Art Clown chống tay tạo dáng', scale: 0.88 },
+  { src: 'mascot-pose-4.png', alt: 'Mascot Art Clown trình bày tác phẩm', scale: 1.58 },
+  { src: 'mascot-pose-5.png', alt: 'Mascot Art Clown nhảy vui vẻ', scale: 0.93 },
+  { src: 'mascot-pose-6.png', alt: 'Mascot Art Clown cười vui', scale: 0.96 },
+  { src: 'mascot-pose-7.png', alt: 'Mascot Art Clown cúi chào', scale: 0.91 },
+  { src: 'mascot-pose-8.png', alt: 'Mascot Art Clown suy nghĩ', scale: 0.89 },
 ]
 
 function SlideFrame({ className = '', children }) {
@@ -231,10 +231,9 @@ function MascotExperience({ reducedMotion }) {
 
         <div className="art-mascot-experience-body">
           <div className="art-mascot-experience-copy">
-            <p>LAYERED / PARALLAX</p>
-            <h2 id="art-mascot-title">PLAYFUL<br />DEPTH</h2>
-            <span>Nhân vật và nền nằm trên các mặt phẳng khác nhau, tạo chuyển động có chiều sâu tự nhiên.</span>
-            <strong>RÊ CHUỘT TRÊN ẢNH<br />ĐỂ CẢM NHẬN CHIỀU SÂU</strong>
+            <p>BRAND / COMPANION</p>
+            <h2 id="art-mascot-title">MASCOT</h2>
+            <span>Một người bạn tinh nghịch, hài hước, luôn đồng hành để lan tỏa niềm vui và giúp Art Clown trở nên gần gũi, đáng nhớ hơn.</span>
           </div>
 
           <Tilt
@@ -254,6 +253,7 @@ function MascotExperience({ reducedMotion }) {
                   className={index === activeIndex ? 'is-active' : ''}
                   key={mascot.src}
                   src={`${ASSET}/${mascot.src}`}
+                  style={{ '--mascot-scale': mascot.scale }}
                   alt={index === activeIndex ? mascot.alt : ''}
                   aria-hidden={index !== activeIndex}
                   loading="eager"
