@@ -288,10 +288,10 @@ function AboutPage({ onBack }) {
 
   return (
     <main className="about-page" aria-label="About Hung Truong">
-      <img className="about-viewport-background" src="/assets/about/background.png" alt="" aria-hidden="true" />
+      <img className="about-viewport-background" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
       <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
-        <img className="about-background-layer" src="/assets/about/background.png" alt="" aria-hidden="true" />
+        <img className="about-background-layer" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
         <div className="about-atmosphere" aria-hidden="true">
           <div className="about-air-particles">
