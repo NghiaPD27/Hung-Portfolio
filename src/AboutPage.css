@@ -24,8 +24,8 @@
   top: 50%;
   z-index: 2;
   width: 1440px;
-  height: 1024px;
-  overflow: hidden;
+  height: 900px;
+  overflow: visible;
   transform-origin: center;
   background: #d7d7d7;
 }
@@ -33,17 +33,20 @@
 .about-background-layer {
   position: absolute;
   left: 0;
-  top: -28px;
+  top: 0;
   width: 1440px;
-  height: 1080px;
+  height: 900px;
   object-fit: cover;
   pointer-events: none;
 }
 
 .about-atmosphere {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: -62px;
   z-index: 2;
+  width: 1440px;
+  height: 1024px;
   overflow: hidden;
   opacity: 0.79;
   pointer-events: none;
@@ -99,8 +102,8 @@
 .about-hello {
   position: absolute;
   z-index: 3;
-  left: 142px;
-  top: 11px;
+  left: 175px;
+  top: -22px;
   width: 730px;
   height: 246px;
   margin: 0;
@@ -110,153 +113,51 @@
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
-  transform-origin: 0% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
-.about-localized {
-  cursor: default;
-  outline: none;
-}
-
-.about-localized-copy {
-  transition-property: opacity;
-  transition-timing-function: ease-in-out;
-}
-
-.about-localized-fast .about-localized-copy {
-  transition-duration: 200ms;
-}
-
-.about-localized-slow .about-localized-copy {
-  transition-duration: 300ms;
-}
-
-.about-localized-en {
-  opacity: 1;
-}
-
-.about-localized-vi {
-  opacity: 0;
-}
-
-.about-localized:hover .about-localized-en,
-.about-localized:focus-visible .about-localized-en {
-  opacity: 0;
-}
-
-.about-localized:hover .about-localized-vi,
-.about-localized:focus-visible .about-localized-vi {
-  opacity: 1;
-}
-
-.about-localized:focus-visible {
-  outline: 3px solid rgba(255, 223, 14, 0.9);
-  outline-offset: 5px;
-}
-
-.about-hello .about-localized-copy,
-.about-skill-title .about-localized-copy,
-.about-bio .about-localized-copy,
-.about-name .about-localized-copy,
-.about-education .about-localized-copy {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-}
-
-.about-hello .about-localized-vi {
-  width: 1095px;
-}
-
-.about-ff-left {
+.about-person-layer {
   position: absolute;
   z-index: 4;
-  left: 0;
-  top: 28px;
-  width: 960px;
-  height: 1024px;
-  overflow: hidden;
+  left: 215px;
+  top: 107px;
+  width: 450px;
+  height: 714px;
+  object-fit: contain;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(to right, #000 80%, transparent 100%);
-  mask-image: linear-gradient(to right, #000 80%, transparent 100%);
 }
 
-.about-ff-left img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1440px;
-  height: 1024px;
-  max-width: none;
-  object-fit: cover;
-  pointer-events: none;
-  transform-origin: 0% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
-}
-
-.about-ff-right {
+.about-ff-layer {
   position: absolute;
   z-index: 4;
-  right: 0;
-  top: 28px;
-  width: 480px;
-  height: 1024px;
-  overflow: hidden;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to left, #000 70%, transparent 100%);
-  mask-image: linear-gradient(to left, #000 70%, transparent 100%);
-}
-
-.about-ff-right img {
-  position: absolute;
-  right: 0;
+  left: -47px;
   top: 0;
-  width: 1440px;
-  height: 1024px;
-  max-width: none;
+  width: 1530px;
+  height: 956px;
   object-fit: cover;
   pointer-events: none;
-  transform-origin: 100% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-bio {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 234px;
-  width: 637px;
-  height: 226px;
+  left: 776px;
+  top: 219px;
+  width: 538px;
+  height: 173px;
   margin: 0;
   color: #000;
   font-family: 'Montserrat', sans-serif;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: normal;
   text-align: justify;
-  transform-origin: 0% 0%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
-}
-
-.about-bio .about-localized-copy {
-  font: inherit;
-  text-align: inherit;
-}
-
-.about-bio .about-localized-vi {
-  width: 529px;
-}
-
-.about-skill-title .about-localized-vi {
-  width: 427px;
 }
 
 .about-skill-title {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 476px;
+  left: 776px;
+  top: 450px;
   width: 312px;
   height: 58px;
   margin: 0;
@@ -266,20 +167,16 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: -2px;
-  transform-origin: 0% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-skill-icons {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 552px;
+  left: 776px;
+  top: 531px;
   display: flex;
   align-items: center;
   gap: 23px;
-  transform-origin: 0% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-skill-icon {
@@ -297,22 +194,15 @@
 .about-education {
   position: absolute;
   z-index: 5;
-  left: 779px;
-  top: 656px;
-  width: 395px;
-  height: 232px;
+  left: 776px;
+  top: 620px;
+  width: 516px;
+  height: 280px;
   color: #fff;
-  transform-origin: 0% 0%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-education-copy {
-  padding: 10px;
-}
-
-.about-education .about-localized-vi {
-  width: 516px;
-  height: 232px;
+  padding: 0;
 }
 
 .about-education h2 {
@@ -328,7 +218,7 @@
   margin: 0;
   font-family: 'Montserrat', sans-serif;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 900;
   line-height: normal;
   white-space: nowrap;
 }
@@ -336,8 +226,8 @@
 .about-name {
   position: absolute;
   z-index: 5;
-  left: 142px;
-  top: 816px;
+  left: 175px;
+  top: 669px;
   display: flex;
   flex-direction: column;
   width: 707px;
@@ -349,17 +239,11 @@
   line-height: normal;
   letter-spacing: -2.5px;
   white-space: nowrap;
-  transform-origin: 0% 50%;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-name-copy {
   display: flex;
   flex-direction: column;
-}
-
-.about-name .about-localized-vi {
-  width: 715px;
 }
 
 .about-name-copy span:last-child {
@@ -380,8 +264,6 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  transform-origin: center;
-  transform: scaleX(calc(1 / var(--aspect-stretch, 1)));
 }
 
 .about-back img {
@@ -402,7 +284,4 @@
     will-change: auto;
   }
 
-  .about-localized-copy {
-    transition-duration: 0ms !important;
-  }
 }

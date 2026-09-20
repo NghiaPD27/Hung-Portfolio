@@ -260,10 +260,16 @@ function Dandelion({ item, reducedMotion }) {
 
 function useArtboardLayout() {
   const getLayout = () => {
-    const scaleX = window.innerWidth / 1440
-    const scaleY = window.innerHeight / 1024
-    const aspectStretch = Math.max(1, scaleX / scaleY)
-    return { scaleX, scaleY, aspectStretch }
+    const scale = Math.min(window.innerWidth / 1440, window.innerHeight / 900)
+    const viewportWidthInArtboard = window.innerWidth / scale
+    const ffWidth = Math.max(1530, viewportWidthInArtboard)
+
+    return {
+      scale,
+      ffWidth,
+      ffHeight: ffWidth * (900 / 1440),
+      ffLeft: (1440 - ffWidth) / 2,
+    }
   }
   const [layout, setLayout] = useState(getLayout)
 
@@ -284,13 +290,7 @@ function AboutPage({ onBack }) {
     <main className="about-page" aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
-      <section
-        className="about-artboard"
-        style={{
-          transform: `translate(-50%, -50%) scale(${layout.scaleX}, ${layout.scaleY})`,
-          '--aspect-stretch': layout.aspectStretch,
-        }}
-      >
+      <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
         <img className="about-background-layer" src="/assets/about/background.png" alt="" aria-hidden="true" />
 
         <div className="about-atmosphere" aria-hidden="true">
@@ -313,31 +313,25 @@ function AboutPage({ onBack }) {
           ))}
         </div>
 
-        <h1 className="about-hello about-localized about-localized-fast" tabIndex="0" aria-label="Hello, Xin chào">
-          <span className="about-localized-copy about-localized-en" lang="en">HELLO</span>
-          <span className="about-localized-copy about-localized-vi" lang="vi">XIN CHÀO</span>
-        </h1>
+        <h1 className="about-hello">HELLO</h1>
+        <img className="about-person-layer" src="/assets/about/hung.png" alt="Portrait of Hung Truong" />
+        <img
+          className="about-ff-layer"
+          src="/assets/about/ff.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            left: layout.ffLeft,
+            width: layout.ffWidth,
+            height: layout.ffHeight,
+          }}
+        />
 
-        <div className="about-ff-left">
-          <img src="/assets/about/ff.png" alt="Portrait of Hung Truong" />
-        </div>
-        <div className="about-ff-right" aria-hidden="true">
-          <img src="/assets/about/ff.png" alt="" />
-        </div>
+        <p className="about-bio">
+          I was born in 2004 and I’m a freelance web and visual designer based in Saigon. I enjoy traveling, photography, and turning my experiences into creative inspiration. I’m easygoing, open-minded, and always aim to create meaningful work with personality and soul.
+        </p>
 
-        <div className="about-bio about-localized about-localized-fast" tabIndex="0">
-          <p className="about-localized-copy about-localized-en" lang="en">
-            I’m 21 years old, based in Saigon, and currently working as a freelance web and visual designer. I love traveling, capturing moments through my camera, and turning those experiences into inspiration for my projects. I’m easygoing, friendly, and open-minded, always aiming to create work with personality, meaning, and a sense of soul.
-          </p>
-          <p className="about-localized-copy about-localized-vi" lang="vi">
-            21 tuổi, sống ở Sài Gòn và làm freelancer trong mảng web &amp; phim ảnh. Mình yêu du lịch, thích ghi lại trải nghiệm bằng máy ảnh và biến chúng thành cảm hứng cho các dự án. Tính cách thoải mái, hòa đồng, cởi mở và luôn hướng đến những sản phẩm có cá tính, có “hồn”.
-          </p>
-        </div>
-
-        <h2 className="about-skill-title about-localized about-localized-slow" tabIndex="0" aria-label="Skill, Kĩ năng">
-          <span className="about-localized-copy about-localized-en" lang="en">SKILL</span>
-          <span className="about-localized-copy about-localized-vi" lang="vi">KĨ&nbsp;&nbsp;NĂNG</span>
-        </h2>
+        <h2 className="about-skill-title">SKILL</h2>
         <div className="about-skill-icons" aria-label="Design software skills">
           {SKILL_ICONS.map((icon, index) => (
             <div
@@ -359,29 +353,19 @@ function AboutPage({ onBack }) {
           ))}
         </div>
 
-        <div className="about-education about-localized about-localized-slow" tabIndex="0">
-          <div className="about-education-copy about-localized-copy about-localized-en" lang="en">
+        <div className="about-education">
+          <div className="about-education-copy">
             <h2>EDUCATION</h2>
             <p>12/12</p>
             <p>Van Hien University 2022 -2027</p>
             <p>English B2</p>
           </div>
-          <div className="about-education-copy about-localized-copy about-localized-vi" lang="vi">
-            <h2>TRÌNH ĐỘ HỌC VẤN</h2>
-            <p>12/12</p>
-            <p>Đại Học Văn Hiến 2026 - 2027</p>
-            <p>Tiếng Anh B2</p>
-          </div>
         </div>
 
-        <div className="about-name about-localized about-localized-fast" tabIndex="0" aria-label="I'm Hung Truong, Tôi là Hùng Trương">
-          <div className="about-name-copy about-localized-copy about-localized-en" lang="en">
+        <div className="about-name">
+          <div className="about-name-copy">
             <span>I’M</span>
             <span>HUNG TRUONG</span>
-          </div>
-          <div className="about-name-copy about-localized-copy about-localized-vi" lang="vi">
-            <span>TÔI LÀ</span>
-            <span>HÙNG TRƯƠNG</span>
           </div>
         </div>
 
