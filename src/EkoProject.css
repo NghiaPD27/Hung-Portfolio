@@ -49,32 +49,57 @@
   container-type: inline-size;
 }
 
+.eko-full-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.eko-artboard-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100vw, 160vh);
+  width: min(100vw, 160dvh);
+  aspect-ratio: 1440 / 900;
+  overflow: visible;
+  container-type: inline-size;
+  transform: translate(-50%, -50%);
+}
+
 .eko-back {
   position: fixed;
   z-index: 80;
   top: max(20px, env(safe-area-inset-top));
   left: max(24px, env(safe-area-inset-left));
-  display: grid;
-  width: clamp(46px, 4vw, 62px);
-  aspect-ratio: 1;
-  place-items: center;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.36);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.34);
+  display: flex;
+  min-width: 104px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 18px 0 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(20, 26, 32, 0.58), rgba(20, 26, 32, 0.3));
   color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: clamp(28px, 2.4vw, 40px);
-  line-height: 1;
   cursor: pointer;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(10px);
-  transition: color 220ms ease, background 220ms ease, transform 220ms ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 12px 34px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  transition: color 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
-.eko-back span { transform: translateY(-2px); }
+.eko-back::after { position: absolute; inset: 1px; border-radius: inherit; background: linear-gradient(115deg, rgba(255,255,255,.25), transparent 44%); content: ''; pointer-events: none; }
+.eko-back-icon { position: relative; z-index: 1; display: grid; width: 30px; height: 22px; place-items: center; }
+.eko-back-icon img { display: block; width: 100%; height: 100%; filter: invert(1); transform: rotate(180deg); transition: filter 220ms ease, transform 220ms ease; }
+.eko-back-label { position: relative; z-index: 1; font-size: 11px; font-weight: 900; letter-spacing: 0.16em; }
 .eko-back:hover,
-.eko-back:focus-visible { outline: none; background: #49ff00; color: #000; transform: scale(1.08); }
+.eko-back:focus-visible { outline: none; border-color: rgba(73, 255, 0, 0.8); background: rgba(73, 255, 0, 0.9); color: #000; }
+.eko-back:hover .eko-back-icon img,
+.eko-back:focus-visible .eko-back-icon img { filter: none; transform: rotate(180deg) translateX(3px); }
 
 .eko-progress {
   position: fixed;
@@ -132,7 +157,6 @@
 /* 02 — Cleanup game */
 .eko-cleanup { background: #fff; }
 .eko-cleanup-heading { position: absolute; z-index: 10; top: 8.5%; left: 41.2%; }
-.eko-cleanup-heading p { margin: 0 0 0.75cqw; color: #0065f8; font-size: 0.75cqw; font-weight: 900; letter-spacing: 0.16em; }
 .eko-cleanup-heading h2 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 2.78cqw; font-weight: 900; line-height: 1.16; white-space: nowrap; }
 .eko-cleanup-heading span { display: block; margin-top: 0.8cqw; color: rgba(0, 0, 0, 0.54); font-size: 0.82cqw; font-weight: 800; letter-spacing: 0.08em; }
 
@@ -183,9 +207,9 @@
 /* 03 — Logo */
 .eko-logo-stage { background: #000; color: #49ff00; }
 .eko-brand-pattern { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3; }
-.eko-logo-letters { position: absolute; z-index: 2; top: 2%; left: 2.85%; display: flex; height: 89%; flex-direction: column; font-size: 34.72cqw; line-height: 0.768; letter-spacing: -0.2em; }
-.eko-logo-letters strong { font-weight: 900; }
-.eko-logo-letters span { padding-left: 0; font-weight: 400; letter-spacing: -0.2em; }
+.eko-logo-letters { position: absolute; z-index: 2; top: 7.333%; left: 2.847%; display: flex; flex-direction: column; font-size: 34.722cqw; line-height: 0.768; }
+.eko-logo-letters strong { font-weight: 900; letter-spacing: -0.27em; }
+.eko-logo-letters span { padding-left: 0; font-weight: 400; letter-spacing: -0.168em; }
 .eko-logo-render { position: absolute; z-index: 3; top: 31%; left: 63.75%; width: 19.24%; height: 38.11%; object-fit: cover; }
 
 /* 04 — Meaning */
@@ -211,17 +235,17 @@
 .eko-o-mark { position: absolute; z-index: 3; top: 41.222%; left: 70.278%; color: #49ff00; font-size: 27.778cqw; font-weight: 700; line-height: 1.22; }
 
 /* 06 + 10 — Image boards */
-.eko-full-art { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.eko-full-art { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center top; background: #fff; }
 .eko-end-note { position: absolute; right: 2.8%; bottom: 3%; padding: 0.7cqw 1cqw; border-radius: 999px; background: rgba(0, 0, 0, 0.75); color: #49ff00; font-size: 0.7cqw; font-weight: 900; letter-spacing: 0.16em; }
 
 /* 07 — Identity details */
 .eko-identity { background: #fff; }
-.eko-identity-title { position: absolute; z-index: 4; top: 8%; left: 0; width: 100%; text-align: center; white-space: nowrap; }
-.eko-identity-title span { color: #0065f8; font-size: 0.74cqw; font-weight: 900; letter-spacing: 0.16em; }
-.eko-identity-title h2 { margin: 0.65cqw 0 0; font-size: 4.444cqw; font-weight: 900; }
-.eko-identity-pattern { position: absolute; top: 23.5%; left: 0; display: flex; width: 200%; height: 51.1%; }
-.eko-identity-pattern img { flex: none; width: 50%; height: 100%; object-fit: cover; }
-.eko-identity-strip { position: absolute; right: 0; bottom: 7.4%; left: 0; width: 100%; height: 11.444%; object-fit: cover; }
+.eko-identity-title { position: absolute; z-index: 4; top: 8.111%; left: 0; width: 100%; text-align: center; white-space: nowrap; }
+.eko-identity-title h2 { margin: 0; font-size: min(4.444vw, 7.111vh); font-weight: 900; }
+.eko-identity-pattern { position: absolute; top: 22.444%; left: 0; display: flex; width: 200%; height: 51.111%; }
+.eko-identity-pattern span { position: relative; flex: 0 0 50%; height: 100%; overflow: hidden; }
+.eko-identity-pattern img { position: absolute; top: -46.74%; left: 0; display: block; width: 100%; height: 194.13%; max-width: none; object-fit: cover; }
+.eko-identity-strip { position: absolute; top: 81.111%; right: 0; left: 0; width: 100%; height: 11.444%; object-fit: cover; }
 
 /* 08 — Signs */
 .eko-signs { background: #49ff00; color: #0065f8; }
@@ -247,13 +271,10 @@
 .eko-reminder-grid img { width: 64%; aspect-ratio: 265 / 332; object-fit: cover; }
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
-@media (max-aspect-ratio: 4 / 5) {
-  .eko-design-canvas { width: 160dvh; max-width: none; height: 100dvh; }
-  .eko-cleanup-heading { left: 42%; }
-}
-
 @media (max-width: 640px) {
-  .eko-back { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); width: 42px; }
+  .eko-back { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); min-width: 48px; height: 44px; padding: 0 12px; }
+  .eko-back-icon { width: 25px; height: 18px; }
+  .eko-back-label { display: none; }
   .eko-progress { right: 46px; bottom: 14px; }
   .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets { right: max(7px, env(safe-area-inset-right)); width: 26px; padding-inline: 7px; }
 }

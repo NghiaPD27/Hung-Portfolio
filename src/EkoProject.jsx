@@ -156,37 +156,38 @@ function CleanupGame({ active, onDraggingChange }) {
 
   return (
     <DragDropProvider onDragStart={() => onDraggingChange(true)} onDragEnd={handleDragEnd}>
-      <section className="eko-design-canvas eko-cleanup" aria-labelledby="eko-cleanup-title">
-        <Reveal active={active} className="eko-cleanup-heading">
-          <p>PLAY / CLEAN / REPEAT</p>
-          <h2 id="eko-cleanup-title">Lụm rác bỏ vô chứ nhìn cái gì!</h2>
-          <span>Kéo từng mảnh rác vào thùng · {collected.length}/4</span>
-        </Reveal>
+      <section className="eko-cleanup eko-full-canvas" aria-labelledby="eko-cleanup-title">
+        <div className="eko-artboard-inner eko-cleanup-inner">
+          <Reveal active={active} className="eko-cleanup-heading">
+            <h2 id="eko-cleanup-title">Lụm rác bỏ vô chứ nhìn cái gì!</h2>
+            <span>Kéo từng mảnh rác vào thùng · {collected.length}/4</span>
+          </Reveal>
 
-        <TrashBin complete={complete} />
+          <TrashBin complete={complete} />
 
-        <div className="eko-trash-field" aria-live="polite">
-          {trashItems.map((item) => (
-            <DraggableTrash
-              item={item}
-              collected={collected.includes(item.id)}
-              onKeyboardCollect={collect}
-              key={item.id}
-            />
-          ))}
+          <div className="eko-trash-field" aria-live="polite">
+            {trashItems.map((item) => (
+              <DraggableTrash
+                item={item}
+                collected={collected.includes(item.id)}
+                onKeyboardCollect={collect}
+                key={item.id}
+              />
+            ))}
+          </div>
+
+          {complete && (
+            <motion.div
+              className="eko-cleanup-complete"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 240, damping: 18 }}
+            >
+              <strong>KHU VỰC ĐÃ SẠCH</strong>
+              <button type="button" onClick={() => setCollected([])}>CHƠI LẠI ↻</button>
+            </motion.div>
+          )}
         </div>
-
-        {complete && (
-          <motion.div
-            className="eko-cleanup-complete"
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 240, damping: 18 }}
-          >
-            <strong>KHU VỰC ĐÃ SẠCH</strong>
-            <button type="button" onClick={() => setCollected([])}>CHƠI LẠI ↻</button>
-          </motion.div>
-        )}
 
         <div className="eko-pattern-marquee" aria-hidden="true">
           <div className="eko-pattern-track">
@@ -221,9 +222,18 @@ export default function EkoProject({ onBack }) {
 
   return (
     <main className="eko-project" aria-label="Dự án nhận diện EKO">
-      <button className="eko-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
-        <span aria-hidden="true">←</span>
-      </button>
+      <motion.button
+        className="eko-back"
+        onClick={onBack}
+        type="button"
+        aria-label="Quay về trang portfolio"
+        whileHover={reducedMotion ? undefined : { scale: 1.045, x: -3 }}
+        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
+        transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+      >
+        <span className="eko-back-icon" aria-hidden="true"><img src={`${ASSET}/arrow-left.svg`} alt="" /></span>
+        <span className="eko-back-label">BACK</span>
+      </motion.button>
 
       <div className="eko-progress" aria-live="polite">
         <span>{String(activeSlide + 1).padStart(2, '0')}</span>
@@ -261,19 +271,21 @@ export default function EkoProject({ onBack }) {
 
         <SwiperSlide tag="section" aria-label="Màn 3 trên 10: Logo EKO">
           <SlideFrame className="eko-black-frame">
-            <section className="eko-design-canvas eko-logo-stage">
+            <section className="eko-logo-stage eko-full-canvas">
               <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern.png`} alt="" />
-              <Reveal active={activeSlide === 2} className="eko-logo-letters">
-                <strong>LO</strong><span>GO</span>
-              </Reveal>
-              <motion.img
-                className="eko-logo-render"
-                src={`${ASSET}/logo-render.png`}
-                alt="Biểu tượng EKO"
-                initial={false}
-                animate={activeSlide === 2 ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.8, rotate: 8 }}
-                transition={{ duration: reducedMotion ? 0 : 0.9, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              />
+              <div className="eko-artboard-inner eko-logo-inner">
+                <Reveal active={activeSlide === 2} className="eko-logo-letters">
+                  <strong>LO</strong><span>GO</span>
+                </Reveal>
+                <motion.img
+                  className="eko-logo-render"
+                  src={`${ASSET}/logo-render.png`}
+                  alt="Biểu tượng EKO"
+                  initial={false}
+                  animate={activeSlide === 2 ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.8, rotate: 8 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.9, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -332,9 +344,8 @@ export default function EkoProject({ onBack }) {
 
         <SwiperSlide tag="section" aria-label="Màn 7 trên 10: Chi tiết nhận dạng">
           <SlideFrame className="eko-white-frame">
-            <section className="eko-design-canvas eko-identity">
+            <section className="eko-identity eko-full-canvas">
               <Reveal active={activeSlide === 6} className="eko-identity-title">
-                <span>SYSTEM / 07</span>
                 <h2>CHI TIẾT NHẬN DẠNG</h2>
               </Reveal>
               <motion.div
@@ -343,8 +354,8 @@ export default function EkoProject({ onBack }) {
                 animate={activeSlide === 6 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
                 transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
               >
-                <img src={`${ASSET}/brand-pattern.png`} alt="Họa tiết nhận diện EKO" />
-                <img src={`${ASSET}/brand-pattern.png`} alt="" />
+                <span><img src={`${ASSET}/brand-pattern.png`} alt="Họa tiết nhận diện EKO" /></span>
+                <span aria-hidden="true"><img src={`${ASSET}/brand-pattern.png`} alt="" /></span>
               </motion.div>
               <img className="eko-identity-strip" src={`${ASSET}/identity-strip.png`} alt="" />
             </section>
