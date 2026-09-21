@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import './AboutPage.css'
 
 const PARTICLES = [
@@ -285,13 +285,47 @@ function useArtboardLayout() {
 function AboutPage({ onBack }) {
   const reducedMotion = useReducedMotion()
   const layout = useArtboardLayout()
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+  const smoothX = useSpring(pointerX, { stiffness: 85, damping: 24, mass: 0.65 })
+  const smoothY = useSpring(pointerY, { stiffness: 85, damping: 24, mass: 0.65 })
+  const skyX = useTransform(smoothX, [-1, 1], [-16, 16])
+  const skyY = useTransform(smoothY, [-1, 1], [-10, 10])
+  const portraitX = useTransform(smoothX, [-1, 1], [-10, 10])
+  const portraitY = useTransform(smoothY, [-1, 1], [-7, 7])
+  const flowersX = useTransform(smoothX, [-1, 1], [18, -18])
+  const flowersY = useTransform(smoothY, [-1, 1], [9, -9])
+
+  const updatePointer = (event) => {
+    if (reducedMotion || event.pointerType === 'touch') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2)
+    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2)
+  }
+
+  const resetPointer = () => {
+    pointerX.set(0)
+    pointerY.set(0)
+  }
+
+  const reveal = (delay = 0, offset = 24) => ({
+    initial: reducedMotion ? false : { opacity: 0, y: offset },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : delay, ease: [0.16, 1, 0.3, 1] },
+  })
 
   return (
-    <main className="about-page" aria-label="About Hung Truong">
+    <main className="about-page" aria-label="About Hung Truong" onPointerMove={updatePointer} onPointerLeave={resetPointer}>
       <img className="about-viewport-background" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
       <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
-        <img className="about-background-layer" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
+        <motion.img
+          className="about-background-layer"
+          src="/assets/about/background-sky.png"
+          alt=""
+          aria-hidden="true"
+          style={{ x: reducedMotion ? 0 : skyX, y: reducedMotion ? 0 : skyY, scale: 1.035 }}
+        />
 
         <div className="about-atmosphere" aria-hidden="true">
           <div className="about-air-particles">
@@ -313,9 +347,22 @@ function AboutPage({ onBack }) {
           ))}
         </div>
 
-        <h1 className="about-hello">HELLO</h1>
-        <img className="about-person-layer" src="/assets/about/hung.png" alt="Portrait of Hung Truong" />
-        <img
+        <motion.h1
+          className="about-hello"
+          initial={reducedMotion ? false : { opacity: 0, y: -34, scaleX: 0.9 }}
+          animate={{ opacity: 1, y: 0, scaleX: 1 }}
+          transition={{ duration: reducedMotion ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >HELLO</motion.h1>
+        <motion.img
+          className="about-person-layer"
+          src="/assets/about/hung.png"
+          alt="Portrait of Hung Truong"
+          style={{ x: reducedMotion ? 0 : portraitX, y: reducedMotion ? 0 : portraitY }}
+          initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <motion.img
           className="about-ff-layer"
           src="/assets/about/ff.png"
           alt=""
@@ -324,20 +371,30 @@ function AboutPage({ onBack }) {
             left: layout.ffLeft,
             width: layout.ffWidth,
             height: layout.ffHeight,
+            x: reducedMotion ? 0 : flowersX,
+            y: reducedMotion ? 0 : flowersY,
           }}
+          initial={reducedMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.18 }}
         />
 
-        <p className="about-bio">
+        <motion.p className="about-bio" {...reveal(0.18, 28)}>
           I was born in 2004 and I’m a freelance web and visual designer based in Saigon. I enjoy traveling, photography, and turning my experiences into creative inspiration. I’m easygoing, open-minded, and always aim to create meaningful work with personality and soul.
-        </p>
+        </motion.p>
 
-        <h2 className="about-skill-title">SKILL</h2>
+        <motion.h2 className="about-skill-title" {...reveal(0.28, 20)}>SKILL</motion.h2>
         <div className="about-skill-icons" aria-label="Design software skills">
           {SKILL_ICONS.map((icon, index) => (
-            <div
+            <motion.div
               className="about-skill-icon"
               key={`skill-${index + 1}`}
               style={{ width: icon.width, height: icon.height }}
+              initial={reducedMotion ? false : { opacity: 0, y: 26, scale: 0.76 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              whileHover={reducedMotion ? undefined : { y: -9, scale: 1.13, rotate: index % 2 ? 4 : -4 }}
+              whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 330, damping: 22, delay: reducedMotion ? 0 : 0.34 + index * 0.055 }}
             >
               <img
                 src={`/assets/about/skill-${icon.file}.png`}
@@ -349,29 +406,42 @@ function AboutPage({ onBack }) {
                   top: icon.top,
                 }}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        <div className="about-education">
+        <motion.div className="about-education" {...reveal(0.44, 30)}>
           <div className="about-education-copy">
             <h2>EDUCATION</h2>
             <p>12/12</p>
             <p>Van Hien University 2022 -2027</p>
             <p>English B2</p>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="about-name">
+        <motion.div
+          className="about-name"
+          initial={reducedMotion ? false : { opacity: 0, x: -42 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className="about-name-copy">
             <span>I’M</span>
             <span>HUNG TRUONG</span>
           </div>
-        </div>
+        </motion.div>
 
-        <button className="about-back" type="button" onClick={onBack} aria-label="Back to portfolio">
+        <motion.button
+          className="about-back"
+          type="button"
+          onClick={onBack}
+          aria-label="Back to portfolio"
+          whileHover={reducedMotion ? undefined : { x: -7, scale: 1.1 }}
+          whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+          transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+        >
           <img src="/assets/about/back-arrow-a.svg" alt="" />
-        </button>
+        </motion.button>
       </section>
     </main>
   )

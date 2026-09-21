@@ -100,6 +100,8 @@
 .eko-back:focus-visible { outline: none; border-color: rgba(73, 255, 0, 0.8); background: rgba(73, 255, 0, 0.9); color: #000; }
 .eko-back:hover .eko-back-icon img,
 .eko-back:focus-visible .eko-back-icon img { filter: none; transform: rotate(180deg) translateX(3px); }
+.eko-back.is-locked { border-color: rgba(0, 0, 0, 0.1); background: rgba(20, 26, 32, 0.24); color: rgba(255, 255, 255, 0.62); cursor: not-allowed; }
+.eko-back.is-locked .eko-back-icon img { opacity: 0.58; }
 
 .eko-progress {
   position: fixed;
@@ -159,7 +161,6 @@
 .eko-cleanup-heading { position: absolute; z-index: 10; top: 8.5%; left: 41.2%; }
 .eko-cleanup-heading h2 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 2.78cqw; font-weight: 900; line-height: 1.16; white-space: nowrap; }
 .eko-cleanup-heading span { display: block; margin-top: 0.8cqw; color: rgba(0, 0, 0, 0.54); font-size: 0.82cqw; font-weight: 800; letter-spacing: 0.08em; }
-
 .eko-trash-bin {
   position: absolute;
   z-index: 8;
@@ -203,13 +204,12 @@
 .eko-pattern-track { display: flex; width: 200%; height: 100%; animation: eko-pattern-move 16s linear infinite; }
 .eko-pattern-track img { flex: none; width: 50%; height: 100%; object-fit: cover; }
 @keyframes eko-pattern-move { to { transform: translateX(-50%); } }
+.eko-project.is-navigation-locked .swiper-pagination-bullet { pointer-events: none; cursor: not-allowed; }
 
 /* 03 — Logo */
 .eko-logo-stage { background: #000; color: #49ff00; }
 .eko-brand-pattern { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3; }
-.eko-logo-letters { position: absolute; z-index: 2; top: 7.333%; left: 2.847%; display: flex; flex-direction: column; font-size: 34.722cqw; line-height: 0.768; }
-.eko-logo-letters strong { font-weight: 900; letter-spacing: -0.27em; }
-.eko-logo-letters span { padding-left: 0; font-weight: 400; letter-spacing: -0.168em; }
+.eko-logo-type { position: absolute; z-index: 2; top: 7.333%; left: 2.847%; display: block; width: 44.236%; height: 85.333%; object-fit: contain; object-position: left top; }
 .eko-logo-render { position: absolute; z-index: 3; top: 31%; left: 63.75%; width: 19.24%; height: 38.11%; object-fit: cover; }
 
 /* 04 — Meaning */

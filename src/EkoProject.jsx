@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
@@ -140,9 +140,13 @@ function TrashBin({ complete }) {
   )
 }
 
-function CleanupGame({ active, onDraggingChange }) {
+function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
   const [collected, setCollected] = useState([])
   const complete = collected.length === trashItems.length
+
+  useEffect(() => {
+    onCompleteChange(complete)
+  }, [complete, onCompleteChange])
 
   const collect = (id) => {
     setCollected((current) => (current.includes(id) ? current : [...current, id]))
@@ -203,7 +207,11 @@ function CleanupGame({ active, onDraggingChange }) {
 export default function EkoProject({ onBack }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
+  const gameCompleteRef = useRef(false)
   const [activeSlide, setActiveSlide] = useState(0)
+  const [gameComplete, setGameComplete] = useState(false)
+  const [gameDragging, setGameDraggingState] = useState(false)
+  const navigationLocked = activeSlide === 1 && !gameComplete
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -216,19 +224,41 @@ export default function EkoProject({ onBack }) {
     }
   }, [])
 
-  const setGameDragging = (dragging) => {
-    if (swiperRef.current) swiperRef.current.allowTouchMove = !dragging
-  }
+  const handleGameComplete = useCallback((complete) => {
+    gameCompleteRef.current = complete
+    setGameComplete(complete)
+  }, [])
+
+  const setGameDragging = (dragging) => setGameDraggingState(dragging)
+
+  useEffect(() => {
+    const swiper = swiperRef.current
+    if (!swiper) return
+
+    const allowNavigation = !navigationLocked
+    swiper.allowSlideNext = allowNavigation
+    swiper.allowSlidePrev = allowNavigation
+    swiper.allowTouchMove = allowNavigation && !gameDragging
+
+    if (allowNavigation) {
+      swiper.keyboard?.enable()
+      swiper.mousewheel?.enable()
+    } else {
+      swiper.keyboard?.disable()
+      swiper.mousewheel?.disable()
+    }
+  }, [gameDragging, navigationLocked])
 
   return (
-    <main className="eko-project" aria-label="Dự án nhận diện EKO">
+    <main className={`eko-project ${navigationLocked ? 'is-navigation-locked' : ''}`} aria-label="Dự án nhận diện EKO">
       <motion.button
-        className="eko-back"
-        onClick={onBack}
+        className={`eko-back ${navigationLocked ? 'is-locked' : ''}`}
+        onClick={() => { if (!navigationLocked) onBack() }}
         type="button"
-        aria-label="Quay về trang portfolio"
-        whileHover={reducedMotion ? undefined : { scale: 1.045, x: -3 }}
-        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
+        aria-label={navigationLocked ? 'Hãy lụm hết rác trước khi quay về' : 'Quay về trang portfolio'}
+        disabled={navigationLocked}
+        whileHover={reducedMotion || navigationLocked ? undefined : { scale: 1.045, x: -3 }}
+        whileTap={reducedMotion || navigationLocked ? undefined : { scale: 0.96 }}
         transition={{ type: 'spring', stiffness: 420, damping: 24 }}
       >
         <span className="eko-back-icon" aria-hidden="true"><img src={`${ASSET}/arrow-left.svg`} alt="" /></span>
@@ -255,7 +285,16 @@ export default function EkoProject({ onBack }) {
         pagination={{ clickable: true }}
         a11y={{ enabled: true, prevSlideMessage: 'Màn EKO trước', nextSlideMessage: 'Màn EKO tiếp theo', paginationBulletMessage: 'Đi đến màn {{index}}' }}
         onSwiper={(swiper) => { swiperRef.current = swiper }}
-        onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+        onSlideChange={(swiper) => {
+          setActiveSlide(swiper.activeIndex)
+          if (swiper.activeIndex === 1 && !gameCompleteRef.current) {
+            swiper.allowSlideNext = false
+            swiper.allowSlidePrev = false
+            swiper.allowTouchMove = false
+            swiper.keyboard?.disable()
+            swiper.mousewheel?.disable()
+          }
+        }}
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 10: EKO Hero">
           <SlideFrame className="eko-hero-frame">
@@ -265,7 +304,11 @@ export default function EkoProject({ onBack }) {
 
         <SwiperSlide tag="section" aria-label="Màn 2 trên 10: Trò chơi nhặt rác">
           <SlideFrame className="eko-white-frame">
-            <CleanupGame active={activeSlide === 1} onDraggingChange={setGameDragging} />
+            <CleanupGame
+              active={activeSlide === 1}
+              onDraggingChange={setGameDragging}
+              onCompleteChange={handleGameComplete}
+            />
           </SlideFrame>
         </SwiperSlide>
 
@@ -274,9 +317,14 @@ export default function EkoProject({ onBack }) {
             <section className="eko-logo-stage eko-full-canvas">
               <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern.png`} alt="" />
               <div className="eko-artboard-inner eko-logo-inner">
-                <Reveal active={activeSlide === 2} className="eko-logo-letters">
-                  <strong>LO</strong><span>GO</span>
-                </Reveal>
+                <motion.img
+                  className="eko-logo-type"
+                  src={`${ASSET}/logo-type.svg`}
+                  alt="LOGO"
+                  initial={false}
+                  animate={activeSlide === 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
+                />
                 <motion.img
                   className="eko-logo-render"
                   src={`${ASSET}/logo-render.png`}
