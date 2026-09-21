@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -39,6 +39,63 @@ function Reveal({ active, children, className = '', delay = 0 }) {
     >
       {children}
     </motion.div>
+  )
+}
+
+function EkoHero({ active, reducedMotion }) {
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+  const smoothX = useSpring(pointerX, { stiffness: 90, damping: 24, mass: 0.7 })
+  const smoothY = useSpring(pointerY, { stiffness: 90, damping: 24, mass: 0.7 })
+  const backgroundX = useTransform(smoothX, [-1, 1], [-18, 18])
+  const backgroundY = useTransform(smoothY, [-1, 1], [-12, 12])
+  const grassY = useTransform(smoothY, [-1, 1], [5, -5])
+  const logoX = useTransform(smoothX, [-1, 1], [-9, 9])
+  const logoY = useTransform(smoothY, [-1, 1], [-7, 7])
+
+  const updatePointer = (event) => {
+    if (reducedMotion || event.pointerType === 'touch') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2)
+    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2)
+  }
+
+  const resetPointer = () => {
+    pointerX.set(0)
+    pointerY.set(0)
+  }
+
+  return (
+    <section
+      className="eko-design-canvas eko-hero eko-hero-canvas"
+      aria-label="EKO - bảo vệ môi trường"
+      onPointerMove={updatePointer}
+      onPointerLeave={resetPointer}
+    >
+      <motion.img
+        className="eko-hero-background"
+        src={`${ASSET}/hero-background.png`}
+        alt="Phong cảnh thiên nhiên xanh"
+        style={{ x: backgroundX, y: backgroundY }}
+      />
+      <motion.img
+        className="eko-hero-wave"
+        src={`${ASSET}/hero-wave.png`}
+        alt=""
+        style={{ y: grassY }}
+      />
+      <div className="eko-hero-logo-anchor">
+        <motion.img
+          className="eko-hero-logo"
+          src={`${ASSET}/logo.svg`}
+          alt="EKO"
+          style={{ x: logoX, y: logoY }}
+          initial={false}
+          animate={active ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.75, rotate: -10 }}
+          transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </div>
+    </section>
   )
 }
 
@@ -192,26 +249,7 @@ export default function EkoProject({ onBack }) {
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 10: EKO Hero">
           <SlideFrame className="eko-hero-frame">
-            <section className="eko-design-canvas eko-hero" aria-label="EKO - bảo vệ môi trường">
-              <img className="eko-hero-background" src={`${ASSET}/hero-background.png`} alt="Phong cảnh thiên nhiên xanh" />
-              <motion.img
-                className="eko-hero-wave"
-                src={`${ASSET}/hero-wave.png`}
-                alt=""
-                initial={false}
-                animate={activeSlide === 0 && !reducedMotion ? { y: [0, -9, 0] } : { y: 0 }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.img
-                className="eko-hero-logo"
-                src={`${ASSET}/logo.svg`}
-                alt="EKO"
-                initial={false}
-                animate={activeSlide === 0 ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.75, rotate: -10 }}
-                transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
-              />
-              <div className="eko-hero-tag">EKO · CLEAN EARTH / BRIGHT FUTURE</div>
-            </section>
+            <EkoHero active={activeSlide === 0} reducedMotion={reducedMotion} />
           </SlideFrame>
         </SwiperSlide>
 
