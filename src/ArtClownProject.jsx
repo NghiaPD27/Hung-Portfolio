@@ -190,6 +190,8 @@ const brandValues = [
 
 const campaignPosters = ['campaign-1.png', 'campaign-2.png', 'campaign-3.png', 'campaign-4.png']
 const stationary = ['stationary-new-1.png', 'stationary-new-2.png', 'stationary-new-3.png']
+const stationaryExtra = ['stationary-extra-1.png', 'stationary-extra-2.png', 'stationary-extra-3.png']
+const stationaryGroups = [stationary, stationaryExtra]
 const mascotShowcase = [
   { src: 'mascot-main.png', alt: 'Mascot Art Clown chính diện', scale: 0.91 },
   { src: 'mascot-pose-1.png', alt: 'Mascot Art Clown vẫy tay', scale: 1.52 },
@@ -448,24 +450,43 @@ export default function ArtClownProject({ onBack }) {
           <SlideFrame className="art-slide-yellow">
             <section className="art-design-canvas art-stationary" aria-labelledby="stationary-title">
               <h2 id="stationary-title">STATIONARY</h2>
-              <div className="art-stationary-grid">
-                {stationary.map((src, index) => {
-                  const key = `stationary-${src}`
-                  return (
-                    <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}>
-                      <div className={`art-skeleton art-skeleton-yellow ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
-                      <img
-                        ref={registerRef(key)}
-                        src={`${ASSET}/${src}`}
-                        alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`}
-                        loading="lazy"
-                        onLoad={() => markLoaded(key)}
-                        className={`art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
-                      />
+              <Swiper
+                className="art-stationary-swiper"
+                modules={[Mousewheel, Pagination, A11y]}
+                direction="horizontal"
+                slidesPerView={1}
+                speed={reducedMotion ? 0 : 750}
+                nested
+                grabCursor
+                preventInteractionOnTransition
+                mousewheel={{ forceToAxis: false, releaseOnEdges: true, sensitivity: 0.8, thresholdDelta: 12, thresholdTime: 800 }}
+                pagination={{ clickable: true }}
+                a11y={{ enabled: true, prevSlideMessage: 'Bộ stationary trước', nextSlideMessage: 'Bộ stationary tiếp theo', paginationBulletMessage: 'Đi đến bộ stationary {{index}}' }}
+              >
+                {stationaryGroups.map((group, groupIndex) => (
+                  <SwiperSlide tag="div" aria-label={`Bộ stationary ${groupIndex + 1} trên ${stationaryGroups.length}`} key={`stationary-group-${groupIndex + 1}`}>
+                    <div className={`art-stationary-grid${groupIndex === 1 ? ' art-stationary-grid-new' : ''}`}>
+                      {group.map((src, index) => {
+                        const key = `stationary-${src}`
+                        return (
+                          <div className={`art-stationary-card art-stationary-${index + 1} art-media-card`} key={src}>
+                            <div className={`art-skeleton art-skeleton-yellow ${isLoaded(key) ? 'is-hidden' : ''}`} aria-hidden="true" />
+                            <img
+                              ref={registerRef(key)}
+                              src={`${ASSET}/${src}`}
+                              alt={`Ứng dụng văn phòng phẩm Art Clown ${groupIndex * 3 + index + 1}`}
+                              loading="lazy"
+                              onLoad={() => markLoaded(key)}
+                              className={`art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
+                            />
+                          </div>
+                        )
+                      })}
                     </div>
-                  )
-                })}
-              </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <span className="art-stationary-hint" aria-hidden="true">SCROLL / DRAG</span>
             </section>
           </SlideFrame>
         </SwiperSlide>
