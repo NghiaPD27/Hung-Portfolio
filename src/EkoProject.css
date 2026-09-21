@@ -244,7 +244,7 @@
 .eko-identity-title h2 { margin: 0; font-size: min(4.444vw, 7.111vh); font-weight: 900; }
 .eko-identity-pattern { position: absolute; top: 22.444%; left: 0; display: flex; width: 200%; height: 51.111%; }
 .eko-identity-pattern span { position: relative; flex: 0 0 50%; height: 100%; overflow: hidden; }
-.eko-identity-pattern img { position: absolute; top: -46.74%; left: 0; display: block; width: 100%; height: 194.13%; max-width: none; object-fit: cover; }
+.eko-identity-pattern img { position: absolute; top: -46.74%; left: 0; display: block; width: 100%; height: auto; max-width: none; }
 .eko-identity-strip { position: absolute; top: 81.111%; right: 0; left: 0; width: 100%; height: 11.444%; object-fit: cover; }
 
 /* 08 — Signs */
