@@ -1,14 +1,67 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
+import EkoProject from './EkoProject'
 import './App.css'
+
+function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
+  const cardRef = useRef(null)
+  const pointerX = useMotionValue(50)
+  const pointerY = useMotionValue(50)
+  const tiltXTarget = useMotionValue(0)
+  const tiltYTarget = useMotionValue(0)
+  const tiltX = useSpring(tiltXTarget, { stiffness: 230, damping: 22 })
+  const tiltY = useSpring(tiltYTarget, { stiffness: 230, damping: 22 })
+  const liquidLight = useMotionTemplate`radial-gradient(circle at ${pointerX}% ${pointerY}%, rgba(255,255,255,0.5), rgba(255,255,255,0.08) 24%, transparent 52%)`
+
+  const handlePointerMove = (event) => {
+    const bounds = cardRef.current?.getBoundingClientRect()
+    if (!bounds) return
+    const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width))
+    const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height))
+    pointerX.set(x * 100)
+    pointerY.set(y * 100)
+    tiltXTarget.set((0.5 - y) * 8)
+    tiltYTarget.set((x - 0.5) * 10)
+  }
+
+  const resetTilt = () => {
+    pointerX.set(50)
+    pointerY.set(50)
+    tiltXTarget.set(0)
+    tiltYTarget.set(0)
+  }
+
+  return (
+    <motion.button
+      ref={cardRef}
+      className={`branding-project-card ${className}`}
+      type="button"
+      onClick={onClick}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetTilt}
+      onBlur={resetTilt}
+      whileHover={{ y: -8, scale: 1.015 }}
+      whileTap={{ scale: 0.985 }}
+      style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 900 }}
+    >
+      <motion.span className="branding-liquid-light" style={{ background: liquidLight }} aria-hidden="true" />
+      <span className="branding-card-index">{index}</span>
+      <img src={image} alt={imageAlt} />
+      <span className="branding-project-name">{name}</span>
+      <small>{tagline}</small>
+      <span className="branding-card-action">XEM DỰ ÁN <b>↗</b></span>
+    </motion.button>
+  )
+}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash === '#art-clown')
   const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash === '#about')
+  const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash === '#eko')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
   const productScrollPosition = useRef(0)
@@ -45,10 +98,12 @@ function App() {
     const syncProjectRoute = () => {
       const projectIsOpen = window.location.hash === '#art-clown'
       const aboutIsOpen = window.location.hash === '#about'
+      const ekoIsOpen = window.location.hash === '#eko'
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
+      setIsEkoOpen(ekoIsOpen)
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen || aboutIsOpen ? 0 : productScrollPosition.current,
+        top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
       }))
     }
@@ -138,10 +193,33 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
 
+  const openEkoProject = () => {
+    productScrollPosition.current = window.scrollY
+    setMenuOpen(false)
+    setSelectedProject(null)
+    window.history.pushState({ eko: true }, '', '#eko')
+    setIsArtClownOpen(false)
+    setIsAboutOpen(false)
+    setIsEkoOpen(true)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
+  const closeEkoProject = () => {
+    if (window.history.state?.eko) {
+      window.history.back()
+      return
+    }
+
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
+    setIsEkoOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+  }
+
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && isArtClownOpen) closeArtClownProject()
       if (event.key === 'Escape' && isAboutOpen) closeAboutPage()
+      if (event.key === 'Escape' && isEkoOpen) closeEkoProject()
     }
 
     window.addEventListener('keydown', handleEscape)
@@ -154,6 +232,10 @@ function App() {
 
   if (isAboutOpen) {
     return <AboutPage onBack={closeAboutPage} />
+  }
+
+  if (isEkoOpen) {
+    return <EkoProject onBack={closeEkoProject} />
   }
 
   return (
@@ -424,7 +506,9 @@ function App() {
               key={project.id} 
               className="folder-card-wrapper"
               type="button"
-              onClick={() => project.id === 'branding' ? openArtClownProject() : setSelectedProject(project)}
+              onClick={() => {
+                setSelectedProject(project)
+              }}
               initial={{ opacity: 0, y: 45 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -482,10 +566,40 @@ function App() {
               >
                 ✕
               </button>
-              <span className="folder-tag">{selectedProject.tag} • {selectedProject.year}</span>
-              <h3 className="modal-title">{selectedProject.title}</h3>
-              <h4 className="modal-subtitle">{selectedProject.vietnamese}</h4>
-              <p className="modal-content">{selectedProject.description}</p>
+              {selectedProject.id === 'branding' ? (
+                <>
+                  <span className="folder-tag">BRANDING PROJECTS • 2026</span>
+                  <h3 className="modal-title branding-picker-title">CHỌN DỰ ÁN</h3>
+                  <p className="branding-picker-copy">Hai bộ nhận diện, hai thế giới thương hiệu khác nhau.</p>
+                  <div className="branding-project-grid">
+                    <BrandingProjectCard
+                      className="is-art-clown"
+                      image="/assets/art-clown/source/logo-white.svg"
+                      imageAlt="Art Clown"
+                      name="ART CLOWN"
+                      tagline="PLAY · CREATE · BELONG"
+                      index="01"
+                      onClick={openArtClownProject}
+                    />
+                    <BrandingProjectCard
+                      className="is-eko"
+                      image="/assets/eko/logo.svg"
+                      imageAlt="EKO"
+                      name="EKO"
+                      tagline="CLEAN EARTH · BRIGHT FUTURE"
+                      index="02"
+                      onClick={openEkoProject}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="folder-tag">{selectedProject.tag} • {selectedProject.year}</span>
+                  <h3 className="modal-title">{selectedProject.title}</h3>
+                  <h4 className="modal-subtitle">{selectedProject.vietnamese}</h4>
+                  <p className="modal-content">{selectedProject.description}</p>
+                </>
+              )}
             </motion.div>
           </motion.div>
         )}

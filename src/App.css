@@ -620,6 +620,170 @@
   color: #dddddd;
 }
 
+.project-modal-card:has(.branding-project-grid) {
+  max-width: 920px;
+  padding: clamp(30px, 4vw, 54px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(145deg, rgba(26, 27, 34, 0.76), rgba(8, 9, 13, 0.56));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 34px 90px rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(30px) saturate(155%);
+}
+
+.branding-picker-title {
+  margin-top: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 900;
+}
+
+.branding-picker-copy {
+  margin: 0 0 26px;
+  color: #bdbdbd;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.branding-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  perspective: 1200px;
+}
+
+.branding-project-card {
+  position: relative;
+  display: flex;
+  min-height: 280px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 22px;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.24), inset 0 -30px 60px rgba(0, 0, 0, 0.16), 0 20px 46px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(22px) saturate(180%);
+}
+
+.branding-project-card::before {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  content: '';
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 42%), radial-gradient(circle at 85% 10%, rgba(var(--brand-rgb), 0.72), transparent 55%);
+}
+
+.branding-project-card::after {
+  position: absolute;
+  z-index: 4;
+  inset: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  content: '';
+  pointer-events: none;
+}
+
+.branding-project-card:hover,
+.branding-project-card:focus-visible {
+  outline: none;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.34), inset 0 -30px 60px rgba(0, 0, 0, 0.12), 0 30px 66px rgba(var(--brand-rgb), 0.24);
+}
+
+.branding-project-card.is-art-clown { --brand-rgb: 174, 0, 43; background: rgba(99, 0, 24, 0.46); }
+.branding-project-card.is-eko { --brand-rgb: 73, 255, 0; background: rgba(19, 80, 8, 0.42); }
+
+.branding-liquid-light {
+  position: absolute;
+  z-index: -1;
+  inset: -1px;
+  border-radius: inherit;
+  opacity: 0.74;
+  pointer-events: none;
+}
+
+.branding-card-index {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  color: rgba(255, 255, 255, 0.68);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.branding-project-card img {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: clamp(74px, 9vw, 126px);
+  height: clamp(74px, 9vw, 126px);
+  object-fit: contain;
+  transform: translateZ(34px);
+}
+
+.branding-project-card.is-art-clown img { filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.24)); }
+.branding-project-card.is-eko img { width: clamp(82px, 10vw, 138px); }
+
+.branding-project-name {
+  position: relative;
+  z-index: 2;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(25px, 3vw, 42px);
+  font-weight: 900;
+  line-height: 1;
+  transform: translateZ(26px);
+}
+
+.branding-project-card small {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  transform: translateZ(22px);
+}
+
+.branding-project-card.is-eko .branding-project-name { color: #49ff00; }
+.branding-project-card.is-eko small { color: #c6ffb2; }
+
+.branding-card-action {
+  position: absolute;
+  right: 22px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, 0.74);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  transform: translateZ(24px);
+}
+
+.branding-card-action b {
+  display: grid;
+  width: 26px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+@media (max-width: 680px) {
+  .branding-project-grid { grid-template-columns: 1fr; }
+  .branding-project-card { min-height: 210px; }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
