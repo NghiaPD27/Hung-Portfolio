@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import './AboutPage.css'
 
 const PARTICLES = [
@@ -285,28 +285,6 @@ function useArtboardLayout() {
 function AboutPage({ onBack }) {
   const reducedMotion = useReducedMotion()
   const layout = useArtboardLayout()
-  const pointerX = useMotionValue(0)
-  const pointerY = useMotionValue(0)
-  const smoothX = useSpring(pointerX, { stiffness: 85, damping: 24, mass: 0.65 })
-  const smoothY = useSpring(pointerY, { stiffness: 85, damping: 24, mass: 0.65 })
-  const skyX = useTransform(smoothX, [-1, 1], [-16, 16])
-  const skyY = useTransform(smoothY, [-1, 1], [-10, 10])
-  const portraitX = useTransform(smoothX, [-1, 1], [-10, 10])
-  const portraitY = useTransform(smoothY, [-1, 1], [-7, 7])
-  const flowersX = useTransform(smoothX, [-1, 1], [18, -18])
-  const flowersY = useTransform(smoothY, [-1, 1], [9, -9])
-
-  const updatePointer = (event) => {
-    if (reducedMotion || event.pointerType === 'touch') return
-    const bounds = event.currentTarget.getBoundingClientRect()
-    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2)
-    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2)
-  }
-
-  const resetPointer = () => {
-    pointerX.set(0)
-    pointerY.set(0)
-  }
 
   const reveal = (delay = 0, offset = 24) => ({
     initial: reducedMotion ? false : { opacity: 0, y: offset },
@@ -315,16 +293,15 @@ function AboutPage({ onBack }) {
   })
 
   return (
-    <main className="about-page" aria-label="About Hung Truong" onPointerMove={updatePointer} onPointerLeave={resetPointer}>
+    <main className="about-page" aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
       <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
-        <motion.img
+        <img
           className="about-background-layer"
           src="/assets/about/background-sky.png"
           alt=""
           aria-hidden="true"
-          style={{ x: reducedMotion ? 0 : skyX, y: reducedMotion ? 0 : skyY, scale: 1.035 }}
         />
 
         <div className="about-atmosphere" aria-hidden="true">
@@ -357,7 +334,6 @@ function AboutPage({ onBack }) {
           className="about-person-layer"
           src="/assets/about/hung.png"
           alt="Portrait of Hung Truong"
-          style={{ x: reducedMotion ? 0 : portraitX, y: reducedMotion ? 0 : portraitY }}
           initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
@@ -371,8 +347,6 @@ function AboutPage({ onBack }) {
             left: layout.ffLeft,
             width: layout.ffWidth,
             height: layout.ffHeight,
-            x: reducedMotion ? 0 : flowersX,
-            y: reducedMotion ? 0 : flowersY,
           }}
           initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
