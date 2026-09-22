@@ -9,7 +9,7 @@ import 'swiper/css/pagination'
 import './EkoProject.css'
 
 const ASSET = '/assets/eko'
-const TOTAL_SLIDES = 15
+const TOTAL_SLIDES = 14
 
 const trashItems = [
   { id: 'trash-1', src: 'trash-1.png', label: 'Mảnh rác thứ nhất', className: 'eko-trash-one' },
@@ -120,9 +120,10 @@ function DraggableTrash({ item, collected, onKeyboardCollect }) {
       type="button"
       className={`eko-trash-piece swiper-no-swiping ${item.className} ${isDragging ? 'is-dragging' : ''}`}
       aria-label={`${item.label}. Kéo vào thùng rác; nhấn Enter để bỏ nhanh.`}
-      onKeyDown={(event) => {
+      onKeyDownCapture={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault()
+          event.stopPropagation()
           onKeyboardCollect(item.id)
         }
       }}
@@ -152,15 +153,41 @@ function TrashBin({ complete }) {
 
 function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
   const [collected, setCollected] = useState([])
+  const collectSound = useRef(null)
   const complete = collected.length === trashItems.length
 
   useEffect(() => {
     onCompleteChange(complete)
   }, [complete, onCompleteChange])
 
-  const collect = (id) => {
+  useEffect(() => {
+    const audio = new Audio(`${ASSET}/trash-collect-sparkle.mp3`)
+    audio.preload = 'auto'
+    audio.volume = 0.42
+    audio.load()
+    collectSound.current = audio
+
+    return () => {
+      audio.pause()
+      collectSound.current = null
+    }
+  }, [])
+
+  const playCollectSound = useCallback((isFinalPiece) => {
+    const audio = collectSound.current
+    if (!audio) return
+
+    audio.pause()
+    audio.currentTime = 0
+    audio.playbackRate = isFinalPiece ? 1.1 : 1
+    audio.play().catch(() => {})
+  }, [])
+
+  const collect = useCallback((id) => {
+    if (!id || collected.includes(id)) return
+    playCollectSound(collected.length === trashItems.length - 1)
     setCollected((current) => (current.includes(id) ? current : [...current, id]))
-  }
+  }, [collected, playCollectSound])
 
   const handleDragEnd = (event) => {
     onDraggingChange(false)
@@ -420,13 +447,13 @@ export default function EkoProject({ onBack }) {
           }
         }}
       >
-        <SwiperSlide tag="section" aria-label="Màn 1 trên 15: EKO Hero">
+        <SwiperSlide tag="section" aria-label="Màn 1 trên 14: EKO Hero">
           <SlideFrame className="eko-hero-frame">
             <EkoHero active={activeSlide === 0} reducedMotion={reducedMotion} />
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 2 trên 15: Trò chơi nhặt rác">
+        <SwiperSlide tag="section" aria-label="Màn 2 trên 14: Trò chơi nhặt rác">
           <SlideFrame className="eko-white-frame">
             <CleanupGame
               active={activeSlide === 1}
@@ -436,7 +463,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 3 trên 15: Logo EKO">
+        <SwiperSlide tag="section" aria-label="Màn 3 trên 14: Logo EKO">
           <SlideFrame className="eko-black-frame">
             <section className="eko-logo-stage eko-full-canvas">
               <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" />
@@ -462,7 +489,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 4 trên 15: Ý nghĩa logo">
+        <SwiperSlide tag="section" aria-label="Màn 4 trên 14: Ý nghĩa logo">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-logo-meaning">
               <Reveal active={activeSlide === 3} className="eko-meaning-content">
@@ -477,7 +504,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 5 trên 15: Tên gọi EKO">
+        <SwiperSlide tag="section" aria-label="Màn 5 trên 14: Tên gọi EKO">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-name-story">
               <Reveal active={activeSlide === 4} className="eko-name-copy">
@@ -501,30 +528,17 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 6 trên 15: Logo âm dương">
-          <SlideFrame className="eko-image-frame eko-logo-system-frame">
-            <motion.img
-              className="eko-full-art eko-logo-system-art"
-              src={`${ASSET}/mockup-9.png`}
-              alt="Hệ thống logo EKO âm dương"
-              initial={false}
-              animate={activeSlide === 5 ? { opacity: 1, scale: 1 } : { opacity: 0.6, scale: 0.975 }}
-              transition={{ duration: reducedMotion ? 0 : 0.9 }}
-            />
-          </SlideFrame>
-        </SwiperSlide>
-
-        <SwiperSlide tag="section" aria-label="Màn 7 trên 15: Chi tiết nhận dạng">
+        <SwiperSlide tag="section" aria-label="Màn 6 trên 14: Chi tiết nhận dạng">
           <SlideFrame className="eko-white-frame">
             <section className="eko-identity eko-full-canvas">
-              <Reveal active={activeSlide === 6} className="eko-identity-title">
+              <Reveal active={activeSlide === 5} className="eko-identity-title">
                 <h2>CHI TIẾT NHẬN DẠNG</h2>
               </Reveal>
               <motion.div
                 className="eko-identity-pattern"
                 initial={false}
-                animate={activeSlide === 6 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
-                transition={activeSlide === 6 && !reducedMotion ? { duration: 16, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
+                animate={activeSlide === 5 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
+                transition={activeSlide === 5 && !reducedMotion ? { duration: 16, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
               >
                 <span><img src={`${ASSET}/brand-pattern-opt.png`} alt="Họa tiết nhận diện EKO" /></span>
                 <span aria-hidden="true"><img src={`${ASSET}/brand-pattern-opt.png`} alt="" /></span>
@@ -534,10 +548,10 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 8 trên 15: Hệ thống biển báo">
+        <SwiperSlide tag="section" aria-label="Màn 7 trên 14: Hệ thống biển báo">
           <SlideFrame className="eko-green-frame">
             <section className="eko-design-canvas eko-signs">
-              <Reveal active={activeSlide === 7} className="eko-signs-title">
+              <Reveal active={activeSlide === 6} className="eko-signs-title">
                 <h2>NHÌN BIỂN BÁO, HÀNH ĐỘNG ĐẸP!</h2>
               </Reveal>
               <div className="eko-sign-grid">
@@ -561,7 +575,7 @@ export default function EkoProject({ onBack }) {
                       className="eko-sign-surface"
                       tabIndex="0"
                       initial={false}
-                      animate={activeSlide === 7 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
+                      animate={activeSlide === 6 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
                       transition={{ duration: reducedMotion ? 0 : 0.65, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <span className="eko-sign-caption">{sign.caption}</span>
@@ -569,21 +583,21 @@ export default function EkoProject({ onBack }) {
                         className="eko-sign-scan"
                         aria-hidden="true"
                         initial={false}
-                        animate={activeSlide === 7 && !reducedMotion ? { x: ['-170%', '320%'], opacity: [0, 0.5, 0] } : { x: '-170%', opacity: 0 }}
-                        transition={activeSlide === 7 && !reducedMotion ? { duration: 2.4, delay: 0.45 + index * 0.28, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' } : { duration: 0 }}
+                        animate={activeSlide === 6 && !reducedMotion ? { x: ['-170%', '320%'], opacity: [0, 0.5, 0] } : { x: '-170%', opacity: 0 }}
+                        transition={activeSlide === 6 && !reducedMotion ? { duration: 2.4, delay: 0.45 + index * 0.28, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' } : { duration: 0 }}
                       />
                       <motion.i
                         className="eko-sign-pulse"
                         aria-hidden="true"
                         initial={false}
-                        animate={activeSlide === 7 && !reducedMotion ? { opacity: [0, 0.34, 0], scale: [0.72, 1.15, 1.34] } : { opacity: 0, scale: 0.8 }}
+                        animate={activeSlide === 6 && !reducedMotion ? { opacity: [0, 0.34, 0], scale: [0.72, 1.15, 1.34] } : { opacity: 0, scale: 0.8 }}
                         transition={{ duration: 2.8, delay: 0.35 + index * 0.24, repeat: Infinity, ease: 'easeOut' }}
                       />
                       <div className="eko-sign-image">
                         <motion.img
                           src={`${ASSET}/${sign.src}`}
                           alt={sign.caption}
-                          animate={activeSlide === 7 && !reducedMotion ? { y: [0, -1.5, 0] } : { y: 0 }}
+                          animate={activeSlide === 6 && !reducedMotion ? { y: [0, -1.5, 0] } : { y: 0 }}
                           transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
                         />
                       </div>
@@ -596,19 +610,19 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 9 trên 15: EKO ở mọi nơi">
+        <SwiperSlide tag="section" aria-label="Màn 8 trên 14: EKO ở mọi nơi">
           <SlideFrame className="eko-black-frame">
             <section className="eko-design-canvas eko-reminders">
-              <Reveal active={activeSlide === 8} className="eko-reminder-title">
-                <span>PRESENCE / 09</span>
+              <Reveal active={activeSlide === 7} className="eko-reminder-title">
+                <span>PRESENCE / 08</span>
                 <h2>TÔI CÓ MẶT Ở MỌI NƠI</h2>
               </Reveal>
               <motion.div
                 className="eko-reminder-beam"
                 aria-hidden="true"
                 initial={false}
-                animate={activeSlide === 8 && !reducedMotion ? { x: ['-140%', '280%'], opacity: [0, 0.28, 0] } : { x: '-140%', opacity: 0 }}
-                transition={activeSlide === 8 && !reducedMotion ? { duration: 3.4, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' } : { duration: 0 }}
+                animate={activeSlide === 7 && !reducedMotion ? { x: ['-140%', '280%'], opacity: [0, 0.28, 0] } : { x: '-140%', opacity: 0 }}
+                transition={activeSlide === 7 && !reducedMotion ? { duration: 3.4, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' } : { duration: 0 }}
               />
               <div className="eko-reminder-grid">
                 {['reminder-1-opt.png', 'reminder-2-opt.png', 'reminder-3-opt.png'].map((src, index) => (
@@ -631,45 +645,45 @@ export default function EkoProject({ onBack }) {
                     <motion.div
                       className="eko-reminder-card"
                       initial={false}
-                      animate={activeSlide === 8 ? { opacity: 1, y: index * 10, rotate: (index - 1) * 2.5 } : { opacity: 0, y: 70, rotate: 0 }}
+                      animate={activeSlide === 7 ? { opacity: 1, y: index * 10, rotate: (index - 1) * 2.5 } : { opacity: 0, y: 70, rotate: 0 }}
                       transition={{ duration: reducedMotion ? 0 : 0.75, delay: 0.12 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <motion.img
                         src={`${ASSET}/${src}`}
                         alt={`Ứng dụng biển nhắc nhở EKO ${index + 1}`}
-                        animate={activeSlide === 8 && !reducedMotion ? { y: [0, -7, 0], rotate: [0, index % 2 === 0 ? 0.7 : -0.7, 0] } : { y: 0, rotate: 0 }}
-                        transition={activeSlide === 8 && !reducedMotion ? { duration: 4.2 + index * 0.35, delay: index * 0.24, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
+                        animate={activeSlide === 7 && !reducedMotion ? { y: [0, -7, 0], rotate: [0, index % 2 === 0 ? 0.7 : -0.7, 0] } : { y: 0, rotate: 0 }}
+                        transition={activeSlide === 7 && !reducedMotion ? { duration: 4.2 + index * 0.35, delay: index * 0.24, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
                       />
                     </motion.div>
                   </Tilt>
                 ))}
               </div>
-              <motion.p initial={false} animate={activeSlide === 8 ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}>ĐỂ NHẮC NHỞ !!!</motion.p>
+              <motion.p initial={false} animate={activeSlide === 7 ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}>ĐỂ NHẮC NHỞ !!!</motion.p>
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 10 trên 15: Tổng kết EKO">
+        <SwiperSlide tag="section" aria-label="Màn 9 trên 14: Tổng kết EKO">
           <SlideFrame className="eko-image-frame">
             <motion.img
               className="eko-full-art"
               src={`${ASSET}/mockup-12.png`}
               alt="Tổng kết nhận diện EKO"
               initial={false}
-              animate={activeSlide === 9 ? { opacity: 1, scale: 1 } : { opacity: 0.62, scale: 1.04 }}
+              animate={activeSlide === 8 ? { opacity: 1, scale: 1 } : { opacity: 0.62, scale: 1.04 }}
               transition={{ duration: reducedMotion ? 0 : 0.9 }}
             />
             <div className="eko-end-note">EKO · CLEAN EARTH / BRIGHT FUTURE</div>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 11 trên 15: Tuyên truyền và hành động">
+        <SwiperSlide tag="section" aria-label="Màn 10 trên 14: Tuyên truyền và hành động">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-campaign">
               <img className="eko-campaign-background" src={`${ASSET}/campaign-background-opt.jpg`} alt="" />
               <motion.h2
                 initial={false}
-                animate={activeSlide === 10 ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
+                animate={activeSlide === 9 ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
                 transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
               >
                 TUYÊN TRUYỀN, HÀNH ĐỘNG
@@ -684,7 +698,7 @@ export default function EkoProject({ onBack }) {
                     src={`${ASSET}/${src}`}
                     alt={alt}
                     initial={false}
-                    animate={activeSlide === 10 ? { opacity: 1, y: 0 } : { opacity: 0, y: 52 }}
+                    animate={activeSlide === 9 ? { opacity: 1, y: 0 } : { opacity: 0, y: 52 }}
                     transition={{ duration: reducedMotion ? 0 : 0.78, delay: reducedMotion ? 0 : 0.1 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                     whileHover={reducedMotion ? undefined : { y: -14, scale: 1.025, rotate: (index - 1) * 1.2 }}
                     key={src}
@@ -695,13 +709,13 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 12 trên 15: Vì mái nhà xanh">
+        <SwiperSlide tag="section" aria-label="Màn 11 trên 14: Vì mái nhà xanh">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-green-home">
               <motion.div
                 className="eko-green-home-title"
                 initial={false}
-                animate={activeSlide === 11 ? { opacity: 1, x: 0 } : { opacity: 0, x: -42 }}
+                animate={activeSlide === 10 ? { opacity: 1, x: 0 } : { opacity: 0, x: -42 }}
                 transition={{ duration: reducedMotion ? 0 : 0.78, ease: [0.16, 1, 0.3, 1] }}
               >
                 <span>VÌ</span><span>MÁI</span><span>NHÀ</span><span>XANH</span>
@@ -710,20 +724,20 @@ export default function EkoProject({ onBack }) {
                 src={`${ASSET}/green-home-opt.jpg`}
                 alt="Vì mái nhà xanh"
                 initial={false}
-                animate={activeSlide === 11 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.035 }}
+                animate={activeSlide === 10 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.035 }}
                 transition={{ duration: reducedMotion ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
               />
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 13 trên 15: Ứng dụng poster ngoài trời">
+        <SwiperSlide tag="section" aria-label="Màn 12 trên 14: Ứng dụng poster ngoài trời">
           <SlideFrame className="eko-white-frame">
-            <OutdoorPosterCarousel active={activeSlide === 12} reducedMotion={reducedMotion} />
+            <OutdoorPosterCarousel active={activeSlide === 11} reducedMotion={reducedMotion} />
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 14 trên 15: Bộ poster chiến dịch EKO">
+        <SwiperSlide tag="section" aria-label="Màn 13 trên 14: Bộ poster chiến dịch EKO">
           <SlideFrame className="eko-poster-frame">
             <section className="eko-design-canvas eko-poster-pair">
               {[
@@ -734,7 +748,7 @@ export default function EkoProject({ onBack }) {
                   src={`${ASSET}/${src}`}
                   alt={alt}
                   initial={false}
-                  animate={activeSlide === 13 ? { opacity: 1, y: 0 } : { opacity: 0, y: 44 }}
+                  animate={activeSlide === 12 ? { opacity: 1, y: 0 } : { opacity: 0, y: 44 }}
                   transition={{ duration: reducedMotion ? 0 : 0.82, delay: reducedMotion ? 0 : index * 0.12, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={reducedMotion ? undefined : { y: -16, scale: 1.025, rotate: index === 0 ? -1 : 1 }}
                   key={src}
@@ -744,20 +758,20 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 15 trên 15: Lời cảm ơn">
+        <SwiperSlide tag="section" aria-label="Màn 14 trên 14: Lời cảm ơn">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-thank-you">
               <motion.div
                 className="eko-thank-logo"
                 initial={false}
-                animate={activeSlide === 14 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 36, scale: 0.94 }}
+                animate={activeSlide === 13 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 36, scale: 0.94 }}
                 transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
                 <img src={`${ASSET}/thank-you-logo.png`} alt="Biểu tượng EKO" />
               </motion.div>
               <motion.p
                 initial={false}
-                animate={activeSlide === 14 ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+                animate={activeSlide === 13 ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
                 transition={{ duration: reducedMotion ? 0 : 0.75, delay: reducedMotion ? 0 : 0.14, ease: [0.16, 1, 0.3, 1] }}
               >
                 Cảm ơn những người đã, đang và sẽ cùng chung tay bảo vệ môi trường. Mỗi hành động nhỏ hôm nay đều góp phần tạo nên một tương lai xanh hơn.

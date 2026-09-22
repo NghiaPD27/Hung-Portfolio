@@ -66,9 +66,11 @@ function App() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
+  const [projectTransition, setProjectTransition] = useState(null)
   const [isAboutSoundOn, setIsAboutSoundOn] = useState(false)
   const productScrollPosition = useRef(0)
   const aboutTransitionTimer = useRef(null)
+  const projectTransitionTimer = useRef(null)
   const aboutAudioRef = useRef(null)
   const aboutAudioFade = useRef(null)
 
@@ -131,6 +133,7 @@ function App() {
 
   useEffect(() => () => {
     if (aboutTransitionTimer.current) window.clearTimeout(aboutTransitionTimer.current)
+    if (projectTransitionTimer.current) window.clearTimeout(projectTransitionTimer.current)
     if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
     aboutAudioRef.current?.pause()
   }, [])
@@ -163,6 +166,7 @@ function App() {
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)
+      setProjectTransition(null)
       if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
         aboutAudioRef.current.pause()
         aboutAudioRef.current.currentTime = 0
@@ -219,12 +223,19 @@ function App() {
   ]
 
   const openArtClownProject = () => {
+    if (projectTransition) return
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
-    window.history.pushState({ artClown: true }, '', '#art-clown')
-    setIsArtClownOpen(true)
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    setProjectTransition('art-clown')
+    projectTransitionTimer.current = window.setTimeout(() => {
+      window.history.pushState({ artClown: true }, '', '#art-clown')
+      setIsArtClownOpen(true)
+      setIsAboutOpen(false)
+      setIsEkoOpen(false)
+      setProjectTransition(null)
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    }, reducedMotion ? 80 : 980)
   }
 
   const closeArtClownProject = () => {
@@ -267,14 +278,19 @@ function App() {
   }
 
   const openEkoProject = () => {
+    if (projectTransition) return
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
-    window.history.pushState({ eko: true }, '', '#eko')
-    setIsArtClownOpen(false)
-    setIsAboutOpen(false)
-    setIsEkoOpen(true)
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    setProjectTransition('eko')
+    projectTransitionTimer.current = window.setTimeout(() => {
+      window.history.pushState({ eko: true }, '', '#eko')
+      setIsArtClownOpen(false)
+      setIsAboutOpen(false)
+      setIsEkoOpen(true)
+      setProjectTransition(null)
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    }, reducedMotion ? 80 : 980)
   }
 
   const closeEkoProject = () => {
@@ -337,6 +353,49 @@ function App() {
             >
               <small>ENTERING / PERSONAL SPACE</small>
               <strong>HELLO.</strong>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {projectTransition && (
+          <motion.div
+            className={`project-route-transition is-${projectTransition}`}
+            initial={projectTransition === 'eko'
+              ? { clipPath: 'circle(0% at 50% 50%)' }
+              : { clipPath: 'inset(49.8% 0 49.8% 0)' }}
+            animate={projectTransition === 'eko'
+              ? { clipPath: 'circle(150% at 50% 50%)' }
+              : { clipPath: 'inset(0% 0 0% 0)' }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0.08 : 0.86, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <motion.span
+              className="project-route-shape shape-one"
+              initial={{ opacity: 0, scale: 0.45, rotate: -35 }}
+              animate={{ opacity: 1, scale: 1, rotate: projectTransition === 'eko' ? 18 : 7 }}
+              transition={{ duration: reducedMotion ? 0 : 0.72, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              aria-hidden="true"
+            />
+            <motion.span
+              className="project-route-shape shape-two"
+              initial={{ opacity: 0, scale: 1.5, rotate: 30 }}
+              animate={{ opacity: 0.72, scale: 1, rotate: projectTransition === 'eko' ? -12 : -5 }}
+              transition={{ duration: reducedMotion ? 0 : 0.78, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+              aria-hidden="true"
+            />
+            <motion.div
+              className="project-route-copy"
+              initial={{ opacity: 0, y: 30, scale: 0.92 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 0.56, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <img
+                src={projectTransition === 'eko' ? '/assets/eko/logo.svg' : '/assets/art-clown/source/logo-white.svg'}
+                alt=""
+              />
+              <small>{projectTransition === 'eko' ? 'CLEAN EARTH / BRIGHT FUTURE' : 'PLAY / CREATE / BELONG'}</small>
+              <strong>{projectTransition === 'eko' ? 'E-KO' : 'ART CLOWN'}</strong>
             </motion.div>
           </motion.div>
         )}
