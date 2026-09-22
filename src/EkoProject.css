@@ -271,7 +271,30 @@
 .eko-reminder-grid img { width: 64%; aspect-ratio: 265 / 332; object-fit: cover; }
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
-/* 11 — Thank you */
+/* 11 — Campaign stands */
+.eko-campaign { background: #fff; color: #0065f8; }
+.eko-campaign-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
+.eko-campaign h2 { position: absolute; top: 7.778%; left: 15.486%; width: 69.028%; margin: 0; font-size: 4.444cqw; font-style: italic; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+.eko-campaign-stands { position: absolute; top: 23%; left: 17.361%; display: grid; width: 65.208%; grid-template-columns: repeat(3, 19.236cqw); gap: 3.75cqw; }
+.eko-campaign-stands img { display: block; width: 19.236cqw; height: 43.333cqw; object-fit: cover; }
+
+/* 12 — Green home */
+.eko-green-home { background: #f7f7f5; }
+.eko-green-home > img { position: absolute; top: 0; left: 37.5%; display: block; width: 62.5%; height: 100%; object-fit: cover; }
+.eko-green-home-title { position: absolute; z-index: 2; top: 14.889%; left: 4.931%; display: flex; width: 28.333%; flex-direction: column; color: #0065f8; font-size: 9.028cqw; font-weight: 900; line-height: 0.965; text-align: right; }
+
+/* 13 — Outdoor application */
+.eko-outdoor-application { background: #fff; }
+.eko-outdoor-application img { position: absolute; top: 4.333%; left: 5.069%; display: block; width: 57.083%; height: 91.333%; object-fit: cover; }
+
+/* 14 — Poster pair */
+.eko-poster-frame { background: #0a1730; }
+.eko-poster-pair { background: #0a1730; }
+.eko-poster-pair img { position: absolute; top: 11.111%; display: block; width: 38.889%; height: 77.778%; object-fit: cover; }
+.eko-poster-pair img:first-child { left: 8.75%; }
+.eko-poster-pair img:last-child { left: 53.264%; }
+
+/* 15 — Thank you */
 .eko-thank-you { background: #fff; color: #000; }
 .eko-thank-logo { position: absolute; top: 23.667%; left: 39.306%; width: 21.319%; height: 31.778%; overflow: hidden; }
 .eko-thank-logo img { display: block; width: 100%; height: 147.63%; max-width: none; object-fit: fill; }
