@@ -311,7 +311,8 @@
 .eko-campaign-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
 .eko-campaign h2 { position: absolute; z-index: 2; top: 7.778%; left: 0; width: 100%; margin: 0; font-size: min(4.444vw, 7.111dvh); font-style: italic; font-weight: 800; line-height: 1.2; text-align: center; white-space: nowrap; }
 .eko-campaign-stands { position: absolute; z-index: 2; top: 23%; left: 50%; display: grid; width: max-content; grid-template-columns: repeat(3, min(19.236vw, 30.778dvh)); gap: min(3.75vw, 6.667dvh); transform: translateX(-50%); }
-.eko-campaign-stands img { display: block; width: min(19.236vw, 30.778dvh); height: min(43.333vw, 69.333dvh); object-fit: cover; filter: drop-shadow(0 1.5dvh 2.2dvh rgba(0, 58, 128, 0.11)); cursor: default; }
+.eko-campaign-stand-tilt { width: min(19.236vw, 30.778dvh); height: min(43.333vw, 69.333dvh); border-radius: 18px; transform-style: preserve-3d; }
+.eko-campaign-stands .eko-campaign-stand-tilt img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 18px; filter: drop-shadow(0 1.5dvh 2.2dvh rgba(0, 58, 128, 0.14)); cursor: default; transform: translateZ(24px); }
 
 /* 12 — Green home */
 .eko-green-home { background: #f7f7f5; }

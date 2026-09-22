@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
@@ -73,6 +73,8 @@ function App() {
   const projectTransitionTimer = useRef(null)
   const aboutAudioRef = useRef(null)
   const aboutAudioFade = useRef(null)
+  const ekoHeroAudioRef = useRef(null)
+  const ekoHeroAudioFade = useRef(null)
 
   const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
     const audio = aboutAudioRef.current
@@ -123,6 +125,55 @@ function App() {
     stopAboutAudio()
   }
 
+  const fadeEkoHeroAudio = useCallback((targetVolume, duration = 800, pauseAfter = false) => {
+    const audio = ekoHeroAudioRef.current
+    if (!audio) return
+    if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
+    const startVolume = audio.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration)
+      const eased = 1 - ((1 - progress) ** 3)
+      audio.volume = Math.min(1, Math.max(0, startVolume + ((targetVolume - startVolume) * eased)))
+      if (progress < 1) {
+        ekoHeroAudioFade.current = requestAnimationFrame(tick)
+      } else {
+        ekoHeroAudioFade.current = null
+        if (pauseAfter) audio.pause()
+      }
+    }
+    ekoHeroAudioFade.current = requestAnimationFrame(tick)
+  }, [])
+
+  const ensureEkoHeroAudio = useCallback(() => {
+    if (!ekoHeroAudioRef.current) {
+      const audio = new Audio('/assets/eko/hero-breeze.mp3')
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      ekoHeroAudioRef.current = audio
+    }
+    return ekoHeroAudioRef.current
+  }, [])
+
+  const primeEkoHeroAudio = useCallback(() => {
+    const audio = ensureEkoHeroAudio()
+    audio.volume = 0
+    audio.play().catch(() => {})
+  }, [ensureEkoHeroAudio])
+
+  const setEkoHeroAudioActive = useCallback((active) => {
+    if (!active) {
+      fadeEkoHeroAudio(0, 420, true)
+      return
+    }
+
+    const audio = ensureEkoHeroAudio()
+    audio.play()
+      .then(() => fadeEkoHeroAudio(0.12, 1100))
+      .catch(() => {})
+  }, [ensureEkoHeroAudio, fadeEkoHeroAudio])
+
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -135,7 +186,9 @@ function App() {
     if (aboutTransitionTimer.current) window.clearTimeout(aboutTransitionTimer.current)
     if (projectTransitionTimer.current) window.clearTimeout(projectTransitionTimer.current)
     if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
+    if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
     aboutAudioRef.current?.pause()
+    ekoHeroAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
@@ -171,6 +224,12 @@ function App() {
         aboutAudioRef.current.pause()
         aboutAudioRef.current.currentTime = 0
         setIsAboutSoundOn(false)
+      }
+      if (!ekoIsOpen && ekoHeroAudioRef.current) {
+        if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
+        ekoHeroAudioRef.current.pause()
+        ekoHeroAudioRef.current.currentTime = 0
+        ekoHeroAudioRef.current.volume = 0
       }
       requestAnimationFrame(() => window.scrollTo({
         top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
@@ -258,6 +317,7 @@ function App() {
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
+    primeEkoHeroAudio()
     setProjectTransition('eko')
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ eko: true }, '', '#eko')
@@ -270,6 +330,7 @@ function App() {
   }
 
   const closeEkoProject = () => {
+    setEkoHeroAudioActive(false)
     if (window.history.state?.eko) {
       window.history.back()
       return
@@ -300,7 +361,7 @@ function App() {
   }
 
   if (isEkoOpen) {
-    return <EkoProject onBack={closeEkoProject} />
+    return <EkoProject onBack={closeEkoProject} onHeroAudioStateChange={setEkoHeroAudioActive} />
   }
 
   return (

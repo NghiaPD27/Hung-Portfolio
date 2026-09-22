@@ -355,7 +355,7 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
   )
 }
 
-export default function EkoProject({ onBack }) {
+export default function EkoProject({ onBack, onHeroAudioStateChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const gameCompleteRef = useRef(false)
@@ -363,6 +363,12 @@ export default function EkoProject({ onBack }) {
   const [gameComplete, setGameComplete] = useState(false)
   const [gameDragging, setGameDraggingState] = useState(false)
   const navigationLocked = activeSlide === 1 && !gameComplete
+
+  useEffect(() => {
+    onHeroAudioStateChange?.(activeSlide === 0)
+  }, [activeSlide, onHeroAudioStateChange])
+
+  useEffect(() => () => onHeroAudioStateChange?.(false), [onHeroAudioStateChange])
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -401,7 +407,11 @@ export default function EkoProject({ onBack }) {
   }, [gameDragging, navigationLocked])
 
   return (
-    <main className={`eko-project ${navigationLocked ? 'is-navigation-locked' : ''}`} aria-label="Dự án nhận diện EKO">
+    <main
+      className={`eko-project ${navigationLocked ? 'is-navigation-locked' : ''}`}
+      aria-label="Dự án nhận diện EKO"
+      onPointerDown={() => { if (activeSlide === 0) onHeroAudioStateChange?.(true) }}
+    >
       <motion.button
         className={`eko-back ${navigationLocked ? 'is-locked' : ''}`}
         onClick={() => { if (!navigationLocked) onBack() }}
@@ -694,15 +704,30 @@ export default function EkoProject({ onBack }) {
                   ['campaign-stand-middle-opt.jpg', 'Standee phân loại rác'],
                   ['campaign-stand-right-opt.jpg', 'Standee giảm nhựa'],
                 ].map(([src, alt], index) => (
-                  <motion.img
-                    src={`${ASSET}/${src}`}
-                    alt={alt}
-                    initial={false}
-                    animate={activeSlide === 9 ? { opacity: 1, y: 0 } : { opacity: 0, y: 52 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.78, delay: reducedMotion ? 0 : 0.1 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    whileHover={reducedMotion ? undefined : { y: -14, scale: 1.025, rotate: (index - 1) * 1.2 }}
+                  <Tilt
+                    className="eko-campaign-stand-tilt"
+                    tiltEnable={!reducedMotion}
+                    tiltReverse={index === 1}
+                    tiltMaxAngleX={6}
+                    tiltMaxAngleY={9}
+                    perspective={1400}
+                    scale={1.025}
+                    transitionSpeed={900}
+                    glareEnable={!reducedMotion}
+                    glareMaxOpacity={0.2}
+                    glareColor="#b9ffe5"
+                    glarePosition="all"
+                    glareBorderRadius="18px"
                     key={src}
-                  />
+                  >
+                    <motion.img
+                      src={`${ASSET}/${src}`}
+                      alt={alt}
+                      initial={false}
+                      animate={activeSlide === 9 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 52, scale: 0.96 }}
+                      transition={{ duration: reducedMotion ? 0 : 0.78, delay: reducedMotion ? 0 : 0.1 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                  </Tilt>
                 ))}
               </div>
             </section>
