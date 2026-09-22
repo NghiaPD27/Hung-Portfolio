@@ -195,30 +195,6 @@ function App() {
       vietnamese: 'BỘ NHẬN DIỆN THƯƠNG HIỆU',
       description: 'Định hình bản sắc thương hiệu qua ngôn ngữ thị giác đương đại: Logo, hệ thống màu sắc, kiểu chữ và bộ quy chuẩn ứng dụng toàn diện.',
       year: '2026'
-    },
-    {
-      id: 'uiux',
-      tag: 'Digital Experience',
-      title: 'UI / UX',
-      vietnamese: 'TRẢI NGHIỆM GIAO DIỆN SỐ',
-      description: 'Thiết kế hệ thống giao diện tối ưu trải nghiệm người dùng trên đa nền tảng, cân bằng giữa thẩm mỹ vị lai và công năng tiện dụng.',
-      year: '2025'
-    },
-    {
-      id: 'visual3d',
-      tag: '3D & CGI',
-      title: '3D ART',
-      vietnamese: 'NGHỆ THUẬT HÌNH ẢNH 3D',
-      description: 'Chất liệu pha lê, thủy tinh hữu cơ và ánh xạ siêu thực tạo nên các tác phẩm điêu khắc kỹ thuật số đầy cảm hứng.',
-      year: '2026'
-    },
-    {
-      id: 'editorial',
-      tag: 'Print & Concept',
-      title: 'EDITORIAL',
-      vietnamese: 'ẤN PHẨM & NGHỆ THUẬT IN ẤN',
-      description: 'Sáng tạo layout tạp chí, sách nghệ thuật và bộ nhận diện ấn phẩm đặc biệt với tinh thần phá vỡ giới hạn truyền thống.',
-      year: '2025'
     }
   ]
 
