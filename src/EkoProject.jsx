@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -18,18 +19,18 @@ const trashItems = [
 ]
 
 const signs = [
-  { src: 'sign-4.png', caption: 'TÍNH BỎ RÁC Ở ĐÂU ?', action: 'RÁC ĐÚNG CHỖ' },
-  { src: 'sign-1.png', caption: 'TÍNH XẢ RÁC HẢ ?', action: 'KHÔNG XẢ BỪA' },
-  { src: 'sign-3.png', caption: 'BẢO VỆ LÁ PHỔI XANH', action: 'GIỮ MÀU XANH' },
-  { src: 'sign-2.png', caption: 'THẤY THÌ LỤM BỎ', action: 'THẤY LÀ LỤM' },
+  { src: 'sign-4-opt.jpg', caption: 'TÍNH BỎ RÁC Ở ĐÂU ?', action: 'RÁC ĐÚNG CHỖ' },
+  { src: 'sign-1-opt.jpg', caption: 'TÍNH XẢ RÁC HẢ ?', action: 'KHÔNG XẢ BỪA' },
+  { src: 'sign-3-opt.jpg', caption: 'BẢO VỆ LÁ PHỔI XANH', action: 'GIỮ MÀU XANH' },
+  { src: 'sign-2-opt.jpg', caption: 'THẤY THÌ LỤM BỎ', action: 'THẤY LÀ LỤM' },
 ]
 
 const outdoorPosters = [
-  { src: 'outdoor-poster.png', alt: 'Poster EKO ứng dụng ngoài trời số 1', eyebrow: 'ỨNG DỤNG NGOÀI TRỜI', title: 'Hành động nhỏ, thay đổi lớn' },
-  { src: 'outdoor-poster-2.png', alt: 'Poster EKO ứng dụng ngoài trời số 2', eyebrow: 'NHẬN DIỆN TRONG ĐỜI SỐNG', title: 'Đưa EKO đến gần cộng đồng' },
-  { src: 'outdoor-poster-3.png', alt: 'Poster EKO ứng dụng ngoài trời số 3', eyebrow: 'TRUYỀN THÔNG XANH', title: 'Thông điệp dễ thấy, hành động dễ làm' },
-  { src: 'outdoor-poster-4.png', alt: 'Poster EKO ứng dụng ngoài trời số 4', eyebrow: 'LAN TỎA THÓI QUEN TỐT', title: 'Mỗi điểm chạm là một lời nhắc' },
-  { src: 'outdoor-poster-5.png', alt: 'Poster EKO ứng dụng ngoài trời số 5', eyebrow: 'CÙNG EKO HÀNH ĐỘNG', title: 'Vì một thành phố xanh hơn' },
+  { src: 'outdoor-poster-opt-1.jpg', backdrop: 'outdoor-poster-bg-1.jpg', alt: 'Poster EKO ứng dụng ngoài trời số 1', eyebrow: 'ỨNG DỤNG NGOÀI TRỜI', title: 'Hành động nhỏ, thay đổi lớn' },
+  { src: 'outdoor-poster-opt-2.jpg', backdrop: 'outdoor-poster-bg-2.jpg', alt: 'Poster EKO ứng dụng ngoài trời số 2', eyebrow: 'NHẬN DIỆN TRONG ĐỜI SỐNG', title: 'Đưa EKO đến gần cộng đồng' },
+  { src: 'outdoor-poster-opt-3.jpg', backdrop: 'outdoor-poster-bg-3.jpg', alt: 'Poster EKO ứng dụng ngoài trời số 3', eyebrow: 'TRUYỀN THÔNG XANH', title: 'Thông điệp dễ thấy, hành động dễ làm' },
+  { src: 'outdoor-poster-opt-4.jpg', backdrop: 'outdoor-poster-bg-4.jpg', alt: 'Poster EKO ứng dụng ngoài trời số 4', eyebrow: 'LAN TỎA THÓI QUEN TỐT', title: 'Mỗi điểm chạm là một lời nhắc' },
+  { src: 'outdoor-poster-opt-5.jpg', backdrop: 'outdoor-poster-bg-5.jpg', alt: 'Poster EKO ứng dụng ngoài trời số 5', eyebrow: 'CÙNG EKO HÀNH ĐỘNG', title: 'Vì một thành phố xanh hơn' },
 ]
 
 function SlideFrame({ children, className = '' }) {
@@ -76,14 +77,14 @@ function EkoHero({ active, reducedMotion }) {
 
   return (
     <section
-      className="eko-design-canvas eko-hero eko-hero-canvas"
+      className={`eko-design-canvas eko-hero eko-hero-canvas ${active ? 'is-active' : ''}`}
       aria-label="EKO - bảo vệ môi trường"
       onPointerMove={updatePointer}
       onPointerLeave={resetPointer}
     >
       <motion.img
         className="eko-hero-background"
-        src={`${ASSET}/hero-background.png`}
+        src={`${ASSET}/hero-background-opt.jpg`}
         alt="Phong cảnh thiên nhiên xanh"
         style={{ x: backgroundX, y: backgroundY }}
       />
@@ -169,7 +170,7 @@ function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
 
   return (
     <DragDropProvider onDragStart={() => onDraggingChange(true)} onDragEnd={handleDragEnd}>
-      <section className="eko-cleanup eko-full-canvas" aria-labelledby="eko-cleanup-title">
+      <section className={`eko-cleanup eko-full-canvas ${active ? 'is-active' : ''}`} aria-labelledby="eko-cleanup-title">
         <div className="eko-artboard-inner eko-cleanup-inner">
           <Reveal active={active} className="eko-cleanup-heading">
             <h2 id="eko-cleanup-title">Lụm rác bỏ vô chứ nhìn cái gì!</h2>
@@ -215,6 +216,7 @@ function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
 
 function OutdoorPosterCarousel({ active, reducedMotion }) {
   const [[posterIndex, direction], setPoster] = useState([0, 1])
+  const preloadedPosters = useRef([])
 
   const movePoster = useCallback((nextDirection) => {
     setPoster(([current]) => [
@@ -229,14 +231,34 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
     return () => window.clearInterval(timer)
   }, [active, movePoster, reducedMotion])
 
+  useEffect(() => {
+    const preload = () => {
+      preloadedPosters.current = outdoorPosters.flatMap((poster) => [poster.src, poster.backdrop]).map((src) => {
+        const image = new Image()
+        image.decoding = 'async'
+        image.src = `${ASSET}/${src}`
+        image.decode?.().catch(() => {})
+        return image
+      })
+    }
+    const idleId = window.requestIdleCallback
+      ? window.requestIdleCallback(preload, { timeout: 1800 })
+      : window.setTimeout(preload, 900)
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId)
+      else window.clearTimeout(idleId)
+      preloadedPosters.current = []
+    }
+  }, [])
+
   const currentPoster = outdoorPosters[posterIndex]
 
   return (
     <section className="eko-outdoor-carousel" aria-label="Bộ ảnh poster EKO ngoài trời">
-      <AnimatePresence initial={false} custom={direction} mode="popLayout">
+      <AnimatePresence initial={false} custom={direction}>
         <motion.img
           className="eko-outdoor-backdrop"
-          src={`${ASSET}/${currentPoster.src}`}
+          src={`${ASSET}/${currentPoster.backdrop}`}
           alt=""
           aria-hidden="true"
           key={`background-${currentPoster.src}`}
@@ -248,7 +270,7 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
       </AnimatePresence>
 
       <div className="eko-outdoor-stage swiper-no-swiping">
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+        <AnimatePresence initial={false} custom={direction}>
           <motion.img
             className="eko-outdoor-poster"
             src={`${ASSET}/${currentPoster.src}`}
@@ -259,6 +281,8 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
             animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
             exit={reducedMotion ? undefined : { opacity: 0, x: direction > 0 ? '-18%' : '18%', scale: 0.96, rotateY: direction > 0 ? 7 : -7 }}
             transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
+            decoding="async"
+            loading="eager"
             drag={reducedMotion ? false : 'x'}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.16}
@@ -415,7 +439,7 @@ export default function EkoProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 3 trên 15: Logo EKO">
           <SlideFrame className="eko-black-frame">
             <section className="eko-logo-stage eko-full-canvas">
-              <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern.png`} alt="" />
+              <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" />
               <div className="eko-artboard-inner eko-logo-inner">
                 <motion.img
                   className="eko-logo-type"
@@ -464,9 +488,9 @@ export default function EkoProject({ onBack }) {
                 className="eko-globe-orbit"
                 initial={false}
                 animate={activeSlide === 4 && !reducedMotion ? { rotate: 360 } : { rotate: 0 }}
-                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+                transition={activeSlide === 4 && !reducedMotion ? { duration: 18, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
               >
-                <img src={`${ASSET}/eko-globe.png`} alt="Trái Đất EKO" />
+                <img src={`${ASSET}/eko-globe-opt.png`} alt="Trái Đất EKO" />
               </motion.div>
               <div className="eko-globe-arrows" aria-hidden="true">
                 <span>↓</span>
@@ -500,10 +524,10 @@ export default function EkoProject({ onBack }) {
                 className="eko-identity-pattern"
                 initial={false}
                 animate={activeSlide === 6 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
-                transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+                transition={activeSlide === 6 && !reducedMotion ? { duration: 16, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
               >
-                <span><img src={`${ASSET}/brand-pattern.png`} alt="Họa tiết nhận diện EKO" /></span>
-                <span aria-hidden="true"><img src={`${ASSET}/brand-pattern.png`} alt="" /></span>
+                <span><img src={`${ASSET}/brand-pattern-opt.png`} alt="Họa tiết nhận diện EKO" /></span>
+                <span aria-hidden="true"><img src={`${ASSET}/brand-pattern-opt.png`} alt="" /></span>
               </motion.div>
               <img className="eko-identity-strip" src={`${ASSET}/identity-strip.png`} alt="" />
             </section>
@@ -518,23 +542,35 @@ export default function EkoProject({ onBack }) {
               </Reveal>
               <div className="eko-sign-grid">
                 {signs.map((sign, index) => (
-                  <motion.div
+                  <Tilt
                     className="eko-sign-card"
-                    initial={false}
-                    animate={activeSlide === 7 ? { opacity: 1, y: 0, scale: 1, rotate: 0 } : { opacity: 0, y: 26, scale: 0.94, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
-                    transition={{ type: 'spring', stiffness: 170, damping: 20, delay: reducedMotion ? 0 : index * 0.075 }}
-                    whileHover={reducedMotion ? undefined : { y: -3, scale: 1.012, rotate: index % 2 === 0 ? -0.45 : 0.45 }}
-                    whileTap={reducedMotion ? undefined : { scale: 0.985 }}
+                    tiltEnable={!reducedMotion}
+                    tiltMaxAngleX={8}
+                    tiltMaxAngleY={10}
+                    perspective={1100}
+                    scale={1.035}
+                    transitionSpeed={650}
+                    glareEnable={!reducedMotion}
+                    glareMaxOpacity={0.28}
+                    glareColor="#e9ffff"
+                    glarePosition="all"
+                    glareBorderRadius="24px"
                     key={sign.src}
                   >
-                    <article className="eko-sign-surface" tabIndex="0">
+                    <motion.article
+                      className="eko-sign-surface"
+                      tabIndex="0"
+                      initial={false}
+                      animate={activeSlide === 7 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
+                      transition={{ duration: reducedMotion ? 0 : 0.65, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    >
                       <span className="eko-sign-caption">{sign.caption}</span>
                       <motion.span
                         className="eko-sign-scan"
                         aria-hidden="true"
                         initial={false}
                         animate={activeSlide === 7 && !reducedMotion ? { x: ['-170%', '320%'], opacity: [0, 0.5, 0] } : { x: '-170%', opacity: 0 }}
-                        transition={{ duration: 2.4, delay: 0.45 + index * 0.28, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' }}
+                        transition={activeSlide === 7 && !reducedMotion ? { duration: 2.4, delay: 0.45 + index * 0.28, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' } : { duration: 0 }}
                       />
                       <motion.i
                         className="eko-sign-pulse"
@@ -552,8 +588,8 @@ export default function EkoProject({ onBack }) {
                         />
                       </div>
                       <span className="eko-sign-action">{sign.action}<b aria-hidden="true">↗</b></span>
-                    </article>
-                  </motion.div>
+                    </motion.article>
+                  </Tilt>
                 ))}
               </div>
             </section>
@@ -567,14 +603,22 @@ export default function EkoProject({ onBack }) {
                 <span>PRESENCE / 09</span>
                 <h2>TÔI CÓ MẶT Ở MỌI NƠI</h2>
               </Reveal>
+              <motion.div
+                className="eko-reminder-beam"
+                aria-hidden="true"
+                initial={false}
+                animate={activeSlide === 8 && !reducedMotion ? { x: ['-140%', '280%'], opacity: [0, 0.28, 0] } : { x: '-140%', opacity: 0 }}
+                transition={activeSlide === 8 && !reducedMotion ? { duration: 3.4, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' } : { duration: 0 }}
+              />
               <div className="eko-reminder-grid">
-                {['reminder-1.png', 'reminder-2.png', 'reminder-3.png'].map((src, index) => (
+                {['reminder-1-opt.png', 'reminder-2-opt.png', 'reminder-3-opt.png'].map((src, index) => (
                   <motion.img
                     src={`${ASSET}/${src}`}
                     alt={`Ứng dụng biển nhắc nhở EKO ${index + 1}`}
                     initial={false}
                     animate={activeSlide === 8 ? { opacity: 1, y: index * 10, rotate: (index - 1) * 2.5 } : { opacity: 0, y: 70, rotate: 0 }}
                     transition={{ duration: reducedMotion ? 0 : 0.75, delay: 0.12 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    whileHover={reducedMotion ? undefined : { y: index * 10 - 7, scale: 1.035, rotate: 0 }}
                     key={src}
                   />
                 ))}
@@ -601,7 +645,7 @@ export default function EkoProject({ onBack }) {
         <SwiperSlide tag="section" aria-label="Màn 11 trên 15: Tuyên truyền và hành động">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-campaign">
-              <img className="eko-campaign-background" src={`${ASSET}/campaign-background.png`} alt="" />
+              <img className="eko-campaign-background" src={`${ASSET}/campaign-background-opt.jpg`} alt="" />
               <motion.h2
                 initial={false}
                 animate={activeSlide === 10 ? { opacity: 1, y: 0 } : { opacity: 0, y: -24 }}
@@ -611,9 +655,9 @@ export default function EkoProject({ onBack }) {
               </motion.h2>
               <div className="eko-campaign-stands">
                 {[
-                  ['campaign-stand-left.png', 'Standee bảo vệ môi trường'],
-                  ['campaign-stand-middle.png', 'Standee phân loại rác'],
-                  ['campaign-stand-right.png', 'Standee giảm nhựa'],
+                  ['campaign-stand-left-opt.jpg', 'Standee bảo vệ môi trường'],
+                  ['campaign-stand-middle-opt.jpg', 'Standee phân loại rác'],
+                  ['campaign-stand-right-opt.jpg', 'Standee giảm nhựa'],
                 ].map(([src, alt], index) => (
                   <motion.img
                     src={`${ASSET}/${src}`}
@@ -642,7 +686,7 @@ export default function EkoProject({ onBack }) {
                 <span>VÌ</span><span>MÁI</span><span>NHÀ</span><span>XANH</span>
               </motion.div>
               <motion.img
-                src={`${ASSET}/green-home.png`}
+                src={`${ASSET}/green-home-opt.jpg`}
                 alt="Vì mái nhà xanh"
                 initial={false}
                 animate={activeSlide === 11 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.035 }}
@@ -662,8 +706,8 @@ export default function EkoProject({ onBack }) {
           <SlideFrame className="eko-poster-frame">
             <section className="eko-design-canvas eko-poster-pair">
               {[
-                ['poster-future.png', 'EKO — Mang bình, mang tương lai'],
-                ['poster-brandboard.png', 'Bộ nhận diện thương hiệu EKO'],
+                ['poster-future-opt.jpg', 'EKO — Mang bình, mang tương lai'],
+                ['poster-brandboard-opt.jpg', 'Bộ nhận diện thương hiệu EKO'],
               ].map(([src, alt], index) => (
                 <motion.img
                   src={`${ASSET}/${src}`}

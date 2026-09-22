@@ -29,6 +29,7 @@
   height: 100%;
   place-items: center;
   overflow: hidden;
+  contain: layout paint style;
 }
 
 .eko-white-frame { background: #fff; }
@@ -154,10 +155,13 @@
 /* 01 — Hero */
 .eko-hero { background: #5ca1cc; }
 .eko-hero-canvas { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; container-type: inline-size; }
-.eko-hero-background { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; object-position: center; will-change: transform; }
-.eko-hero-wave { position: absolute; z-index: 2; right: 0; bottom: clamp(48px, 9vh, 96px); left: 0; width: 100%; height: auto; object-fit: contain; object-position: center bottom; will-change: transform; }
+.eko-hero-background { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; object-position: center; }
+.eko-hero-wave { position: absolute; z-index: 2; right: 0; bottom: clamp(48px, 9vh, 96px); left: 0; width: 100%; height: auto; object-fit: contain; object-position: center bottom; }
 .eko-hero-logo-anchor { position: absolute; z-index: 3; top: 50%; left: 50%; width: clamp(128px, 13.578vw, 196px); aspect-ratio: 195.53 / 188.14; transform: translate(-50%, -50%); }
-.eko-hero-logo { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.15)); will-change: transform; }
+.eko-hero-logo { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.15)); }
+.eko-hero.is-active .eko-hero-background,
+.eko-hero.is-active .eko-hero-wave,
+.eko-hero.is-active .eko-hero-logo { will-change: transform; }
 
 /* 02 — Cleanup game */
 .eko-cleanup { background: #fff; }
@@ -204,7 +208,8 @@
 .eko-cleanup-complete button { padding: 0.7cqw 1.1cqw; border: 0; border-radius: 999px; background: #49ff00; color: #000; font-family: inherit; font-size: 0.72cqw; font-weight: 900; letter-spacing: 0.12em; cursor: pointer; }
 
 .eko-pattern-marquee { position: absolute; z-index: 20; right: 0; bottom: 0; left: 0; height: 11.444%; overflow: hidden; }
-.eko-pattern-track { display: flex; width: 200%; height: 100%; animation: eko-pattern-move 16s linear infinite; }
+.eko-pattern-track { display: flex; width: 200%; height: 100%; animation: eko-pattern-move 16s linear infinite; animation-play-state: paused; }
+.eko-cleanup.is-active .eko-pattern-track { animation-play-state: running; will-change: transform; }
 .eko-pattern-track img { flex: none; width: 50%; height: 100%; object-fit: cover; }
 @keyframes eko-pattern-move { to { transform: translateX(-50%); } }
 .eko-project.is-navigation-locked .swiper-pagination-bullet { pointer-events: none; cursor: not-allowed; }
@@ -266,9 +271,9 @@
 .eko-sign-surface:focus-visible::after { opacity: 1; }
 .eko-sign-caption { position: absolute; z-index: 5; top: 4.5%; right: 0; left: 0; display: block; font-size: 1.528cqw; font-weight: 900; line-height: 1.2; white-space: nowrap; transform: translateZ(58px); }
 .eko-sign-card:nth-child(even) .eko-sign-caption { top: auto; bottom: 3.2%; }
-.eko-sign-image { position: absolute; z-index: 3; top: 20%; left: 0; width: 100%; height: 62.8%; overflow: hidden; clip-path: inset(0); contain: paint; transform: translateZ(42px); }
-.eko-sign-image img { position: absolute; top: -21.24%; left: 0; display: block; width: 100%; height: 154.87%; max-width: none; object-fit: fill; filter: drop-shadow(0 1.1cqw 0.8cqw rgba(0, 73, 36, 0.16)); }
-.eko-sign-scan { position: absolute; z-index: 6; top: -20%; left: 0; display: block; width: 34%; height: 140%; pointer-events: none; }
+.eko-sign-image { position: absolute; z-index: 3; top: 20%; left: 0; width: 100%; height: 62.8%; overflow: hidden; clip-path: inset(0); contain: paint; filter: drop-shadow(0 1.1cqw 0.8cqw rgba(0, 73, 36, 0.16)); transform: translateZ(42px); }
+.eko-sign-image img { position: absolute; top: -21.24%; left: 0; display: block; width: 100%; height: 154.87%; max-width: none; object-fit: fill; backface-visibility: hidden; }
+.eko-sign-scan { position: absolute; z-index: 6; top: -20%; left: 0; display: block; width: 34%; height: 140%; contain: paint; pointer-events: none; will-change: transform, opacity; }
 .eko-sign-scan::before { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent); content: ''; filter: blur(0.42cqw); transform: skewX(-16deg); }
 .eko-sign-pulse { position: absolute; z-index: 1; top: 30%; right: 0; left: 0; display: block; width: 42%; aspect-ratio: 1; margin-inline: auto; border: 0.24cqw solid rgba(0, 101, 248, 0.48); border-radius: 50%; pointer-events: none; }
 .eko-sign-action { position: absolute; z-index: 7; right: 8%; bottom: 4%; display: flex; align-items: center; gap: 0.5cqw; padding: 0.48cqw 0.72cqw; border-radius: 999px; background: #001b46; color: #49ff00; font-size: 0.72cqw; font-weight: 900; letter-spacing: 0.08em; opacity: 0; transform: translate3d(0, 10px, 70px); transition: opacity 260ms ease, transform 360ms cubic-bezier(.16,1,.3,1); pointer-events: none; }
@@ -283,8 +288,11 @@
 .eko-reminder-title { position: absolute; top: 11%; left: 7.22%; }
 .eko-reminder-title span { color: #49ff00; font-size: 0.72cqw; font-weight: 900; letter-spacing: 0.18em; }
 .eko-reminder-title h2 { margin: 0.7cqw 0 0; font-size: 3.472cqw; font-weight: 900; }
+.eko-reminder-beam { position: absolute; z-index: 1; top: 22%; left: 0; width: 32%; height: 58%; background: linear-gradient(90deg, transparent, rgba(73, 255, 0, 0.13), rgba(0, 101, 248, 0.12), transparent); clip-path: polygon(40% 0, 100% 0, 60% 100%, 0 100%); pointer-events: none; }
 .eko-reminder-grid { position: absolute; top: 29%; left: 7.22%; display: grid; width: 85.55%; grid-template-columns: repeat(3, 1fr); align-items: start; justify-items: center; }
-.eko-reminder-grid img { width: 64%; aspect-ratio: 265 / 332; object-fit: cover; }
+.eko-reminder-grid img { position: relative; z-index: 2; width: 64%; aspect-ratio: 265 / 332; object-fit: cover; backface-visibility: hidden; }
+.swiper-slide-active .eko-reminder-grid img,
+.swiper-slide-active .eko-reminder-beam { will-change: transform, opacity; }
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
 /* 11 — Campaign stands */
@@ -310,11 +318,11 @@
 .eko-green-home-title { position: absolute; z-index: 2; top: 14.889%; left: 4.931%; display: flex; width: 28.333%; flex-direction: column; color: #0065f8; font-size: min(9.028vw, 14.444dvh); font-weight: 900; line-height: 0.965; text-align: right; }
 
 /* 13 — Outdoor application */
-.eko-outdoor-carousel { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; background: #e8f2e8; }
+.eko-outdoor-carousel { position: relative; width: 100%; height: 100%; overflow: hidden; contain: strict; isolation: isolate; background: #e8f2e8; }
 .eko-outdoor-carousel::after { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(0, 20, 12, 0.62), transparent 34%, transparent 70%, rgba(0, 38, 18, 0.28)); content: ''; pointer-events: none; }
-.eko-outdoor-backdrop { position: absolute; z-index: -2; inset: -5%; display: block; width: 110%; height: 110%; object-fit: cover; filter: blur(28px) saturate(0.88); }
+.eko-outdoor-backdrop { position: absolute; z-index: -2; inset: -5%; display: block; width: 110%; height: 110%; object-fit: cover; filter: blur(28px) saturate(0.88); backface-visibility: hidden; will-change: transform, opacity; }
 .eko-outdoor-stage { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1400px; }
-.eko-outdoor-poster { display: block; width: min(57.083vw, 91.333dvh); height: min(57.083vw, 91.333dvh); object-fit: cover; border-radius: 2px; box-shadow: 0 3.2dvh 8dvh rgba(0, 20, 12, 0.32); cursor: grab; touch-action: pan-y; }
+.eko-outdoor-poster { position: absolute; display: block; width: min(57.083vw, 91.333dvh); height: min(57.083vw, 91.333dvh); object-fit: cover; border-radius: 2px; box-shadow: 0 3.2dvh 8dvh rgba(0, 20, 12, 0.32); cursor: grab; touch-action: pan-y; backface-visibility: hidden; will-change: transform, opacity; }
 .eko-outdoor-poster:active { cursor: grabbing; }
 .eko-outdoor-story { position: absolute; z-index: 4; bottom: 7.5%; left: max(4.5%, 76px); display: flex; width: min(27rem, 28vw); flex-direction: column; gap: 0.5rem; padding: 1.2rem 1.35rem; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 18px; background: rgba(4, 30, 18, 0.54); color: #fff; box-shadow: 0 18px 54px rgba(0, 0, 0, 0.16); backdrop-filter: blur(16px) saturate(145%); -webkit-backdrop-filter: blur(16px) saturate(145%); }
 .eko-outdoor-story span { color: #49ff00; font-size: clamp(0.58rem, 0.62vw, 0.75rem); font-weight: 900; letter-spacing: 0.16em; }
