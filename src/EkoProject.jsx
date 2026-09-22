@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
-import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -479,9 +478,9 @@ export default function EkoProject({ onBack }) {
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 6 trên 15: Logo âm dương">
-          <SlideFrame className="eko-image-frame">
+          <SlideFrame className="eko-image-frame eko-logo-system-frame">
             <motion.img
-              className="eko-full-art"
+              className="eko-full-art eko-logo-system-art"
               src={`${ASSET}/mockup-9.png`}
               alt="Hệ thống logo EKO âm dương"
               initial={false}
@@ -519,29 +518,24 @@ export default function EkoProject({ onBack }) {
               </Reveal>
               <div className="eko-sign-grid">
                 {signs.map((sign, index) => (
-                  <Tilt
+                  <motion.div
                     className="eko-sign-card"
-                    tiltEnable={!reducedMotion}
-                    tiltMaxAngleX={8}
-                    tiltMaxAngleY={10}
-                    perspective={1100}
-                    scale={1.035}
-                    transitionSpeed={650}
-                    glareEnable={!reducedMotion}
-                    glareMaxOpacity={0.28}
-                    glareColor="#e9ffff"
-                    glarePosition="all"
-                    glareBorderRadius="24px"
+                    initial={false}
+                    animate={activeSlide === 7 ? { opacity: 1, y: 0, scale: 1, rotate: 0 } : { opacity: 0, y: 26, scale: 0.94, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
+                    transition={{ type: 'spring', stiffness: 170, damping: 20, delay: reducedMotion ? 0 : index * 0.075 }}
+                    whileHover={reducedMotion ? undefined : { y: -3, scale: 1.012, rotate: index % 2 === 0 ? -0.45 : 0.45 }}
+                    whileTap={reducedMotion ? undefined : { scale: 0.985 }}
                     key={sign.src}
                   >
-                    <motion.article
-                      className="eko-sign-surface"
-                      tabIndex="0"
-                      initial={false}
-                      animate={activeSlide === 7 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
-                      transition={{ duration: reducedMotion ? 0 : 0.65, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    >
+                    <article className="eko-sign-surface" tabIndex="0">
                       <span className="eko-sign-caption">{sign.caption}</span>
+                      <motion.span
+                        className="eko-sign-scan"
+                        aria-hidden="true"
+                        initial={false}
+                        animate={activeSlide === 7 && !reducedMotion ? { x: ['-170%', '320%'], opacity: [0, 0.5, 0] } : { x: '-170%', opacity: 0 }}
+                        transition={{ duration: 2.4, delay: 0.45 + index * 0.28, repeat: Infinity, repeatDelay: 2.6, ease: 'easeInOut' }}
+                      />
                       <motion.i
                         className="eko-sign-pulse"
                         aria-hidden="true"
@@ -553,13 +547,13 @@ export default function EkoProject({ onBack }) {
                         <motion.img
                           src={`${ASSET}/${sign.src}`}
                           alt={sign.caption}
-                          animate={activeSlide === 7 && !reducedMotion ? { y: [0, -5, 0] } : { y: 0 }}
-                          transition={{ duration: 3.2 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
+                          animate={activeSlide === 7 && !reducedMotion ? { y: [0, -1.5, 0] } : { y: 0 }}
+                          transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
                         />
                       </div>
                       <span className="eko-sign-action">{sign.action}<b aria-hidden="true">↗</b></span>
-                    </motion.article>
-                  </Tilt>
+                    </article>
+                  </motion.div>
                 ))}
               </div>
             </section>
