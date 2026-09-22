@@ -272,39 +272,61 @@
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
 /* 11 — Campaign stands */
+.eko-campaign,
+.eko-green-home,
+.eko-poster-pair,
+.eko-thank-you {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: auto;
+  container-type: inline-size;
+}
 .eko-campaign { background: #fff; color: #0065f8; }
 .eko-campaign-background { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
-.eko-campaign h2 { position: absolute; top: 7.778%; left: 15.486%; width: 69.028%; margin: 0; font-size: 4.444cqw; font-style: italic; font-weight: 800; line-height: 1.2; white-space: nowrap; }
-.eko-campaign-stands { position: absolute; top: 23%; left: 17.361%; display: grid; width: 65.208%; grid-template-columns: repeat(3, 19.236cqw); gap: 3.75cqw; }
-.eko-campaign-stands img { display: block; width: 19.236cqw; height: 43.333cqw; object-fit: cover; }
+.eko-campaign h2 { position: absolute; z-index: 2; top: 7.778%; left: 0; width: 100%; margin: 0; font-size: min(4.444vw, 7.111dvh); font-style: italic; font-weight: 800; line-height: 1.2; text-align: center; white-space: nowrap; }
+.eko-campaign-stands { position: absolute; z-index: 2; top: 23%; left: 50%; display: grid; width: max-content; grid-template-columns: repeat(3, min(19.236vw, 30.778dvh)); gap: min(3.75vw, 6.667dvh); transform: translateX(-50%); }
+.eko-campaign-stands img { display: block; width: min(19.236vw, 30.778dvh); height: min(43.333vw, 69.333dvh); object-fit: cover; filter: drop-shadow(0 1.5dvh 2.2dvh rgba(0, 58, 128, 0.11)); cursor: default; }
 
 /* 12 — Green home */
 .eko-green-home { background: #f7f7f5; }
 .eko-green-home > img { position: absolute; top: 0; left: 37.5%; display: block; width: 62.5%; height: 100%; object-fit: cover; }
-.eko-green-home-title { position: absolute; z-index: 2; top: 14.889%; left: 4.931%; display: flex; width: 28.333%; flex-direction: column; color: #0065f8; font-size: 9.028cqw; font-weight: 900; line-height: 0.965; text-align: right; }
+.eko-green-home-title { position: absolute; z-index: 2; top: 14.889%; left: 4.931%; display: flex; width: 28.333%; flex-direction: column; color: #0065f8; font-size: min(9.028vw, 14.444dvh); font-weight: 900; line-height: 0.965; text-align: right; }
 
 /* 13 — Outdoor application */
-.eko-outdoor-application { background: #fff; }
-.eko-outdoor-application img { position: absolute; top: 4.333%; left: 5.069%; display: block; width: 57.083%; height: 91.333%; object-fit: cover; }
+.eko-outdoor-carousel { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; background: #e8f2e8; }
+.eko-outdoor-carousel::after { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(0, 20, 12, 0.62), transparent 34%, transparent 70%, rgba(0, 38, 18, 0.28)); content: ''; pointer-events: none; }
+.eko-outdoor-backdrop { position: absolute; z-index: -2; inset: -5%; display: block; width: 110%; height: 110%; object-fit: cover; filter: blur(28px) saturate(0.88); }
+.eko-outdoor-stage { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1400px; }
+.eko-outdoor-poster { display: block; width: min(57.083vw, 91.333dvh); height: min(57.083vw, 91.333dvh); object-fit: cover; border-radius: 2px; box-shadow: 0 3.2dvh 8dvh rgba(0, 20, 12, 0.32); cursor: grab; touch-action: pan-y; }
+.eko-outdoor-poster:active { cursor: grabbing; }
+.eko-outdoor-story { position: absolute; z-index: 4; bottom: 7.5%; left: max(4.5%, 76px); display: flex; width: min(27rem, 28vw); flex-direction: column; gap: 0.5rem; padding: 1.2rem 1.35rem; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 18px; background: rgba(4, 30, 18, 0.54); color: #fff; box-shadow: 0 18px 54px rgba(0, 0, 0, 0.16); backdrop-filter: blur(16px) saturate(145%); -webkit-backdrop-filter: blur(16px) saturate(145%); }
+.eko-outdoor-story span { color: #49ff00; font-size: clamp(0.58rem, 0.62vw, 0.75rem); font-weight: 900; letter-spacing: 0.16em; }
+.eko-outdoor-story strong { font-size: clamp(1.15rem, 1.75vw, 2rem); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
+.eko-outdoor-story p { margin: 0.2rem 0 0; color: rgba(255, 255, 255, 0.78); font-size: clamp(0.68rem, 0.78vw, 0.9rem); font-weight: 600; line-height: 1.45; }
+.eko-outdoor-controls { position: absolute; z-index: 5; right: max(5.5%, 82px); bottom: 7.5%; display: flex; align-items: center; gap: 14px; padding: 9px 13px; border: 1px solid rgba(255, 255, 255, 0.38); border-radius: 999px; background: rgba(4, 30, 18, 0.45); color: #fff; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.12em; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.eko-outdoor-dots { display: flex; align-items: center; gap: 7px; }
+.eko-outdoor-dots button { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.48); cursor: pointer; transition: width 220ms ease, border-radius 220ms ease, background 220ms ease; }
+.eko-outdoor-dots button.is-active { width: 22px; border-radius: 999px; background: #49ff00; }
+.eko-outdoor-dots button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 /* 14 — Poster pair */
 .eko-poster-frame { background: #0a1730; }
-.eko-poster-pair { background: #0a1730; }
-.eko-poster-pair img { position: absolute; top: 11.111%; display: block; width: 38.889%; height: 77.778%; object-fit: cover; }
-.eko-poster-pair img:first-child { left: 8.75%; }
-.eko-poster-pair img:last-child { left: 53.264%; }
+.eko-poster-pair { display: flex; align-items: center; justify-content: center; gap: min(5vw, 9dvh); background: radial-gradient(circle at 50% 44%, #19315c 0, #0a1730 52%, #061023 100%); }
+.eko-poster-pair img { position: relative; display: block; width: auto; height: min(77.778dvh, 38.889vw); object-fit: contain; box-shadow: 0 2.8dvh 7dvh rgba(0, 0, 0, 0.34); }
 
 /* 15 — Thank you */
 .eko-thank-you { background: #fff; color: #000; }
-.eko-thank-logo { position: absolute; top: 23.667%; left: 39.306%; width: 21.319%; height: 31.778%; overflow: hidden; }
+.eko-thank-logo { position: absolute; top: 23.667%; right: 0; left: 0; width: min(21.319vw, 34.111dvh); height: min(19.861vw, 31.778dvh); margin-inline: auto; overflow: hidden; }
 .eko-thank-logo img { display: block; width: 100%; height: 147.63%; max-width: none; object-fit: fill; }
 .eko-thank-you > p {
   position: absolute;
   top: 55.444%;
-  left: 12.153%;
-  width: 75.694%;
-  margin: 0;
-  font-size: 2.083cqw;
+  right: 0;
+  left: 0;
+  width: min(75.694vw, 121.111dvh);
+  margin: 0 auto;
+  font-size: min(2.083vw, 3.333dvh);
   font-style: italic;
   font-weight: 900;
   line-height: 1.2;
@@ -318,6 +340,17 @@
   .eko-back-label { display: none; }
   .eko-progress { right: 46px; bottom: 14px; }
   .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets { right: max(7px, env(safe-area-inset-right)); width: 26px; padding-inline: 7px; }
+  .eko-campaign h2 { top: 12%; font-size: clamp(1.25rem, 6vw, 2rem); }
+  .eko-campaign-stands { top: 23%; grid-template-columns: repeat(3, min(27vw, 23dvh)); gap: 2.5vw; }
+  .eko-campaign-stands img { width: min(27vw, 23dvh); height: min(60.81vw, 51.75dvh); }
+  .eko-green-home > img { left: 31%; width: 69%; }
+  .eko-green-home-title { left: 3%; width: 27%; font-size: min(11vw, 8dvh); }
+  .eko-outdoor-poster { width: min(92vw, 72dvh); height: min(92vw, 72dvh); }
+  .eko-outdoor-story { bottom: 4%; left: 4%; width: calc(92% - 60px); padding: 0.8rem 0.9rem; }
+  .eko-outdoor-story p { display: none; }
+  .eko-outdoor-controls { right: 4%; bottom: auto; top: 4%; }
+  .eko-poster-pair { flex-direction: column; gap: 2.2dvh; }
+  .eko-poster-pair img { width: auto; height: min(38dvh, 74vw); }
 }
 
 @media (prefers-reduced-motion: reduce) {
