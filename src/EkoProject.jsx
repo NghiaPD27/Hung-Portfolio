@@ -508,7 +508,7 @@ export default function EkoProject({ onBack }) {
               src={`${ASSET}/mockup-9.png`}
               alt="Hệ thống logo EKO âm dương"
               initial={false}
-              animate={activeSlide === 5 ? { opacity: 1, scale: 1 } : { opacity: 0.6, scale: 1.035 }}
+              animate={activeSlide === 5 ? { opacity: 1, scale: 1 } : { opacity: 0.6, scale: 0.975 }}
               transition={{ duration: reducedMotion ? 0 : 0.9 }}
             />
           </SlideFrame>
@@ -612,15 +612,36 @@ export default function EkoProject({ onBack }) {
               />
               <div className="eko-reminder-grid">
                 {['reminder-1-opt.png', 'reminder-2-opt.png', 'reminder-3-opt.png'].map((src, index) => (
-                  <motion.img
-                    src={`${ASSET}/${src}`}
-                    alt={`Ứng dụng biển nhắc nhở EKO ${index + 1}`}
-                    initial={false}
-                    animate={activeSlide === 8 ? { opacity: 1, y: index * 10, rotate: (index - 1) * 2.5 } : { opacity: 0, y: 70, rotate: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.75, delay: 0.12 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    whileHover={reducedMotion ? undefined : { y: index * 10 - 7, scale: 1.035, rotate: 0 }}
+                  <Tilt
+                    className="eko-reminder-tilt"
+                    tiltEnable={!reducedMotion}
+                    tiltMaxAngleX={9}
+                    tiltMaxAngleY={11}
+                    perspective={1200}
+                    scale={1.045}
+                    transitionSpeed={900}
+                    glareEnable={!reducedMotion}
+                    glareMaxOpacity={0.24}
+                    glareColor="#49ff00"
+                    glarePosition="all"
+                    glareBorderRadius="24px"
+                    gyroscope={false}
                     key={src}
-                  />
+                  >
+                    <motion.div
+                      className="eko-reminder-card"
+                      initial={false}
+                      animate={activeSlide === 8 ? { opacity: 1, y: index * 10, rotate: (index - 1) * 2.5 } : { opacity: 0, y: 70, rotate: 0 }}
+                      transition={{ duration: reducedMotion ? 0 : 0.75, delay: 0.12 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <motion.img
+                        src={`${ASSET}/${src}`}
+                        alt={`Ứng dụng biển nhắc nhở EKO ${index + 1}`}
+                        animate={activeSlide === 8 && !reducedMotion ? { y: [0, -7, 0], rotate: [0, index % 2 === 0 ? 0.7 : -0.7, 0] } : { y: 0, rotate: 0 }}
+                        transition={activeSlide === 8 && !reducedMotion ? { duration: 4.2 + index * 0.35, delay: index * 0.24, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
+                      />
+                    </motion.div>
+                  </Tilt>
                 ))}
               </div>
               <motion.p initial={false} animate={activeSlide === 8 ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}>ĐỂ NHẮC NHỞ !!!</motion.p>

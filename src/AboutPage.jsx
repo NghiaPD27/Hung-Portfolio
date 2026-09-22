@@ -282,7 +282,7 @@ function useArtboardLayout() {
   return layout
 }
 
-function AboutPage({ onBack }) {
+function AboutPage({ onBack, soundOn, onToggleSound }) {
   const reducedMotion = useReducedMotion()
   const layout = useArtboardLayout()
 
@@ -415,6 +415,24 @@ function AboutPage({ onBack }) {
           transition={{ type: 'spring', stiffness: 420, damping: 24 }}
         >
           <img src="/assets/about/back-arrow-a.svg" alt="" />
+        </motion.button>
+
+        <motion.button
+          className={`about-sound-toggle ${soundOn ? 'is-playing' : ''}`}
+          type="button"
+          onClick={onToggleSound}
+          aria-label={soundOn ? 'Tắt nhạc nền About' : 'Bật nhạc nền About'}
+          aria-pressed={soundOn}
+          initial={reducedMotion ? false : { opacity: 0, x: 18 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={reducedMotion ? undefined : { scale: 1.06 }}
+          whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+          transition={{ duration: reducedMotion ? 0 : 0.55, delay: reducedMotion ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="about-sound-bars" aria-hidden="true">
+            <i /><i /><i /><i />
+          </span>
+          <span>{soundOn ? 'AMBIENT ON' : 'AMBIENT OFF'}</span>
         </motion.button>
       </section>
     </main>

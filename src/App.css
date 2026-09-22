@@ -53,6 +53,54 @@
   overflow-x: hidden;
 }
 
+.about-route-transition {
+  position: fixed;
+  z-index: 1800;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  background: radial-gradient(circle at 78% 17%, #ffdf0e 0 11%, #0068d8 11.2% 38%, #050505 38.2% 100%);
+  color: #fff;
+  pointer-events: all;
+}
+
+.about-route-transition::before {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 8vw, rgba(255,255,255,0.06) 8vw calc(8vw + 1px));
+  content: '';
+}
+
+.about-route-orbit {
+  position: absolute;
+  width: min(72vw, 920px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,255,255,0.48);
+  border-radius: 50%;
+  box-shadow: 0 0 0 11vw rgba(255,255,255,0.045), 0 0 0 24vw rgba(255,255,255,0.025);
+}
+
+.about-route-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.about-route-copy small {
+  font-size: clamp(0.62rem, 0.72vw, 0.78rem);
+  font-weight: 800;
+}
+
+.about-route-copy strong {
+  font-size: clamp(5rem, 14vw, 13rem);
+  font-weight: 900;
+  line-height: 0.92;
+}
+
 /* =================== HEADER & MENU =================== */
 .app-header {
   position: absolute;

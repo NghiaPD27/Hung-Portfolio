@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
 import EkoProject from './EkoProject'
@@ -57,6 +57,7 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
 }
 
 function App() {
+  const reducedMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash === '#art-clown')
@@ -64,7 +65,61 @@ function App() {
   const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash === '#eko')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(true)
+  const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
+  const [isAboutSoundOn, setIsAboutSoundOn] = useState(false)
   const productScrollPosition = useRef(0)
+  const aboutTransitionTimer = useRef(null)
+  const aboutAudioRef = useRef(null)
+  const aboutAudioFade = useRef(null)
+
+  const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
+    const audio = aboutAudioRef.current
+    if (!audio) return
+    if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
+    const startVolume = audio.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration)
+      const eased = 1 - ((1 - progress) ** 3)
+      audio.volume = Math.min(1, Math.max(0, startVolume + ((targetVolume - startVolume) * eased)))
+      if (progress < 1) {
+        aboutAudioFade.current = requestAnimationFrame(tick)
+      } else {
+        aboutAudioFade.current = null
+        if (pauseAfter) audio.pause()
+      }
+    }
+    aboutAudioFade.current = requestAnimationFrame(tick)
+  }
+
+  const startAboutAudio = () => {
+    if (!aboutAudioRef.current) {
+      const audio = new Audio('/assets/about/relaxation-05.mp3')
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      aboutAudioRef.current = audio
+    }
+    const audio = aboutAudioRef.current
+    audio.play().then(() => {
+      setIsAboutSoundOn(true)
+      fadeAboutAudio(0.18, 1200)
+    }).catch(() => setIsAboutSoundOn(false))
+  }
+
+  const stopAboutAudio = () => {
+    setIsAboutSoundOn(false)
+    fadeAboutAudio(0, 480, true)
+  }
+
+  const toggleAboutAudio = () => {
+    const audio = aboutAudioRef.current
+    if (!audio || audio.paused) {
+      startAboutAudio()
+      return
+    }
+    stopAboutAudio()
+  }
 
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
@@ -72,6 +127,12 @@ function App() {
       setShowCurtain(false)
     }, 1200)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => () => {
+    if (aboutTransitionTimer.current) window.clearTimeout(aboutTransitionTimer.current)
+    if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
+    aboutAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
@@ -102,6 +163,11 @@ function App() {
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)
+      if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
+        aboutAudioRef.current.pause()
+        aboutAudioRef.current.currentTime = 0
+        setIsAboutSoundOn(false)
+      }
       requestAnimationFrame(() => window.scrollTo({
         top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
@@ -173,16 +239,23 @@ function App() {
   }
 
   const openAboutPage = () => {
+    if (isAboutTransitioning) return
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
-    window.history.pushState({ about: true }, '', '#about')
-    setIsArtClownOpen(false)
-    setIsAboutOpen(true)
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    startAboutAudio()
+    setIsAboutTransitioning(true)
+    aboutTransitionTimer.current = window.setTimeout(() => {
+      window.history.pushState({ about: true }, '', '#about')
+      setIsArtClownOpen(false)
+      setIsAboutOpen(true)
+      setIsAboutTransitioning(false)
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    }, reducedMotion ? 80 : 1050)
   }
 
   const closeAboutPage = () => {
+    stopAboutAudio()
     if (window.history.state?.about) {
       window.history.back()
       return
@@ -231,7 +304,7 @@ function App() {
   }
 
   if (isAboutOpen) {
-    return <AboutPage onBack={closeAboutPage} />
+    return <AboutPage onBack={closeAboutPage} soundOn={isAboutSoundOn} onToggleSound={toggleAboutAudio} />
   }
 
   if (isEkoOpen) {
@@ -240,6 +313,34 @@ function App() {
 
   return (
     <div className="portfolio-app">
+      <AnimatePresence>
+        {isAboutTransitioning && (
+          <motion.div
+            className="about-route-transition"
+            initial={{ clipPath: 'circle(0% at 78% 17%)' }}
+            animate={{ clipPath: 'circle(150% at 78% 17%)' }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0.08 : 0.92, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <motion.span
+              className="about-route-orbit"
+              initial={{ scale: 0.3, rotate: -80, opacity: 0 }}
+              animate={{ scale: 1, rotate: 18, opacity: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 0.86, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+              aria-hidden="true"
+            />
+            <motion.div
+              className="about-route-copy"
+              initial={{ opacity: 0, y: 34, letterSpacing: '0.35em' }}
+              animate={{ opacity: 1, y: 0, letterSpacing: '0.08em' }}
+              transition={{ duration: reducedMotion ? 0 : 0.58, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <small>ENTERING / PERSONAL SPACE</small>
+              <strong>HELLO.</strong>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* ================= MÀN MỞ ĐẦU ĐIỆN ẢNH (CINEMATIC INTRO CURTAIN) ================= */}
       <AnimatePresence>
         {showCurtain && (

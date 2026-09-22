@@ -277,11 +277,47 @@
   outline-offset: 4px;
 }
 
+.about-sound-toggle {
+  position: absolute;
+  z-index: 8;
+  top: 54px;
+  right: 42px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
+  background: rgba(0, 41, 92, 0.28);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(0, 48, 108, 0.16);
+  font: 800 11px/1 'Montserrat', sans-serif;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+.about-sound-bars { display: flex; height: 18px; align-items: center; gap: 3px; }
+.about-sound-bars i { display: block; width: 3px; height: 26%; border-radius: 999px; background: #ffdf0e; transform-origin: center; }
+.about-sound-toggle.is-playing .about-sound-bars i { animation: about-sound-wave 0.9s ease-in-out infinite alternate; }
+.about-sound-toggle.is-playing .about-sound-bars i:nth-child(2) { animation-delay: -0.28s; }
+.about-sound-toggle.is-playing .about-sound-bars i:nth-child(3) { animation-delay: -0.52s; }
+.about-sound-toggle.is-playing .about-sound-bars i:nth-child(4) { animation-delay: -0.14s; }
+.about-sound-toggle:focus-visible { outline: 3px solid #ffdf0e; outline-offset: 4px; }
+
+@keyframes about-sound-wave {
+  from { transform: scaleY(0.5); }
+  to { transform: scaleY(1.8); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .about-particle,
   .about-dandelion,
   .about-dandelion-visual {
     will-change: auto;
   }
+
+  .about-sound-toggle.is-playing .about-sound-bars i { animation: none; }
 
 }

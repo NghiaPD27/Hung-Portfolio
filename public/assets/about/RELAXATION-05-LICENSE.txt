@@ -1,0 +1,7 @@
+Track: Relaxation 05
+Artist: Lily J
+Source: https://mixkit.co/free-stock-music/ambient/
+Asset: https://assets.mixkit.co/music/749/749.mp3
+License: Mixkit Free License — https://mixkit.co/license/
+
+Included as low-volume ambient background music for the About page.

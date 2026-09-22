@@ -38,8 +38,8 @@
 .eko-image-frame { background: #fff; }
 .eko-hero-frame { background: #5ca1cc; }
 
-.eko-logo-system-frame { box-sizing: border-box; padding: clamp(14px, 2.4dvh, 28px) clamp(12px, 1.5vw, 28px) clamp(42px, 6dvh, 68px); background: #fff; }
-.eko-logo-system-frame .eko-logo-system-art { width: 100%; height: 100%; object-fit: contain; object-position: center; background: transparent; }
+.eko-logo-system-frame { box-sizing: border-box; padding: clamp(12px, 2dvh, 24px) clamp(10px, 1.4vw, 26px) max(clamp(76px, 10dvh, 116px), env(safe-area-inset-bottom)); background: #fff; }
+.eko-logo-system-frame .eko-logo-system-art { position: relative; width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; object-position: center top; background: transparent; transform-origin: center top; }
 
 .eko-design-canvas {
   position: relative;
@@ -290,8 +290,11 @@
 .eko-reminder-title h2 { margin: 0.7cqw 0 0; font-size: 3.472cqw; font-weight: 900; }
 .eko-reminder-beam { position: absolute; z-index: 1; top: 22%; left: 0; width: 32%; height: 58%; background: linear-gradient(90deg, transparent, rgba(73, 255, 0, 0.13), rgba(0, 101, 248, 0.12), transparent); clip-path: polygon(40% 0, 100% 0, 60% 100%, 0 100%); pointer-events: none; }
 .eko-reminder-grid { position: absolute; top: 29%; left: 7.22%; display: grid; width: 85.55%; grid-template-columns: repeat(3, 1fr); align-items: start; justify-items: center; }
-.eko-reminder-grid img { position: relative; z-index: 2; width: 64%; aspect-ratio: 265 / 332; object-fit: cover; backface-visibility: hidden; }
-.swiper-slide-active .eko-reminder-grid img,
+.eko-reminder-tilt { position: relative; z-index: 2; width: 64%; aspect-ratio: 265 / 332; border: 1px solid rgba(73, 255, 0, 0.12); border-radius: 24px; background: radial-gradient(circle at 50% 38%, rgba(73, 255, 0, 0.09), transparent 72%); transform-style: preserve-3d; }
+.eko-reminder-card { width: 100%; height: 100%; transform-style: preserve-3d; }
+.eko-reminder-card img { display: block; width: 100%; height: 100%; object-fit: contain; backface-visibility: hidden; transform: translateZ(32px); }
+.swiper-slide-active .eko-reminder-card img,
+.swiper-slide-active .eko-reminder-card,
 .swiper-slide-active .eko-reminder-beam { will-change: transform, opacity; }
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
