@@ -271,6 +271,24 @@
 .eko-reminder-grid img { width: 64%; aspect-ratio: 265 / 332; object-fit: cover; }
 .eko-reminders > p { position: absolute; right: 7.3%; bottom: 8%; margin: 0; color: #49ff00; font-size: 6.667cqw; font-weight: 900; white-space: nowrap; }
 
+/* 11 — Thank you */
+.eko-thank-you { background: #fff; color: #000; }
+.eko-thank-logo { position: absolute; top: 23.667%; left: 39.306%; width: 21.319%; height: 31.778%; overflow: hidden; }
+.eko-thank-logo img { display: block; width: 100%; height: 147.63%; max-width: none; object-fit: fill; }
+.eko-thank-you > p {
+  position: absolute;
+  top: 55.444%;
+  left: 12.153%;
+  width: 75.694%;
+  margin: 0;
+  font-size: 2.083cqw;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 @media (max-width: 640px) {
   .eko-back { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); min-width: 48px; height: 44px; padding: 0 12px; }
   .eko-back-icon { width: 25px; height: 18px; }

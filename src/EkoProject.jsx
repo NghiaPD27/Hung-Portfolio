@@ -8,6 +8,7 @@ import 'swiper/css/pagination'
 import './EkoProject.css'
 
 const ASSET = '/assets/eko'
+const TOTAL_SLIDES = 11
 
 const trashItems = [
   { id: 'trash-1', src: 'trash-1.png', label: 'Mảnh rác thứ nhất', className: 'eko-trash-one' },
@@ -268,7 +269,7 @@ export default function EkoProject({ onBack }) {
       <div className="eko-progress" aria-live="polite">
         <span>{String(activeSlide + 1).padStart(2, '0')}</span>
         <i />
-        <span>10</span>
+        <span>{String(TOTAL_SLIDES).padStart(2, '0')}</span>
       </div>
 
       <Swiper
@@ -296,13 +297,13 @@ export default function EkoProject({ onBack }) {
           }
         }}
       >
-        <SwiperSlide tag="section" aria-label="Màn 1 trên 10: EKO Hero">
+        <SwiperSlide tag="section" aria-label="Màn 1 trên 11: EKO Hero">
           <SlideFrame className="eko-hero-frame">
             <EkoHero active={activeSlide === 0} reducedMotion={reducedMotion} />
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 2 trên 10: Trò chơi nhặt rác">
+        <SwiperSlide tag="section" aria-label="Màn 2 trên 11: Trò chơi nhặt rác">
           <SlideFrame className="eko-white-frame">
             <CleanupGame
               active={activeSlide === 1}
@@ -312,7 +313,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 3 trên 10: Logo EKO">
+        <SwiperSlide tag="section" aria-label="Màn 3 trên 11: Logo EKO">
           <SlideFrame className="eko-black-frame">
             <section className="eko-logo-stage eko-full-canvas">
               <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern.png`} alt="" />
@@ -338,7 +339,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 4 trên 10: Ý nghĩa logo">
+        <SwiperSlide tag="section" aria-label="Màn 4 trên 11: Ý nghĩa logo">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-logo-meaning">
               <Reveal active={activeSlide === 3} className="eko-meaning-content">
@@ -353,7 +354,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 5 trên 10: Tên gọi EKO">
+        <SwiperSlide tag="section" aria-label="Màn 5 trên 11: Tên gọi EKO">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-name-story">
               <Reveal active={activeSlide === 4} className="eko-name-copy">
@@ -377,7 +378,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 6 trên 10: Logo âm dương">
+        <SwiperSlide tag="section" aria-label="Màn 6 trên 11: Logo âm dương">
           <SlideFrame className="eko-image-frame">
             <motion.img
               className="eko-full-art"
@@ -390,7 +391,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 7 trên 10: Chi tiết nhận dạng">
+        <SwiperSlide tag="section" aria-label="Màn 7 trên 11: Chi tiết nhận dạng">
           <SlideFrame className="eko-white-frame">
             <section className="eko-identity eko-full-canvas">
               <Reveal active={activeSlide === 6} className="eko-identity-title">
@@ -410,7 +411,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 8 trên 10: Hệ thống biển báo">
+        <SwiperSlide tag="section" aria-label="Màn 8 trên 11: Hệ thống biển báo">
           <SlideFrame className="eko-green-frame">
             <section className="eko-design-canvas eko-signs">
               <Reveal active={activeSlide === 7} className="eko-signs-title">
@@ -436,7 +437,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 9 trên 10: EKO ở mọi nơi">
+        <SwiperSlide tag="section" aria-label="Màn 9 trên 11: EKO ở mọi nơi">
           <SlideFrame className="eko-black-frame">
             <section className="eko-design-canvas eko-reminders">
               <Reveal active={activeSlide === 8} className="eko-reminder-title">
@@ -460,7 +461,7 @@ export default function EkoProject({ onBack }) {
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label="Màn 10 trên 10: Tổng kết EKO">
+        <SwiperSlide tag="section" aria-label="Màn 10 trên 11: Tổng kết EKO">
           <SlideFrame className="eko-image-frame">
             <motion.img
               className="eko-full-art"
@@ -471,6 +472,28 @@ export default function EkoProject({ onBack }) {
               transition={{ duration: reducedMotion ? 0 : 0.9 }}
             />
             <div className="eko-end-note">EKO · CLEAN EARTH / BRIGHT FUTURE</div>
+          </SlideFrame>
+        </SwiperSlide>
+
+        <SwiperSlide tag="section" aria-label="Màn 11 trên 11: Lời cảm ơn">
+          <SlideFrame className="eko-white-frame">
+            <section className="eko-design-canvas eko-thank-you">
+              <motion.div
+                className="eko-thank-logo"
+                initial={false}
+                animate={activeSlide === 10 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 36, scale: 0.94 }}
+                transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <img src={`${ASSET}/thank-you-logo.png`} alt="Biểu tượng EKO" />
+              </motion.div>
+              <motion.p
+                initial={false}
+                animate={activeSlide === 10 ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+                transition={{ duration: reducedMotion ? 0 : 0.75, delay: reducedMotion ? 0 : 0.14, ease: [0.16, 1, 0.3, 1] }}
+              >
+                Cảm ơn những người đã, đang và sẽ cùng chung tay bảo vệ môi trường. Mỗi hành động nhỏ hôm nay đều góp phần tạo nên một tương lai xanh hơn.
+              </motion.p>
+            </section>
           </SlideFrame>
         </SwiperSlide>
       </Swiper>
