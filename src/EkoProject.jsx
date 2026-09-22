@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -18,10 +19,10 @@ const trashItems = [
 ]
 
 const signs = [
-  { src: 'sign-4.png', caption: 'TÍNH BỎ RÁC Ở ĐÂU ?' },
-  { src: 'sign-1.png', caption: 'TÍNH XẢ RÁC HẢ ?' },
-  { src: 'sign-3.png', caption: 'BẢO VỆ LÁ PHỔI XANH' },
-  { src: 'sign-2.png', caption: 'THẤY THÌ LỤM BỎ' },
+  { src: 'sign-4.png', caption: 'TÍNH BỎ RÁC Ở ĐÂU ?', action: 'RÁC ĐÚNG CHỖ' },
+  { src: 'sign-1.png', caption: 'TÍNH XẢ RÁC HẢ ?', action: 'KHÔNG XẢ BỪA' },
+  { src: 'sign-3.png', caption: 'BẢO VỆ LÁ PHỔI XANH', action: 'GIỮ MÀU XANH' },
+  { src: 'sign-2.png', caption: 'THẤY THÌ LỤM BỎ', action: 'THẤY LÀ LỤM' },
 ]
 
 const outdoorPosters = [
@@ -518,18 +519,47 @@ export default function EkoProject({ onBack }) {
               </Reveal>
               <div className="eko-sign-grid">
                 {signs.map((sign, index) => (
-                  <motion.article
+                  <Tilt
                     className="eko-sign-card"
-                    initial={false}
-                    animate={activeSlide === 7 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.65, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    tiltEnable={!reducedMotion}
+                    tiltMaxAngleX={8}
+                    tiltMaxAngleY={10}
+                    perspective={1100}
+                    scale={1.035}
+                    transitionSpeed={650}
+                    glareEnable={!reducedMotion}
+                    glareMaxOpacity={0.28}
+                    glareColor="#e9ffff"
+                    glarePosition="all"
+                    glareBorderRadius="24px"
                     key={sign.src}
                   >
-                    <span>{sign.caption}</span>
-                    <div className="eko-sign-image">
-                      <img src={`${ASSET}/${sign.src}`} alt={sign.caption} />
-                    </div>
-                  </motion.article>
+                    <motion.article
+                      className="eko-sign-surface"
+                      tabIndex="0"
+                      initial={false}
+                      animate={activeSlide === 7 ? { opacity: 1, y: 0 } : { opacity: 0, y: 42 }}
+                      transition={{ duration: reducedMotion ? 0 : 0.65, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <span className="eko-sign-caption">{sign.caption}</span>
+                      <motion.i
+                        className="eko-sign-pulse"
+                        aria-hidden="true"
+                        initial={false}
+                        animate={activeSlide === 7 && !reducedMotion ? { opacity: [0, 0.34, 0], scale: [0.72, 1.15, 1.34] } : { opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 2.8, delay: 0.35 + index * 0.24, repeat: Infinity, ease: 'easeOut' }}
+                      />
+                      <div className="eko-sign-image">
+                        <motion.img
+                          src={`${ASSET}/${sign.src}`}
+                          alt={sign.caption}
+                          animate={activeSlide === 7 && !reducedMotion ? { y: [0, -5, 0] } : { y: 0 }}
+                          transition={{ duration: 3.2 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                      </div>
+                      <span className="eko-sign-action">{sign.action}<b aria-hidden="true">↗</b></span>
+                    </motion.article>
+                  </Tilt>
                 ))}
               </div>
             </section>

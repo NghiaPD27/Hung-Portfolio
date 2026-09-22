@@ -252,15 +252,26 @@
 .eko-signs-title { position: absolute; top: 18.111%; left: 17.153%; width: 65.694%; text-align: center; }
 .eko-signs-title h2 { margin: 0; font-size: 3.472cqw; font-weight: 900; line-height: normal; white-space: nowrap; }
 .eko-sign-grid { position: absolute; inset: 0; }
-.eko-sign-card { position: absolute; top: 0; width: 24.306%; height: 100%; text-align: center; }
+.eko-sign-card { position: absolute !important; top: 35%; width: 24.306%; height: 41%; overflow: hidden; border-radius: 1.6cqw; text-align: center; transform-style: preserve-3d; }
 .eko-sign-card:nth-child(1) { left: 0; }
 .eko-sign-card:nth-child(2) { left: 25.208%; }
 .eko-sign-card:nth-child(3) { left: 50.417%; }
 .eko-sign-card:nth-child(4) { left: 75.694%; }
-.eko-sign-card span { position: absolute; top: 37.778%; right: 0; left: 0; display: block; font-size: 1.528cqw; font-weight: 900; line-height: 1.2; white-space: nowrap; }
-.eko-sign-card:nth-child(even) span { top: 70.333%; }
-.eko-sign-image { position: absolute; top: 43.222%; left: 0; width: 100%; height: 25.111%; overflow: hidden; }
-.eko-sign-image img { position: absolute; top: -21.24%; left: 0; display: block; width: 100%; height: 154.87%; max-width: none; object-fit: fill; }
+.eko-sign-surface { position: relative; width: 100%; height: 100%; overflow: hidden; border: 1px solid rgba(0, 101, 248, 0.1); border-radius: inherit; outline: none; background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(53, 220, 31, 0.08)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 1.4cqw 2.7cqw rgba(0, 76, 32, 0.1); transform-style: preserve-3d; }
+.eko-sign-surface::after { position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at 50% 48%, rgba(255,255,255,.28), transparent 42%); content: ''; opacity: 0; transition: opacity 320ms ease; pointer-events: none; }
+.eko-sign-card:hover .eko-sign-surface::after,
+.eko-sign-surface:focus-visible::after { opacity: 1; }
+.eko-sign-caption { position: absolute; z-index: 5; top: 4.5%; right: 0; left: 0; display: block; font-size: 1.528cqw; font-weight: 900; line-height: 1.2; white-space: nowrap; transform: translateZ(58px); }
+.eko-sign-card:nth-child(even) .eko-sign-caption { top: auto; bottom: 3.2%; }
+.eko-sign-image { position: absolute; z-index: 3; top: 20%; left: 0; width: 100%; height: 62.8%; overflow: hidden; transform: translateZ(42px); }
+.eko-sign-image img { position: absolute; top: -21.24%; left: 0; display: block; width: 100%; height: 154.87%; max-width: none; object-fit: fill; filter: drop-shadow(0 1.1cqw 0.8cqw rgba(0, 73, 36, 0.16)); }
+.eko-sign-pulse { position: absolute; z-index: 1; top: 30%; right: 0; left: 0; display: block; width: 42%; aspect-ratio: 1; margin-inline: auto; border: 0.24cqw solid rgba(0, 101, 248, 0.48); border-radius: 50%; pointer-events: none; }
+.eko-sign-action { position: absolute; z-index: 7; right: 8%; bottom: 4%; display: flex; align-items: center; gap: 0.5cqw; padding: 0.48cqw 0.72cqw; border-radius: 999px; background: #001b46; color: #49ff00; font-size: 0.72cqw; font-weight: 900; letter-spacing: 0.08em; opacity: 0; transform: translate3d(0, 10px, 70px); transition: opacity 260ms ease, transform 360ms cubic-bezier(.16,1,.3,1); pointer-events: none; }
+.eko-sign-card:nth-child(even) .eko-sign-action { top: 3.5%; bottom: auto; }
+.eko-sign-action b { color: #fff; font-size: 0.9cqw; }
+.eko-sign-card:hover .eko-sign-action,
+.eko-sign-surface:focus-visible .eko-sign-action { opacity: 1; transform: translate3d(0, 0, 70px); }
+.eko-sign-surface:focus-visible { border-color: rgba(0, 101, 248, 0.62); box-shadow: 0 0 0 0.22cqw rgba(255, 255, 255, 0.72), 0 1.4cqw 2.7cqw rgba(0, 76, 32, 0.16); }
 
 /* 09 — Reminder applications */
 .eko-reminders { background: #000; color: #fff; }
