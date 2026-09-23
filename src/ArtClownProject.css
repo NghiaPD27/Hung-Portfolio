@@ -475,6 +475,7 @@
   transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1), filter 650ms ease;
 }
 .art-logo-applications-art:hover img { filter: saturate(1.04) contrast(1.02); transform: scale(1.015); }
+.art-logo-applications-mobile { display: none; }
 
 /* Mascot — full viewport interactive showcase */
 .art-mascot-experience {
@@ -1057,33 +1058,236 @@
 
   /* Slide 4: Logo Applications */
   .art-logo-applications {
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     height: 100%;
-    padding: 20px;
+    padding: max(60px, calc(env(safe-area-inset-top, 0px) + 50px)) 20px max(34px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+    box-sizing: border-box;
+    background: #f7f3eb;
   }
 
   .art-logo-applications-art {
-    position: relative;
-    top: auto;
-    left: auto;
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: none !important;
   }
 
-  .art-logo-applications-art img {
-    position: relative;
-    top: auto;
-    left: auto;
+  .art-logo-applications-mobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
-    height: auto;
-    max-width: 100%;
-    max-height: 72dvh;
-    object-fit: contain;
+    max-width: 298px;
+    height: 100%;
+    max-height: 640px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .art-app-header {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .art-app-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #1a1a1a;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(190, 26, 26, 0.25);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .art-app-num {
+    color: #be1a1a;
+    font-weight: 800;
+  }
+
+  .art-app-slash {
+    color: #be1a1a;
+    opacity: 0.5;
+  }
+
+  .art-app-guide {
+    color: rgba(26, 26, 26, 0.85);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .art-app-title {
+    font-size: clamp(24px, 7vw, 30px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #120204;
+    margin: 0 0 2px;
+    letter-spacing: -0.02em;
+  }
+
+  .art-app-subtitle {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #be1a1a;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .art-app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    flex: 1;
+    max-height: 480px;
+    align-content: center;
+    margin: 6px 0;
+  }
+
+  .art-app-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 10px 10px;
     border-radius: 16px;
+    aspect-ratio: 1 / 1.15;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .art-app-card:active {
+    transform: scale(0.98);
+  }
+
+  .art-app-card-preview {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .art-app-card-preview img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .art-app-card-meta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding-top: 6px;
+  }
+
+  .art-app-card-name {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+  }
+
+  .art-app-card-slash {
+    display: none;
+  }
+
+  .art-app-card-vn {
+    font-size: 9px;
+    font-weight: 600;
+    opacity: 0.8;
+    line-height: 1.15;
+  }
+
+  /* 4 Brand Card Themes */
+  .art-app-card-primary {
+    background: #ffffff;
+    border: 1px solid rgba(190, 26, 26, 0.14);
+    box-shadow: 0 8px 24px rgba(60, 10, 10, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+    color: #be1a1a;
+  }
+
+  .art-app-card-primary .art-app-card-vn {
+    color: #8c1212;
+  }
+
+  .art-app-card-reversed {
+    background: #be1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 28px rgba(190, 26, 26, 0.28), 0 2px 6px rgba(190, 26, 26, 0.12);
+    color: #faef5d;
+  }
+
+  .art-app-card-reversed .art-app-card-preview img {
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+  }
+
+  .art-app-card-reversed .art-app-card-vn {
+    color: #f7f3eb;
+  }
+
+  .art-app-card-mono {
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+  }
+
+  .art-app-card-mono .art-app-card-preview img {
+    filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.1));
+  }
+
+  .art-app-card-mono .art-app-card-vn {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .art-app-card-mark {
+    background: #f6d274;
+    border: 1px solid rgba(190, 26, 26, 0.2);
+    box-shadow: 0 10px 26px rgba(246, 210, 116, 0.32), 0 2px 6px rgba(0, 0, 0, 0.04);
+    color: #160304;
+  }
+
+  .art-app-card-mark .art-app-card-preview img {
+    width: 74%;
+    height: 74%;
+  }
+
+  .art-app-card-mark .art-app-card-vn {
+    color: rgba(22, 3, 4, 0.7);
+  }
+
+  .art-app-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(26, 26, 26, 0.5);
+    padding-top: 8px;
+    border-top: 1px solid rgba(190, 26, 26, 0.14);
+    margin-top: 4px;
+  }
+
+  .art-app-lang {
+    color: #be1a1a;
+    font-weight: 800;
   }
 
   /* Slide 5: Mascot Experience */

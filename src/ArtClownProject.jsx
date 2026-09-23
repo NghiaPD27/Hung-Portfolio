@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
@@ -282,6 +282,23 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
   const [openValue, setOpenValue] = useState(null)
   const [activeSlide, setActiveSlide] = useState(0)
   const { isLoaded, markLoaded, registerRef } = useImageSkeleton()
+  const swiperRef = useRef(null)
+
+  useEffect(() => {
+    const handleHash = () => {
+      const match = window.location.hash.match(/^#art-clown-(\d+)$/)
+      if (match) {
+        const target = parseInt(match[1], 10)
+        if (target !== activeSlide && swiperRef.current) {
+          swiperRef.current.slideTo(target, 0)
+        }
+        setActiveSlide(target)
+      }
+    }
+    handleHash()
+    window.addEventListener('hashchange', handleHash)
+    return () => window.removeEventListener('hashchange', handleHash)
+  }, [activeSlide])
 
   useEffect(() => {
     if (activeSlide !== 0 || reducedMotion) {
@@ -340,6 +357,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         keyboard={{ enabled: true, onlyInViewport: true, pageUpDown: true }}
         pagination={{ clickable: true }}
         a11y={{ enabled: true, prevSlideMessage: 'Màn trước', nextSlideMessage: 'Màn tiếp theo', paginationBulletMessage: 'Đi đến màn {{index}}' }}
+        onSwiper={(swiper) => { swiperRef.current = swiper }}
         onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 8: Hero Art Clown">
@@ -443,6 +461,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         <SwiperSlide tag="section" aria-label="Màn 4 trên 8: Logo Applications">
           <SlideFrame className="art-slide-cream">
             <section className="art-design-canvas art-logo-applications" aria-label="Ứng dụng logo Art Clown">
+              {/* Desktop artwork — 1440x690 canvas centered inside the slide */}
               <div className="art-logo-applications-art">
                 <div className={`art-skeleton art-skeleton-cream ${isLoaded('logo-applications') ? 'is-hidden' : ''}`} aria-hidden="true" />
                 <img
@@ -453,6 +472,70 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   onLoad={() => markLoaded('logo-applications')}
                   className={`art-img-fade ${isLoaded('logo-applications') ? 'is-loaded' : ''}`}
                 />
+              </div>
+
+              {/* Mobile native editorial identity board */}
+              <div className="art-logo-applications-mobile" aria-label="Hệ thống ứng dụng logo Art Clown">
+                <header className="art-app-header">
+                  <div className="art-app-eyebrow">
+                    <span className="art-app-num">03</span>
+                    <span className="art-app-slash">/</span>
+                    <span className="art-app-guide">BRAND GUIDELINES 2026</span>
+                  </div>
+                  <h2 className="art-app-title">Logo Applications</h2>
+                  <p className="art-app-subtitle">Hệ phiên bản logo</p>
+                </header>
+
+                <div className="art-app-grid">
+                  <div className="art-app-card art-app-card-primary">
+                    <div className="art-app-card-preview">
+                      <img src={`${ASSET}/logo-on-white.svg`} alt="Logo Art Clown bản chính" />
+                    </div>
+                    <div className="art-app-card-meta">
+                      <span className="art-app-card-name">PRIMARY</span>
+                      <span className="art-app-card-slash">/</span>
+                      <span className="art-app-card-vn">Chính</span>
+                    </div>
+                  </div>
+
+                  <div className="art-app-card art-app-card-reversed">
+                    <div className="art-app-card-preview">
+                      <img src={`${ASSET}/logo-white.svg`} alt="Logo Art Clown âm bản" />
+                    </div>
+                    <div className="art-app-card-meta">
+                      <span className="art-app-card-name">REVERSED</span>
+                      <span className="art-app-card-slash">/</span>
+                      <span className="art-app-card-vn">Âm bản</span>
+                    </div>
+                  </div>
+
+                  <div className="art-app-card art-app-card-mono">
+                    <div className="art-app-card-preview">
+                      <img src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown đơn sắc" />
+                    </div>
+                    <div className="art-app-card-meta">
+                      <span className="art-app-card-name">MONO</span>
+                      <span className="art-app-card-slash">/</span>
+                      <span className="art-app-card-vn">Đơn sắc</span>
+                    </div>
+                  </div>
+
+                  <div className="art-app-card art-app-card-mark">
+                    <div className="art-app-card-preview">
+                      <img src={`${ASSET}/logo-mark-only.svg`} alt="Logo Art Clown biểu tượng" />
+                    </div>
+                    <div className="art-app-card-meta">
+                      <span className="art-app-card-name">MARK-ONLY</span>
+                      <span className="art-app-card-slash">/</span>
+                      <span className="art-app-card-vn">Biểu tượng</span>
+                    </div>
+                  </div>
+                </div>
+
+                <footer className="art-app-footer">
+                  <span className="art-app-lang">VI / EN</span>
+                  <span className="art-app-tag">SYSTEM · IDENTITY</span>
+                </footer>
               </div>
             </section>
           </SlideFrame>
