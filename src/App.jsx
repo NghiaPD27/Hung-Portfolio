@@ -59,9 +59,6 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
 const globalMenuItems = [
   { num: '01', title: 'HOME', destination: 'home' },
   { num: '02', title: 'ABOUT', destination: 'about' },
-  { num: '03', title: 'ART CLOWN', destination: 'art-clown' },
-  { num: '04', title: 'E-KO', destination: 'eko' },
-  { num: '05', title: 'WORKS', destination: 'works' },
 ]
 
 function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }) {
@@ -332,7 +329,7 @@ function App() {
     const audio = ensureArtClownCircusAudio()
     if (audio.volume === 0) audio.currentTime = 0
     audio.play()
-      .then(() => fadeArtClownCircusAudio(0.14, 950))
+      .then(() => fadeArtClownCircusAudio(0.22, 950))
       .catch(() => {})
   }, [ensureArtClownCircusAudio, fadeArtClownCircusAudio])
 
