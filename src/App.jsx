@@ -135,9 +135,9 @@ function App() {
   const reducedMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
-  const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash === '#art-clown')
-  const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash === '#about')
-  const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash === '#eko')
+  const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash.startsWith('#art-clown'))
+  const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash.startsWith('#about'))
+  const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash.startsWith('#eko'))
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
@@ -379,9 +379,9 @@ function App() {
 
   useEffect(() => {
     const syncProjectRoute = () => {
-      const projectIsOpen = window.location.hash === '#art-clown'
-      const aboutIsOpen = window.location.hash === '#about'
-      const ekoIsOpen = window.location.hash === '#eko'
+      const projectIsOpen = window.location.hash.startsWith('#art-clown')
+      const aboutIsOpen = window.location.hash.startsWith('#about')
+      const ekoIsOpen = window.location.hash.startsWith('#eko')
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)

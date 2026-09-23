@@ -360,10 +360,32 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const gameCompleteRef = useRef(false)
-  const [activeSlide, setActiveSlide] = useState(0)
+  const [activeSlide, setActiveSlide] = useState(() => {
+    const match = window.location.hash.match(/#eko-(\d+)/)
+    return match ? Math.max(0, Math.min(TOTAL_SLIDES - 1, parseInt(match[1], 10))) : 0
+  })
   const [gameComplete, setGameComplete] = useState(false)
   const [gameDragging, setGameDraggingState] = useState(false)
   const navigationLocked = activeSlide === 1 && !gameComplete
+
+  useEffect(() => {
+    const handleHash = () => {
+      const match = window.location.hash.match(/#eko-(\d+)/)
+      if (match) {
+        const target = Math.max(0, Math.min(TOTAL_SLIDES - 1, parseInt(match[1], 10)))
+        if (target !== activeSlide) {
+          if (swiperRef.current) {
+            swiperRef.current.allowSlideNext = true
+            swiperRef.current.allowSlidePrev = true
+            swiperRef.current.slideTo(target, 0)
+          }
+          setActiveSlide(target)
+        }
+      }
+    }
+    window.addEventListener('hashchange', handleHash)
+    return () => window.removeEventListener('hashchange', handleHash)
+  }, [activeSlide])
 
   useEffect(() => {
     onHeroAudioStateChange?.(activeSlide === 0)
@@ -413,7 +435,6 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
       swiper.mousewheel?.enable()
     } else {
       swiper.keyboard?.disable()
-      swiper.mousewheel?.disable()
     }
   }, [gameDragging, navigationLocked])
 
@@ -448,6 +469,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
         modules={[Mousewheel, Keyboard, Pagination, A11y]}
         direction="vertical"
         slidesPerView={1}
+        initialSlide={activeSlide}
         speed={reducedMotion ? 0 : 850}
         preventInteractionOnTransition
         noSwiping
