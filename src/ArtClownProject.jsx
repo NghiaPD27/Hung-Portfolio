@@ -277,13 +277,39 @@ function MascotExperience({ reducedMotion }) {
   )
 }
 
-export default function ArtClownProject({ onBack }) {
+export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop }) {
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
+  const [activeSlide, setActiveSlide] = useState(0)
   const { isLoaded, markLoaded, registerRef } = useImageSkeleton()
 
+  useEffect(() => {
+    if (activeSlide !== 0 || reducedMotion) {
+      onFireworkSoundStop?.()
+      return undefined
+    }
+
+    let boomTimer
+    const queueBoom = () => {
+      boomTimer = window.setTimeout(() => onFireworkBoom?.(), 1320)
+    }
+
+    queueBoom()
+    const cycleTimer = window.setInterval(queueBoom, 4000)
+
+    return () => {
+      window.clearTimeout(boomTimer)
+      window.clearInterval(cycleTimer)
+      onFireworkSoundStop?.()
+    }
+  }, [activeSlide, reducedMotion, onFireworkBoom, onFireworkSoundStop])
+
   return (
-    <main className="art-clown-project" aria-label="Art Clown branding project">
+    <main
+      className="art-clown-project"
+      aria-label="Art Clown branding project"
+      onPointerDown={() => { if (activeSlide === 0) onFireworkSoundPrime?.() }}
+    >
       <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
         <img src={`${ASSET}/back.svg`} alt="" />
       </button>
@@ -299,6 +325,7 @@ export default function ArtClownProject({ onBack }) {
         keyboard={{ enabled: true, onlyInViewport: true, pageUpDown: true }}
         pagination={{ clickable: true }}
         a11y={{ enabled: true, prevSlideMessage: 'Màn trước', nextSlideMessage: 'Màn tiếp theo', paginationBulletMessage: 'Đi đến màn {{index}}' }}
+        onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 8: Hero Art Clown">
           <SlideFrame className="art-slide-hero">

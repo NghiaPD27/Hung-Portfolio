@@ -75,6 +75,7 @@ function App() {
   const aboutAudioFade = useRef(null)
   const ekoHeroAudioRef = useRef(null)
   const ekoHeroAudioFade = useRef(null)
+  const artClownFireworksAudioRef = useRef(null)
 
   const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
     const audio = aboutAudioRef.current
@@ -174,6 +175,38 @@ function App() {
       .catch(() => {})
   }, [ensureEkoHeroAudio, fadeEkoHeroAudio])
 
+  const ensureArtClownFireworksAudio = useCallback(() => {
+    if (!artClownFireworksAudioRef.current) {
+      const audio = new Audio('/assets/art-clown/source/fireworks-multiple-booms.mp3')
+      audio.preload = 'auto'
+      audio.volume = 0
+      artClownFireworksAudioRef.current = audio
+    }
+    return artClownFireworksAudioRef.current
+  }, [])
+
+  const primeArtClownFireworksAudio = useCallback(() => {
+    const audio = ensureArtClownFireworksAudio()
+    if (!audio.paused && audio.volume > 0) return
+    audio.volume = 0
+    audio.play().catch(() => {})
+  }, [ensureArtClownFireworksAudio])
+
+  const playArtClownFireworks = useCallback(() => {
+    const audio = ensureArtClownFireworksAudio()
+    audio.pause()
+    audio.currentTime = 0
+    audio.volume = 0.88
+    audio.play().catch(() => {})
+  }, [ensureArtClownFireworksAudio])
+
+  const stopArtClownFireworks = useCallback(() => {
+    const audio = artClownFireworksAudioRef.current
+    if (!audio) return
+    audio.pause()
+    audio.currentTime = 0
+  }, [])
+
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -189,6 +222,7 @@ function App() {
     if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
     aboutAudioRef.current?.pause()
     ekoHeroAudioRef.current?.pause()
+    artClownFireworksAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
@@ -231,6 +265,7 @@ function App() {
         ekoHeroAudioRef.current.currentTime = 0
         ekoHeroAudioRef.current.volume = 0
       }
+      if (!projectIsOpen) stopArtClownFireworks()
       requestAnimationFrame(() => window.scrollTo({
         top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
@@ -243,7 +278,7 @@ function App() {
       window.removeEventListener('popstate', syncProjectRoute)
       window.removeEventListener('hashchange', syncProjectRoute)
     }
-  }, [])
+  }, [stopArtClownFireworks])
 
   // Danh mục sản phẩm dạng Thẻ Folder
   const folderProjects = [
@@ -262,6 +297,7 @@ function App() {
     productScrollPosition.current = window.scrollY
     setMenuOpen(false)
     setSelectedProject(null)
+    primeArtClownFireworksAudio()
     setProjectTransition('art-clown')
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ artClown: true }, '', '#art-clown')
@@ -274,6 +310,7 @@ function App() {
   }
 
   const closeArtClownProject = () => {
+    stopArtClownFireworks()
     if (window.history.state?.artClown) {
       window.history.back()
       return
@@ -353,7 +390,14 @@ function App() {
   })
 
   if (isArtClownOpen) {
-    return <ArtClownProject onBack={closeArtClownProject} />
+    return (
+      <ArtClownProject
+        onBack={closeArtClownProject}
+        onFireworkBoom={playArtClownFireworks}
+        onFireworkSoundPrime={primeArtClownFireworksAudio}
+        onFireworkSoundStop={stopArtClownFireworks}
+      />
+    )
   }
 
   if (isAboutOpen) {
