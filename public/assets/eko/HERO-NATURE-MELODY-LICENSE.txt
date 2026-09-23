@@ -1,0 +1,8 @@
+Music track: Relaxation 05
+Artist: Lily J
+Source library: Mixkit
+Source page: https://mixkit.co/free-stock-music/tag/nature/
+Asset: https://assets.mixkit.co/music/749/749.mp3
+License: Mixkit Stock Music Free License — https://mixkit.co/license/#musicFree
+
+Used as a low-volume flute-and-harp ambient loop only while the EKO hero section is active.

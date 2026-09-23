@@ -1,7 +1,0 @@
-Sound effect: Breeze through the trees
-Source library: Mixkit
-Source page: https://mixkit.co/free-sound-effects/nature/
-Asset: https://assets.mixkit.co/active_storage/sfx/2427/2427-preview.mp3
-License: Mixkit Free License — https://mixkit.co/license/
-
-Used as a low-volume ambient loop only while the EKO hero section is active.
