@@ -147,7 +147,7 @@ function App() {
 
   const ensureEkoHeroAudio = useCallback(() => {
     if (!ekoHeroAudioRef.current) {
-      const audio = new Audio('/assets/eko/hero-nature-melody.mp3')
+      const audio = new Audio('/assets/eko/hero-morning-birds.mp3')
       audio.loop = true
       audio.preload = 'auto'
       audio.volume = 0
@@ -170,7 +170,7 @@ function App() {
 
     const audio = ensureEkoHeroAudio()
     audio.play()
-      .then(() => fadeEkoHeroAudio(0.09, 1500))
+      .then(() => fadeEkoHeroAudio(0.07, 1800))
       .catch(() => {})
   }, [ensureEkoHeroAudio, fadeEkoHeroAudio])
 
