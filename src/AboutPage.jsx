@@ -335,28 +335,65 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           animate={{ opacity: 1, y: 0, scaleX: 1 }}
           transition={{ duration: reducedMotion ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
         >HELLO</motion.h1>
-        <motion.img
-          className="about-person-layer"
-          src="/assets/about/hung.png"
-          alt="Portrait of Hung Truong"
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <motion.img
-          className="about-ff-layer"
-          src="/assets/about/ff.png"
-          alt=""
-          aria-hidden="true"
-          style={layout.isMobile ? undefined : {
-            left: layout.ffLeft,
-            width: layout.ffWidth,
-            height: layout.ffHeight,
-          }}
-          initial={reducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.18 }}
-        />
+
+        <motion.div
+          className="about-name"
+          initial={reducedMotion ? false : { opacity: 0, x: -42 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="about-name-copy">
+            <span>I’M</span>
+            <span>HUNG TRUONG</span>
+          </div>
+        </motion.div>
+
+        {layout.isMobile ? (
+          <div className="about-mobile-portrait-stage">
+            <motion.img
+              className="about-person-layer"
+              src="/assets/about/hung.png"
+              alt="Portrait of Hung Truong"
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <motion.img
+              className="about-ff-layer"
+              src="/assets/about/ff.png"
+              alt=""
+              aria-hidden="true"
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.18 }}
+            />
+          </div>
+        ) : (
+          <>
+            <motion.img
+              className="about-person-layer"
+              src="/assets/about/hung.png"
+              alt="Portrait of Hung Truong"
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <motion.img
+              className="about-ff-layer"
+              src="/assets/about/ff.png"
+              alt=""
+              aria-hidden="true"
+              style={{
+                left: layout.ffLeft,
+                width: layout.ffWidth,
+                height: layout.ffHeight,
+              }}
+              initial={reducedMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 1.1, delay: reducedMotion ? 0 : 0.18 }}
+            />
+          </>
+        )}
 
         <motion.p className="about-bio" {...reveal(0.18, 28)}>
           I was born in 2004 and I’m a freelance web and visual designer based in Saigon. I enjoy traveling, photography, and turning my experiences into creative inspiration. I’m easygoing, open-minded, and always aim to create meaningful work with personality and soul.
@@ -395,18 +432,6 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
             <p>12/12</p>
             <p>Van Hien University 2022 -2027</p>
             <p>English B2</p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="about-name"
-          initial={reducedMotion ? false : { opacity: 0, x: -42 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="about-name-copy">
-            <span>I’M</span>
-            <span>HUNG TRUONG</span>
           </div>
         </motion.div>
 

@@ -280,8 +280,8 @@
 .about-sound-toggle {
   position: absolute;
   z-index: 8;
-  top: 54px;
-  right: 42px;
+  top: clamp(24px, 4.4vh, 50px);
+  right: max(180px, calc(4.5% + 125px));
   display: flex;
   align-items: center;
   gap: 12px;
@@ -390,7 +390,7 @@
   position: fixed;
   z-index: 100;
   top: max(16px, env(safe-area-inset-top, 16px));
-  right: max(16px, env(safe-area-inset-right, 16px));
+  right: max(100px, calc(env(safe-area-inset-right, 18px) + 82px));
   padding: 9px 14px;
   font-size: 10px;
   background: rgba(0, 41, 92, 0.45);
@@ -405,38 +405,13 @@
   top: auto;
   width: 100%;
   height: auto;
-  font-size: clamp(48px, 15vw, 84px);
+  font-size: clamp(48px, 14vw, 76px);
   text-align: center;
   color: #ffdf0e;
-  margin: 0 0 -12px 0;
+  margin: 0;
+  line-height: 1;
   z-index: 3;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.about-page.is-mobile-view .about-person-layer {
-  position: relative;
-  left: auto;
-  top: auto;
-  width: min(80vw, 320px);
-  height: auto;
-  max-height: 400px;
-  object-fit: contain;
-  margin: 0 auto;
-  z-index: 4;
-  display: block;
-}
-
-.about-page.is-mobile-view .about-ff-layer {
-  position: absolute;
-  left: 50%;
-  top: 50px;
-  transform: translateX(-50%);
-  width: 140%;
-  max-width: 640px;
-  height: auto;
-  pointer-events: none;
-  z-index: 4;
-  opacity: 0.9;
 }
 
 .about-page.is-mobile-view .about-name {
@@ -445,10 +420,10 @@
   top: auto;
   width: 100%;
   height: auto;
-  font-size: clamp(28px, 8.5vw, 42px);
-  letter-spacing: -1.5px;
+  font-size: clamp(24px, 7vw, 36px);
+  letter-spacing: -1.2px;
   text-align: center;
-  margin: 16px 0 22px;
+  margin: 6px 0 12px;
   z-index: 5;
   white-space: normal;
 }
@@ -461,6 +436,50 @@
 
 .about-page.is-mobile-view .about-name-copy span:last-child {
   letter-spacing: -1px;
+}
+
+.about-mobile-portrait-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 360px;
+  height: clamp(340px, 46vh, 400px);
+  margin: 0 auto 18px;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse 52% 58% at 50% 50%, black 68%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 52% 58% at 50% 50%, black 68%, transparent 100%);
+}
+
+.about-page.is-mobile-view .about-person-layer {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  top: auto;
+  transform: none;
+  width: auto;
+  height: 95%;
+  max-width: 280px;
+  object-fit: contain;
+  object-position: center bottom;
+  margin: 0 auto;
+  z-index: 2;
+  display: block;
+}
+
+.about-page.is-mobile-view .about-ff-layer {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  top: auto;
+  transform: translateX(-31.5%);
+  width: 900px;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.98;
 }
 
 .about-page.is-mobile-view .about-bio {

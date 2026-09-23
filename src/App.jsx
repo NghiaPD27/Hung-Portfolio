@@ -63,6 +63,7 @@ const globalMenuItems = [
 ]
 
 function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }) {
+  const reducedMotion = useReducedMotion()
   return (
     <>
       <header className="app-header global-menu-header">
@@ -73,9 +74,9 @@ function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }
           aria-expanded={open}
           aria-disabled={locked}
           disabled={locked}
-          initial={{ opacity: 0, y: -20 }}
+          initial={reducedMotion ? false : { opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.2, ease: 'easeOut' }}
+          transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : 0.2, ease: 'easeOut' }}
           whileHover={locked ? undefined : { scale: 1.05 }}
           whileTap={locked ? undefined : { scale: 0.95 }}
         >

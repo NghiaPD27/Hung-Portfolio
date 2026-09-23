@@ -188,13 +188,13 @@
 .art-hero-tent {
   position: absolute;
   z-index: 2;
-  top: calc(4% + var(--art-hero-lift));
+  bottom: 0;
   left: 50%;
   width: max(106%, 100vw);
   max-width: none;
   height: auto;
   transform: translateX(-50%);
-  transform-origin: 50% 0;
+  transform-origin: 50% 100%;
 }
 
 .art-hero-title {
@@ -439,7 +439,7 @@
   transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 350ms ease;
 }
 
-.art-logo-tile img { width: 60.76%; height: 67.43%; transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1); }
+.art-logo-tile img { width: 60.76%; height: 67.43%; object-fit: contain; transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1); }
 .art-logo-tile-black { width: 18.056cqw; height: 18.056cqw; background: #000; }
 .art-logo-tile-white { width: 18.333cqw; height: 18.333cqw; background: #fff; }
 
@@ -789,7 +789,7 @@
 .art-hero-tent-skeleton {
   position: absolute;
   z-index: 1;
-  top: calc(4% + var(--art-hero-lift));
+  bottom: 0;
   left: 50%;
   width: max(106%, 100vw);
   max-width: none;
@@ -812,7 +812,7 @@
 
 /* Image smooth fade */
 .art-img-fade {
-  opacity: 0;
+  opacity: 1;
   transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1), transform 650ms cubic-bezier(0.16, 1, 0.3, 1), filter 650ms ease;
 }
 
@@ -863,20 +863,27 @@
   }
 
   .art-hero-tent {
-    width: max(135%, 100vw);
+    width: max(120%, 100vw);
+    max-width: 580px;
     top: auto;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
+    display: block;
+    object-fit: contain;
+    object-position: center bottom;
   }
 
   .art-hero-title {
-    top: max(16%, calc(env(safe-area-inset-top, 0px) + 12%));
+    top: max(15%, calc(env(safe-area-inset-top, 0px) + 60px));
     left: 50%;
     transform: translateX(-50%);
-    font-size: clamp(38px, 12vw, 54px);
+    width: 90%;
+    font-size: clamp(22px, 7.2vw, 36px);
     height: auto;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-align: center;
   }
 
   .art-title-echo-near {
@@ -1032,6 +1039,12 @@
     border-radius: 14px;
   }
 
+  .art-logo-tile img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+
   .art-logo-standalone {
     position: relative;
     top: auto;
@@ -1039,6 +1052,7 @@
     grid-column: span 2;
     width: 130px;
     height: auto;
+    object-fit: contain;
   }
 
   /* Slide 4: Logo Applications */
@@ -1057,11 +1071,17 @@
     height: auto;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   .art-logo-applications-art img {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
     max-width: 100%;
-    max-height: 80dvh;
+    max-height: 72dvh;
     object-fit: contain;
     border-radius: 16px;
   }
@@ -1167,9 +1187,24 @@
     top: auto;
     left: auto;
     width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
     height: auto;
-    aspect-ratio: 1;
-    gap: 10px;
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .art-media-card {
+    aspect-ratio: 1 / 1.414;
+    border-radius: 12px;
+  }
+
+  .art-media-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* Slide 7: Stationary */
@@ -1194,19 +1229,55 @@
     position: relative;
     width: 100%;
     height: auto;
-    aspect-ratio: 1.15;
+    aspect-ratio: auto;
   }
 
   .art-stationary-grid {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     width: 100%;
-    height: 100%;
+    height: auto;
+  }
+
+  .art-stationary-card {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1.35;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .art-stationary-1,
+  .art-stationary-2 {
+    grid-column: auto;
   }
 
   .art-stationary-3 {
     grid-column: span 2;
+    aspect-ratio: 2.1;
+  }
+
+  .art-stationary-card img,
+  .art-stationary-3 img {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: inherit;
+  }
+
+  .art-stationary-grid-new .art-stationary-card {
+    top: auto !important;
+    height: auto !important;
   }
 
   .art-stationary-hint {
@@ -1232,8 +1303,10 @@
     position: relative;
     top: auto;
     left: auto;
+    width: 100%;
+    height: auto;
     max-width: 100%;
-    max-height: 80dvh;
+    max-height: 75dvh;
     object-fit: contain;
     border-radius: 12px;
   }
