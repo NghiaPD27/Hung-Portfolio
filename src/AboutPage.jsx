@@ -260,11 +260,13 @@ function Dandelion({ item, reducedMotion }) {
 
 function useArtboardLayout() {
   const getLayout = () => {
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 960 : false
     const scale = Math.min(window.innerWidth / 1440, window.innerHeight / 900)
     const viewportWidthInArtboard = window.innerWidth / scale
     const ffWidth = Math.max(1530, viewportWidthInArtboard)
 
     return {
+      isMobile,
       scale,
       ffWidth,
       ffHeight: ffWidth * (900 / 1440),
@@ -293,10 +295,13 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
   })
 
   return (
-    <main className="about-page" aria-label="About Hung Truong">
+    <main className={`about-page ${layout.isMobile ? 'is-mobile-view' : ''}`} aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
-      <section className="about-artboard" style={{ transform: `translate(-50%, -50%) scale(${layout.scale})` }}>
+      <section
+        className={`about-artboard ${layout.isMobile ? 'is-mobile-artboard' : ''}`}
+        style={layout.isMobile ? undefined : { transform: `translate(-50%, -50%) scale(${layout.scale})` }}
+      >
         <img
           className="about-background-layer"
           src="/assets/about/background-sky.png"
@@ -343,7 +348,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           src="/assets/about/ff.png"
           alt=""
           aria-hidden="true"
-          style={{
+          style={layout.isMobile ? undefined : {
             left: layout.ffLeft,
             width: layout.ffWidth,
             height: layout.ffHeight,

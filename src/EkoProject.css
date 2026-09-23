@@ -360,23 +360,489 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 640px) {
-  .eko-back { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); min-width: 48px; height: 44px; padding: 0 12px; }
-  .eko-back-icon { width: 25px; height: 18px; }
+@media (max-width: 768px) {
+  .eko-back {
+    top: max(14px, env(safe-area-inset-top, 14px));
+    left: max(14px, env(safe-area-inset-left, 14px));
+    min-width: 44px;
+    height: 44px;
+    padding: 0 12px;
+  }
+  .eko-back-icon { width: 22px; height: 16px; }
   .eko-back-label { display: none; }
-  .eko-progress { right: 46px; bottom: 14px; }
-  .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets { right: max(7px, env(safe-area-inset-right)); width: 26px; padding-inline: 7px; }
-  .eko-campaign h2 { top: 12%; font-size: clamp(1.25rem, 6vw, 2rem); }
-  .eko-campaign-stands { top: 23%; grid-template-columns: repeat(3, min(27vw, 23dvh)); gap: 2.5vw; }
-  .eko-campaign-stands img { width: min(27vw, 23dvh); height: min(60.81vw, 51.75dvh); }
-  .eko-green-home > img { left: 31%; width: 69%; }
-  .eko-green-home-title { left: 3%; width: 27%; font-size: min(11vw, 8dvh); }
-  .eko-outdoor-poster { width: min(92vw, 72dvh); height: min(92vw, 72dvh); }
-  .eko-outdoor-story { bottom: 4%; left: 4%; width: calc(92% - 60px); padding: 0.8rem 0.9rem; }
-  .eko-outdoor-story p { display: none; }
-  .eko-outdoor-controls { right: 4%; bottom: auto; top: 4%; }
-  .eko-poster-pair { flex-direction: column; gap: 2.2dvh; }
-  .eko-poster-pair img { width: auto; height: min(38dvh, 74vw); }
+  .eko-progress { right: 44px; bottom: max(12px, env(safe-area-inset-bottom, 12px)); font-size: 9px; }
+  .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets { right: max(7px, env(safe-area-inset-right, 7px)); width: 24px; padding: 8px 6px; }
+  .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets .swiper-pagination-bullet { width: 6px; height: 6px; margin: 6px auto; }
+  .eko-swiper .swiper-pagination-vertical.swiper-pagination-bullets .swiper-pagination-bullet-active { height: 18px; }
+
+  /* Canvases: giải phóng tỷ lệ 1440/900 trên mobile portrait */
+  .eko-design-canvas {
+    width: 100vw;
+    height: 100%;
+    max-height: 100dvh;
+    aspect-ratio: auto;
+    container-type: normal;
+  }
+
+  .eko-artboard-inner {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    transform: none;
+    container-type: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* 02 — Cleanup Game */
+  .eko-cleanup-inner {
+    padding: max(60px, calc(env(safe-area-inset-top, 0px) + 48px)) 16px max(54px, calc(env(safe-area-inset-bottom, 0px) + 40px));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .eko-cleanup-heading {
+    position: absolute;
+    top: max(56px, calc(env(safe-area-inset-top, 0px) + 42px));
+    left: 16px;
+    right: 16px;
+    text-align: center;
+  }
+
+  .eko-cleanup-heading h2 {
+    font-size: clamp(19px, 5.8vw, 26px);
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  .eko-cleanup-heading span {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .eko-trash-bin {
+    position: absolute;
+    top: auto;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(46vw, 190px);
+    height: auto;
+    aspect-ratio: 1 / 1.35;
+  }
+
+  .eko-trash-bin span {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  .eko-trash-piece {
+    width: min(22vw, 88px) !important;
+    height: min(22vw, 88px) !important;
+  }
+
+  .eko-trash-one { top: 28%; left: 16%; }
+  .eko-trash-two { top: 26%; left: 62%; }
+  .eko-trash-three { top: 44%; left: 18%; }
+  .eko-trash-four { top: 43%; left: 64%; }
+
+  .eko-cleanup-complete {
+    right: auto;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 86%;
+    max-width: 320px;
+    padding: 22px 20px;
+    border-radius: 18px;
+  }
+
+  .eko-cleanup-complete strong {
+    font-size: 18px;
+  }
+
+  .eko-cleanup-complete button {
+    padding: 10px 18px;
+    font-size: 12px;
+    min-height: 44px;
+  }
+
+  .eko-pattern-marquee {
+    height: 44px;
+  }
+
+  /* 03 — Logo */
+  .eko-logo-inner {
+    padding: max(60px, calc(env(safe-area-inset-top, 0px) + 44px)) 20px max(32px, env(safe-area-inset-bottom, 0px));
+    align-items: center;
+  }
+
+  .eko-logo-type {
+    position: absolute;
+    top: max(60px, calc(env(safe-area-inset-top, 0px) + 44px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: auto;
+    max-height: 28dvh;
+    object-fit: contain;
+  }
+
+  .eko-logo-render {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(58vw, 230px);
+    height: auto;
+  }
+
+  /* 04 — Meaning */
+  .eko-logo-meaning {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: max(64px, calc(env(safe-area-inset-top, 0px) + 48px)) 20px max(32px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-meaning-content {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+  }
+
+  .eko-meaning-content h2 {
+    font-size: clamp(28px, 8.5vw, 42px);
+    margin-bottom: 22px;
+    white-space: normal;
+  }
+
+  .eko-meaning-list {
+    gap: 16px;
+    font-size: clamp(14px, 4.2vw, 17px);
+    line-height: 1.5;
+  }
+
+  /* 05 — Naming */
+  .eko-name-story {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: max(60px, calc(env(safe-area-inset-top, 0px) + 44px)) 20px max(32px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-name-copy {
+    position: relative;
+    inset: auto;
+    width: 100%;
+  }
+
+  .eko-name-copy h2 {
+    position: relative;
+    top: auto;
+    left: auto;
+    font-size: clamp(44px, 14vw, 70px);
+    margin-bottom: 14px;
+  }
+
+  .eko-name-copy p {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    font-size: clamp(14px, 4vw, 16px);
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .eko-globe-orbit {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: min(44vw, 170px);
+    aspect-ratio: 1;
+    height: auto;
+    margin: 18px auto 0;
+  }
+
+  .eko-globe-arrows,
+  .eko-o-mark {
+    display: none;
+  }
+
+  /* 07 — Identity Details */
+  .eko-identity-title h2 {
+    font-size: clamp(22px, 6.5vw, 32px);
+  }
+
+  .eko-identity-pattern {
+    top: 24%;
+    height: 48%;
+  }
+
+  .eko-identity-strip {
+    height: 46px;
+    top: auto;
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 08 — Signs */
+  .eko-signs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: max(58px, calc(env(safe-area-inset-top, 0px) + 42px)) 14px max(32px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-signs-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-bottom: 14px;
+  }
+
+  .eko-signs-title h2 {
+    font-size: clamp(17px, 5.2vw, 24px);
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  .eko-sign-grid {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    height: auto;
+  }
+
+  .eko-sign-card {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1.34;
+    border-radius: 16px;
+  }
+
+  .eko-sign-caption {
+    font-size: clamp(11px, 3.2vw, 13px);
+  }
+
+  .eko-sign-action {
+    font-size: 10px;
+    padding: 3px 8px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  /* 09 — Reminders */
+  .eko-reminders {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: max(58px, calc(env(safe-area-inset-top, 0px) + 42px)) 14px max(32px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-reminder-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .eko-reminder-title span {
+    font-size: 10px;
+  }
+
+  .eko-reminder-title h2 {
+    font-size: clamp(20px, 6.2vw, 28px);
+    margin: 4px 0 0;
+  }
+
+  .eko-reminder-grid {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .eko-reminder-tilt {
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .eko-reminders > p {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    font-size: clamp(20px, 6vw, 28px);
+    text-align: center;
+    margin-top: 14px;
+  }
+
+  /* 11 — Campaign Stands */
+  .eko-campaign {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: max(56px, calc(env(safe-area-inset-top, 0px) + 40px)) 12px max(28px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-campaign h2 {
+    position: relative;
+    top: auto;
+    left: auto;
+    font-size: clamp(19px, 5.8vw, 26px);
+    margin-bottom: 16px;
+    white-space: normal;
+  }
+
+  .eko-campaign-stands {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .eko-campaign-stand-tilt {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 2.15;
+    border-radius: 12px;
+  }
+
+  .eko-campaign-stand-tilt img {
+    border-radius: 12px;
+  }
+
+  /* 12 — Green Home */
+  .eko-green-home {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    padding: max(60px, calc(env(safe-area-inset-top, 0px) + 44px)) 16px max(32px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .eko-green-home-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    font-size: clamp(26px, 8vw, 38px);
+    text-align: center;
+    margin-bottom: 12px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .eko-green-home > img {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    max-height: 58dvh;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  /* 13 — Outdoor Carousel */
+  .eko-outdoor-poster {
+    width: min(88vw, 70dvh);
+    height: min(88vw, 70dvh);
+  }
+
+  .eko-outdoor-story {
+    bottom: 3%;
+    left: 4%;
+    width: calc(92% - 48px);
+    padding: 0.8rem 1rem;
+    border-radius: 14px;
+  }
+
+  .eko-outdoor-story strong {
+    font-size: clamp(1rem, 4.5vw, 1.35rem);
+  }
+
+  .eko-outdoor-story p {
+    display: none;
+  }
+
+  .eko-outdoor-controls {
+    right: 4%;
+    bottom: auto;
+    top: max(16px, env(safe-area-inset-top, 16px));
+    padding: 7px 11px;
+  }
+
+  /* 14 — Poster Pair */
+  .eko-poster-pair {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 16px;
+  }
+
+  .eko-poster-pair img {
+    width: auto;
+    height: min(37dvh, 74vw);
+    border-radius: 8px;
+  }
+
+  /* 15 — Thank you */
+  .eko-thank-you {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 24px 20px;
+  }
+
+  .eko-thank-logo {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: min(48vw, 170px);
+    height: auto;
+    aspect-ratio: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .eko-thank-you > p {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    max-width: 440px;
+    font-size: clamp(14px, 4.2vw, 17px);
+    line-height: 1.6;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -119,7 +119,8 @@ function DraggableTrash({ item, collected, onKeyboardCollect }) {
       ref={ref}
       type="button"
       className={`eko-trash-piece swiper-no-swiping ${item.className} ${isDragging ? 'is-dragging' : ''}`}
-      aria-label={`${item.label}. Kéo vào thùng rác; nhấn Enter để bỏ nhanh.`}
+      aria-label={`${item.label}. Kéo hoặc chạm để bỏ rác vào thùng.`}
+      onClick={() => onKeyboardCollect(item.id)}
       onKeyDownCapture={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault()

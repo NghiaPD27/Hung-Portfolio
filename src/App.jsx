@@ -16,6 +16,7 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
   const liquidLight = useMotionTemplate`radial-gradient(circle at ${pointerX}% ${pointerY}%, rgba(255,255,255,0.5), rgba(255,255,255,0.08) 24%, transparent 52%)`
 
   const handlePointerMove = (event) => {
+    if (event.pointerType === 'touch') return
     const bounds = cardRef.current?.getBoundingClientRect()
     if (!bounds) return
     const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width))
@@ -69,6 +70,7 @@ function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }
           className={`menu-trigger is-${tone}`}
           onClick={onOpen}
           aria-label={locked ? 'Hoàn thành thử thách nhặt rác để mở menu' : 'Open Navigation Menu'}
+          aria-expanded={open}
           aria-disabled={locked}
           disabled={locked}
           initial={{ opacity: 0, y: -20 }}
@@ -353,10 +355,11 @@ function App() {
     artClownCircusAudioRef.current?.pause()
   }, [])
 
-  // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
+  // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở hoặc trên thiết bị cảm ứng)
   useEffect(() => {
+    if (reducedMotion) return
     const handleMouseMove = (e) => {
-      if (menuOpen) return
+      if (menuOpen || window.matchMedia('(hover: none)').matches) return
       const { innerWidth, innerHeight } = window
       const x = (e.clientX - innerWidth / 2) / (innerWidth / 2)
       const y = (e.clientY - innerHeight / 2) / (innerHeight / 2)
@@ -365,7 +368,7 @@ function App() {
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [menuOpen])
+  }, [menuOpen, reducedMotion])
 
   useEffect(() => {
     if (menuOpen) {
