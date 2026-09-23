@@ -56,6 +56,81 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
   )
 }
 
+const globalMenuItems = [
+  { num: '01', title: 'HOME', destination: 'home' },
+  { num: '02', title: 'ABOUT', destination: 'about' },
+  { num: '03', title: 'ART CLOWN', destination: 'art-clown' },
+  { num: '04', title: 'E-KO', destination: 'eko' },
+  { num: '05', title: 'WORKS', destination: 'works' },
+]
+
+function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }) {
+  return (
+    <>
+      <header className="app-header global-menu-header">
+        <motion.button
+          className={`menu-trigger is-${tone}`}
+          onClick={onOpen}
+          aria-label={locked ? 'Hoàn thành thử thách nhặt rác để mở menu' : 'Open Navigation Menu'}
+          aria-disabled={locked}
+          disabled={locked}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.2, ease: 'easeOut' }}
+          whileHover={locked ? undefined : { scale: 1.05 }}
+          whileTap={locked ? undefined : { scale: 0.95 }}
+        >
+          Menu +
+        </motion.button>
+      </header>
+
+      <AnimatePresence>
+        {open && (
+          <div className="menu-container">
+            <motion.div
+              className="menu-backdrop-left"
+              onClick={onClose}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            <motion.div
+              className="menu-white-drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <button className="menu-close-btn" onClick={onClose} aria-label="Close Menu" type="button">
+                Close X
+              </button>
+
+              <nav className="menu-nav-list" aria-label="Điều hướng chính">
+                {globalMenuItems.map((item, index) => (
+                  <motion.button
+                    key={item.num}
+                    className={`menu-nav-item${current === item.destination ? ' is-current' : ''}`}
+                    type="button"
+                    onClick={() => onNavigate(item.destination)}
+                    initial={{ opacity: 0, x: 35 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.45, delay: 0.15 + index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <span className="nav-item-num">{item.num}</span>
+                    <span className="nav-item-title">{item.title}</span>
+                  </motion.button>
+                ))}
+              </nav>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
+
 function App() {
   const reducedMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -68,6 +143,8 @@ function App() {
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
   const [projectTransition, setProjectTransition] = useState(null)
   const [isAboutSoundOn, setIsAboutSoundOn] = useState(false)
+  const [routeMenuTone, setRouteMenuTone] = useState('light')
+  const [routeNavigationLocked, setRouteNavigationLocked] = useState(false)
   const productScrollPosition = useRef(0)
   const aboutTransitionTimer = useRef(null)
   const projectTransitionTimer = useRef(null)
@@ -76,6 +153,8 @@ function App() {
   const ekoHeroAudioRef = useRef(null)
   const ekoHeroAudioFade = useRef(null)
   const artClownFireworksAudioRef = useRef(null)
+  const artClownCircusAudioRef = useRef(null)
+  const artClownCircusAudioFade = useRef(null)
 
   const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
     const audio = aboutAudioRef.current
@@ -207,6 +286,56 @@ function App() {
     audio.currentTime = 0
   }, [])
 
+  const fadeArtClownCircusAudio = useCallback((targetVolume, duration = 700, pauseAfter = false) => {
+    const audio = artClownCircusAudioRef.current
+    if (!audio) return
+    if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
+    const startVolume = audio.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration)
+      const eased = 1 - ((1 - progress) ** 3)
+      audio.volume = Math.min(1, Math.max(0, startVolume + ((targetVolume - startVolume) * eased)))
+      if (progress < 1) {
+        artClownCircusAudioFade.current = requestAnimationFrame(tick)
+      } else {
+        artClownCircusAudioFade.current = null
+        if (pauseAfter) audio.pause()
+      }
+    }
+    artClownCircusAudioFade.current = requestAnimationFrame(tick)
+  }, [])
+
+  const ensureArtClownCircusAudio = useCallback(() => {
+    if (!artClownCircusAudioRef.current) {
+      const audio = new Audio('/assets/art-clown/source/circus-carousel-theme.mp3')
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      artClownCircusAudioRef.current = audio
+    }
+    return artClownCircusAudioRef.current
+  }, [])
+
+  const primeArtClownCircusAudio = useCallback(() => {
+    const audio = ensureArtClownCircusAudio()
+    audio.volume = 0
+    audio.play().catch(() => {})
+  }, [ensureArtClownCircusAudio])
+
+  const setArtClownCircusAudioActive = useCallback((active) => {
+    if (!active) {
+      fadeArtClownCircusAudio(0, 360, true)
+      return
+    }
+
+    const audio = ensureArtClownCircusAudio()
+    if (audio.volume === 0) audio.currentTime = 0
+    audio.play()
+      .then(() => fadeArtClownCircusAudio(0.14, 950))
+      .catch(() => {})
+  }, [ensureArtClownCircusAudio, fadeArtClownCircusAudio])
+
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -220,9 +349,11 @@ function App() {
     if (projectTransitionTimer.current) window.clearTimeout(projectTransitionTimer.current)
     if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
     if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
+    if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
     aboutAudioRef.current?.pause()
     ekoHeroAudioRef.current?.pause()
     artClownFireworksAudioRef.current?.pause()
+    artClownCircusAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở)
@@ -265,7 +396,15 @@ function App() {
         ekoHeroAudioRef.current.currentTime = 0
         ekoHeroAudioRef.current.volume = 0
       }
-      if (!projectIsOpen) stopArtClownFireworks()
+      if (!projectIsOpen) {
+        stopArtClownFireworks()
+        if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
+        artClownCircusAudioRef.current?.pause()
+        if (artClownCircusAudioRef.current) {
+          artClownCircusAudioRef.current.currentTime = 0
+          artClownCircusAudioRef.current.volume = 0
+        }
+      }
       requestAnimationFrame(() => window.scrollTo({
         top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
@@ -298,6 +437,7 @@ function App() {
     setMenuOpen(false)
     setSelectedProject(null)
     primeArtClownFireworksAudio()
+    primeArtClownCircusAudio()
     setProjectTransition('art-clown')
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ artClown: true }, '', '#art-clown')
@@ -311,6 +451,7 @@ function App() {
 
   const closeArtClownProject = () => {
     stopArtClownFireworks()
+    setArtClownCircusAudioActive(false)
     if (window.history.state?.artClown) {
       window.history.back()
       return
@@ -378,6 +519,66 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
 
+  const navigateFromGlobalMenu = (destination) => {
+    if (routeNavigationLocked) return
+    setMenuOpen(false)
+
+    if (
+      (destination === 'about' && isAboutOpen)
+      || (destination === 'art-clown' && isArtClownOpen)
+      || (destination === 'eko' && isEkoOpen)
+    ) return
+
+    stopAboutAudio()
+    setEkoHeroAudioActive(false)
+    stopArtClownFireworks()
+    setArtClownCircusAudioActive(false)
+
+    if (destination === 'home' || destination === 'works') {
+      window.history.pushState({}, '', `${window.location.pathname}${window.location.search}`)
+      setIsArtClownOpen(false)
+      setIsAboutOpen(false)
+      setIsEkoOpen(false)
+      setRouteMenuTone('light')
+      window.setTimeout(() => {
+        document.getElementById(destination === 'works' ? 'product' : 'hero')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' })
+      }, 0)
+      return
+    }
+
+    if (destination === 'about') {
+      if (!isArtClownOpen && !isEkoOpen) {
+        openAboutPage()
+        return
+      }
+      window.history.pushState({ about: true }, '', '#about')
+      setIsArtClownOpen(false)
+      setIsEkoOpen(false)
+      setIsAboutOpen(true)
+      setRouteMenuTone('dark')
+      startAboutAudio()
+      return
+    }
+
+    if (destination === 'art-clown') {
+      window.history.pushState({ artClown: true }, '', '#art-clown')
+      setIsAboutOpen(false)
+      setIsEkoOpen(false)
+      setIsArtClownOpen(true)
+      setRouteMenuTone('dark')
+      primeArtClownFireworksAudio()
+      primeArtClownCircusAudio()
+      return
+    }
+
+    window.history.pushState({ eko: true }, '', '#eko')
+    setIsArtClownOpen(false)
+    setIsAboutOpen(false)
+    setIsEkoOpen(true)
+    setRouteMenuTone('dark')
+    primeEkoHeroAudio()
+  }
+
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && isArtClownOpen) closeArtClownProject()
@@ -389,27 +590,56 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   })
 
+  const currentMenuPage = isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
+  const sharedMenu = (
+    <GlobalMenu
+      open={menuOpen}
+      tone={isAboutOpen ? 'dark' : routeMenuTone}
+      current={currentMenuPage}
+      locked={routeNavigationLocked}
+      onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
+      onClose={() => setMenuOpen(false)}
+      onNavigate={navigateFromGlobalMenu}
+    />
+  )
+
   if (isArtClownOpen) {
     return (
-      <ArtClownProject
-        onBack={closeArtClownProject}
-        onFireworkBoom={playArtClownFireworks}
-        onFireworkSoundPrime={primeArtClownFireworksAudio}
-        onFireworkSoundStop={stopArtClownFireworks}
-      />
+      <>
+        {sharedMenu}
+        <ArtClownProject
+          onBack={closeArtClownProject}
+          onFireworkBoom={playArtClownFireworks}
+          onFireworkSoundPrime={primeArtClownFireworksAudio}
+          onFireworkSoundStop={stopArtClownFireworks}
+          onCircusAudioStateChange={setArtClownCircusAudioActive}
+          onMenuToneChange={setRouteMenuTone}
+        />
+      </>
     )
   }
 
   if (isAboutOpen) {
-    return <AboutPage onBack={closeAboutPage} soundOn={isAboutSoundOn} onToggleSound={toggleAboutAudio} />
+    return <>{sharedMenu}<AboutPage onBack={closeAboutPage} soundOn={isAboutSoundOn} onToggleSound={toggleAboutAudio} /></>
   }
 
   if (isEkoOpen) {
-    return <EkoProject onBack={closeEkoProject} onHeroAudioStateChange={setEkoHeroAudioActive} />
+    return (
+      <>
+        {sharedMenu}
+        <EkoProject
+          onBack={closeEkoProject}
+          onHeroAudioStateChange={setEkoHeroAudioActive}
+          onMenuToneChange={setRouteMenuTone}
+          onNavigationLockChange={setRouteNavigationLocked}
+        />
+      </>
+    )
   }
 
   return (
     <div className="portfolio-app">
+      {sharedMenu}
       <AnimatePresence>
         {isAboutTransitioning && (
           <motion.div
@@ -517,86 +747,6 @@ function App() {
               The idea becomes visual
             </motion.p>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ================= HEADER & MENU TRIGGER ================= */}
-      <header className="app-header">
-        <motion.button 
-          className="menu-trigger" 
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open Navigation Menu"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Menu +
-        </motion.button>
-      </header>
-
-      {/* ================= SPLIT WHITE MENU DRAWER ================= */}
-      <AnimatePresence>
-        {menuOpen && (
-          <div className="menu-container">
-            {/* Vùng mờ bên trái để bấm đóng menu */}
-            <motion.div 
-              className="menu-backdrop-left"
-              onClick={() => setMenuOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            />
-
-            {/* Bảng Menu trắng 50% trượt vào từ bên phải */}
-            <motion.div 
-              className="menu-white-drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Nút Close X ở góc phải trên */}
-              <button 
-                className="menu-close-btn" 
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close Menu"
-              >
-                Close X
-              </button>
-
-              {/* Danh sách Menu: 01 HOME, 02 ABOUT, 03 CONTACT */}
-              <nav className="menu-nav-list">
-                {[
-                  { num: '01', title: 'HOME', href: '#hero' },
-                  { num: '02', title: 'ABOUT', href: '#about' },
-                  { num: '03', title: 'CONTACT', href: '#product' }
-                ].map((item, index) => (
-                  <motion.a 
-                    key={item.num}
-                    href={item.href}
-                    className="menu-nav-item"
-                    onClick={(event) => {
-                      if (item.title === 'ABOUT') {
-                        event.preventDefault()
-                        openAboutPage()
-                        return
-                      }
-                      setMenuOpen(false)
-                    }}
-                    initial={{ opacity: 0, x: 35 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.45, delay: 0.15 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <span className="nav-item-num">{item.num}</span>
-                    <span className="nav-item-title">{item.title}</span>
-                  </motion.a>
-                ))}
-              </nav>
-            </motion.div>
-          </div>
         )}
       </AnimatePresence>
 

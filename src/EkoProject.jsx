@@ -355,7 +355,7 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
   )
 }
 
-export default function EkoProject({ onBack, onHeroAudioStateChange }) {
+export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneChange, onNavigationLockChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const gameCompleteRef = useRef(false)
@@ -369,6 +369,16 @@ export default function EkoProject({ onBack, onHeroAudioStateChange }) {
   }, [activeSlide, onHeroAudioStateChange])
 
   useEffect(() => () => onHeroAudioStateChange?.(false), [onHeroAudioStateChange])
+
+  useEffect(() => {
+    const menuTones = ['dark', 'dark', 'light', 'dark', 'dark', 'dark', 'dark', 'light', 'dark', 'dark', 'dark', 'light', 'light', 'dark']
+    onMenuToneChange?.(menuTones[activeSlide] || 'dark')
+  }, [activeSlide, onMenuToneChange])
+
+  useEffect(() => {
+    onNavigationLockChange?.(navigationLocked)
+    return () => onNavigationLockChange?.(false)
+  }, [navigationLocked, onNavigationLockChange])
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow

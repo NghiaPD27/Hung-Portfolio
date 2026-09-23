@@ -1,0 +1,7 @@
+Sound effect: Circus
+Creator: ByronatorAustralia
+Source library: Pixabay
+Source page: https://pixabay.com/sound-effects/musical-circus-11794/
+License: Pixabay Content License — https://pixabay.com/service/license-summary/
+
+User-provided MP3 used as a low-volume looping theme only on the Art Clown hero section.

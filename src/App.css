@@ -229,6 +229,21 @@
   line-height: 1;
 }
 
+.menu-trigger.is-light {
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+}
+
+.menu-trigger.is-dark {
+  color: #090b10;
+  text-shadow: 0 2px 18px rgba(255, 255, 255, 0.5);
+}
+
+.menu-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .menu-trigger:hover {
   opacity: 0.75;
   transform: scale(1.04);
@@ -238,7 +253,7 @@
 .menu-container {
   position: fixed;
   inset: 0;
-  z-index: 500;
+  z-index: 5000;
   pointer-events: auto;
 }
 
@@ -266,7 +281,7 @@
   padding-left: clamp(40px, 7vw, 120px);
   padding-right: clamp(30px, 5vw, 60px);
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.45);
-  z-index: 501;
+  z-index: 5001;
 }
 
 .menu-close-btn {
@@ -306,9 +321,18 @@
   gap: 14px;
   text-decoration: none;
   color: #000000;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
   width: fit-content;
   transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-nav-item.is-current {
+  color: #6f00ff;
 }
 
 .menu-nav-item:hover {
@@ -972,5 +996,31 @@
   }
   .hero-section.menu-active .visual-stage {
     transform: translateX(-50%);
+  }
+}
+
+/* Menu dùng chung luôn nằm trên các trang dự án và tự đổi màu theo nền. */
+.app-header.global-menu-header {
+  position: fixed;
+  top: clamp(28px, 4.4vh, 50px);
+  right: max(4.5%, 28px);
+  z-index: 4999;
+  padding: 0;
+  pointer-events: none;
+}
+
+.app-header.global-menu-header .menu-trigger {
+  pointer-events: auto;
+}
+
+@media (max-width: 900px) {
+  .app-header.global-menu-header {
+    top: max(18px, env(safe-area-inset-top));
+    right: max(18px, env(safe-area-inset-right));
+    padding: 0;
+  }
+
+  .app-header.global-menu-header .menu-trigger {
+    font-size: clamp(22px, 6vw, 28px);
   }
 }

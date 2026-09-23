@@ -277,7 +277,7 @@ function MascotExperience({ reducedMotion }) {
   )
 }
 
-export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop }) {
+export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop, onCircusAudioStateChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
   const [activeSlide, setActiveSlide] = useState(0)
@@ -304,11 +304,26 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
     }
   }, [activeSlide, reducedMotion, onFireworkBoom, onFireworkSoundStop])
 
+  useEffect(() => {
+    onCircusAudioStateChange?.(activeSlide === 0)
+  }, [activeSlide, onCircusAudioStateChange])
+
+  useEffect(() => () => onCircusAudioStateChange?.(false), [onCircusAudioStateChange])
+
+  useEffect(() => {
+    const menuTones = ['dark', 'dark', 'dark', 'dark', 'light', 'dark', 'dark', 'light']
+    onMenuToneChange?.(menuTones[activeSlide] || 'dark')
+  }, [activeSlide, onMenuToneChange])
+
   return (
     <main
       className="art-clown-project"
       aria-label="Art Clown branding project"
-      onPointerDown={() => { if (activeSlide === 0) onFireworkSoundPrime?.() }}
+      onPointerDown={() => {
+        if (activeSlide !== 0) return
+        onFireworkSoundPrime?.()
+        onCircusAudioStateChange?.(true)
+      }}
     >
       <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
         <img src={`${ASSET}/back.svg`} alt="" />
