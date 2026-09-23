@@ -139,7 +139,7 @@ function App() {
   const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash === '#about')
   const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash === '#eko')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [showCurtain, setShowCurtain] = useState(true)
+  const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
   const [projectTransition, setProjectTransition] = useState(null)
   const [isAboutSoundOn, setIsAboutSoundOn] = useState(false)
@@ -758,27 +758,27 @@ function App() {
           src="/assets/purple-glow.png" 
           alt="Purple Atmospheric Glow" 
           className="hero-fullscreen-bg"
-          initial={{ opacity: 0 }}
+          initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
+          transition={{ duration: reducedMotion ? 0 : 1.2 }}
         />
 
         {/* Tiêu đề góc trái: Bằng hàng với Menu + */}
         <div className="hero-text-left">
           <motion.h1 
             className="title-port"
-            initial={{ opacity: 0, y: -25 }}
+            initial={reducedMotion ? false : { opacity: 0, y: -25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             PORT
           </motion.h1>
           
           <motion.h2 
             className="title-folio"
-            initial={{ opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             FOLIO
           </motion.h2>
@@ -791,9 +791,9 @@ function App() {
             src="/assets/crystal-lotus.png" 
             alt="Pink Iridescent Crystal Lotus" 
             className="visual-layer layer-lotus"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.3 }}
+            transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.3 }}
             style={{
               transform: `translate(calc(-50% + ${mousePos.x * -16}px), ${mousePos.y * -10}px)`
             }}
@@ -804,9 +804,9 @@ function App() {
             src="/assets/person.png" 
             alt="Young Designer Silhouette Portrait" 
             className="visual-layer layer-person"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.4 }}
+            transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.4 }}
             style={{
               transform: `translateX(calc(-48% + ${mousePos.x * 8}px))`
             }}
@@ -817,9 +817,9 @@ function App() {
             src="/assets/blue-flower.png" 
             alt="Blue Glass Hibiscus Flower" 
             className="visual-layer layer-blue-flower"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.5 }}
+            transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.5 }}
             style={{
               transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
             }}
@@ -830,9 +830,9 @@ function App() {
             src="/assets/amber-rose.png" 
             alt="Amber Crystal Rose" 
             className="visual-layer layer-amber-rose"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.55 }}
+            transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.55 }}
             style={{
               transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
             }}
@@ -843,18 +843,18 @@ function App() {
         <div className="hero-text-right">
           <motion.h2 
             className="title-freedom"
-            initial={{ opacity: 0, y: -15 }}
+            initial={reducedMotion ? false : { opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             FREEDOM
           </motion.h2>
           
           <motion.h3 
             className="title-designer"
-            initial={{ opacity: 0, y: 15 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             DESIGNER
           </motion.h3>
@@ -863,9 +863,9 @@ function App() {
         {/* Dải Marquee Chữ Chạy Vô Tận */}
         <motion.div 
           className="marquee-bar"
-          initial={{ opacity: 0 }}
+          initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.7 }}
+          transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.7 }}
         >
           <div className="marquee-inner">
             <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
