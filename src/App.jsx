@@ -148,6 +148,7 @@ function App() {
   const [routeMenuTone, setRouteMenuTone] = useState('light')
   const [routeNavigationLocked, setRouteNavigationLocked] = useState(false)
   const productScrollPosition = useRef(0)
+  const returnToBrandingPicker = useRef(false)
   const aboutTransitionTimer = useRef(null)
   const projectTransitionTimer = useRef(null)
   const aboutAudioRef = useRef(null)
@@ -392,7 +393,7 @@ function App() {
     if (audio.paused) audio.currentTime = 0
     audio.play()
       .then(() => {
-        if (artClownValuesAudioRequestedActive.current) fadeArtClownValuesAudio(0.18, 1150)
+        if (artClownValuesAudioRequestedActive.current) fadeArtClownValuesAudio(0.5, 1150)
       })
       .catch(() => {})
   }, [ensureArtClownValuesAudio, fadeArtClownValuesAudio])
@@ -547,8 +548,14 @@ function App() {
         posterAudioRef.current.currentTime = 0
         posterAudioRef.current.volume = 0
       }
+      if (!projectIsOpen && !ekoIsOpen && returnToBrandingPicker.current) {
+        returnToBrandingPicker.current = false
+        if (!aboutIsOpen && !posterIsOpen) setSelectedProject({ id: 'branding' })
+      }
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen ? 0 : productScrollPosition.current,
+        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen
+          ? 0
+          : (productScrollPosition.current || document.getElementById('product')?.offsetTop || 0),
         behavior: 'auto'
       }))
     }
@@ -584,6 +591,7 @@ function App() {
   const openArtClownProject = () => {
     if (projectTransition) return
     productScrollPosition.current = window.scrollY
+    returnToBrandingPicker.current = true
     setMenuOpen(false)
     setSelectedProject(null)
     primeArtClownFireworksAudio()
@@ -605,6 +613,7 @@ function App() {
     stopArtClownFireworks()
     setArtClownCircusAudioActive(false)
     setArtClownValuesAudioActive(false)
+    returnToBrandingPicker.current = true
     if (window.history.state?.artClown) {
       window.history.back()
       return
@@ -612,7 +621,9 @@ function App() {
 
     window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
     setIsArtClownOpen(false)
-    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+    returnToBrandingPicker.current = false
+    setSelectedProject({ id: 'branding' })
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current || document.getElementById('product')?.offsetTop || 0, behavior: 'auto' }))
   }
 
   const openAboutPage = () => {
@@ -647,6 +658,7 @@ function App() {
   const openEkoProject = () => {
     if (projectTransition) return
     productScrollPosition.current = window.scrollY
+    returnToBrandingPicker.current = true
     setMenuOpen(false)
     setSelectedProject(null)
     primeEkoHeroAudio()
@@ -664,6 +676,7 @@ function App() {
 
   const closeEkoProject = () => {
     setEkoHeroAudioActive(false)
+    returnToBrandingPicker.current = true
     if (window.history.state?.eko) {
       window.history.back()
       return
@@ -671,7 +684,9 @@ function App() {
 
     window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
     setIsEkoOpen(false)
-    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+    returnToBrandingPicker.current = false
+    setSelectedProject({ id: 'branding' })
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current || document.getElementById('product')?.offsetTop || 0, behavior: 'auto' }))
   }
 
   const openPosterProject = () => {
@@ -713,6 +728,8 @@ function App() {
       || (destination === 'eko' && isEkoOpen)
       || (destination === 'poster' && isPosterOpen)
     ) return
+
+    returnToBrandingPicker.current = false
 
     stopAboutAudio()
     setEkoHeroAudioActive(false)
