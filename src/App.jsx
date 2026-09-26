@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedM
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
 import EkoProject from './EkoProject'
+import PosterProject from './PosterProject'
 import './App.css'
 
 function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
@@ -138,6 +139,7 @@ function App() {
   const [isArtClownOpen, setIsArtClownOpen] = useState(() => window.location.hash.startsWith('#art-clown'))
   const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash.startsWith('#about'))
   const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash.startsWith('#eko'))
+  const [isPosterOpen, setIsPosterOpen] = useState(() => window.location.hash.startsWith('#poster'))
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
@@ -382,9 +384,11 @@ function App() {
       const projectIsOpen = window.location.hash.startsWith('#art-clown')
       const aboutIsOpen = window.location.hash.startsWith('#about')
       const ekoIsOpen = window.location.hash.startsWith('#eko')
+      const posterIsOpen = window.location.hash.startsWith('#poster')
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)
+      setIsPosterOpen(posterIsOpen)
       setProjectTransition(null)
       if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
         aboutAudioRef.current.pause()
@@ -407,7 +411,7 @@ function App() {
         }
       }
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen || aboutIsOpen || ekoIsOpen ? 0 : productScrollPosition.current,
+        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen ? 0 : productScrollPosition.current,
         behavior: 'auto'
       }))
     }
@@ -453,6 +457,7 @@ function App() {
       setIsArtClownOpen(true)
       setIsAboutOpen(false)
       setIsEkoOpen(false)
+      setIsPosterOpen(false)
       setProjectTransition(null)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
     }, reducedMotion ? 80 : 980)
@@ -482,6 +487,7 @@ function App() {
       window.history.pushState({ about: true }, '', '#about')
       setIsArtClownOpen(false)
       setIsAboutOpen(true)
+      setIsPosterOpen(false)
       setIsAboutTransitioning(false)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
     }, reducedMotion ? 80 : 1050)
@@ -511,6 +517,7 @@ function App() {
       setIsArtClownOpen(false)
       setIsAboutOpen(false)
       setIsEkoOpen(true)
+      setIsPosterOpen(false)
       setProjectTransition(null)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
     }, reducedMotion ? 80 : 980)
@@ -528,6 +535,33 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
 
+  const openPosterProject = () => {
+    if (projectTransition) return
+    productScrollPosition.current = window.scrollY
+    setSelectedProject(null)
+    setMenuOpen(false)
+    setProjectTransition('poster')
+    projectTransitionTimer.current = window.setTimeout(() => {
+      window.history.pushState({ poster: true }, '', '#poster')
+      setIsArtClownOpen(false)
+      setIsAboutOpen(false)
+      setIsEkoOpen(false)
+      setIsPosterOpen(true)
+      setProjectTransition(null)
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    }, reducedMotion ? 80 : 850)
+  }
+
+  const closePosterProject = () => {
+    if (window.history.state?.poster) {
+      window.history.back()
+      return
+    }
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
+    setIsPosterOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
+  }
+
   const navigateFromGlobalMenu = (destination) => {
     if (routeNavigationLocked) return
     setMenuOpen(false)
@@ -536,6 +570,7 @@ function App() {
       (destination === 'about' && isAboutOpen)
       || (destination === 'art-clown' && isArtClownOpen)
       || (destination === 'eko' && isEkoOpen)
+      || (destination === 'poster' && isPosterOpen)
     ) return
 
     stopAboutAudio()
@@ -548,6 +583,7 @@ function App() {
       setIsArtClownOpen(false)
       setIsAboutOpen(false)
       setIsEkoOpen(false)
+      setIsPosterOpen(false)
       setRouteMenuTone('light')
       window.setTimeout(() => {
         document.getElementById(destination === 'works' ? 'product' : 'hero')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' })
@@ -556,13 +592,14 @@ function App() {
     }
 
     if (destination === 'about') {
-      if (!isArtClownOpen && !isEkoOpen) {
+      if (!isArtClownOpen && !isEkoOpen && !isPosterOpen) {
         openAboutPage()
         return
       }
       window.history.pushState({ about: true }, '', '#about')
       setIsArtClownOpen(false)
       setIsEkoOpen(false)
+      setIsPosterOpen(false)
       setIsAboutOpen(true)
       setRouteMenuTone('dark')
       startAboutAudio()
@@ -573,6 +610,7 @@ function App() {
       window.history.pushState({ artClown: true }, '', '#art-clown')
       setIsAboutOpen(false)
       setIsEkoOpen(false)
+      setIsPosterOpen(false)
       setIsArtClownOpen(true)
       setRouteMenuTone('dark')
       primeArtClownFireworksAudio()
@@ -583,6 +621,7 @@ function App() {
     window.history.pushState({ eko: true }, '', '#eko')
     setIsArtClownOpen(false)
     setIsAboutOpen(false)
+    setIsPosterOpen(false)
     setIsEkoOpen(true)
     setRouteMenuTone('dark')
     primeEkoHeroAudio()
@@ -599,11 +638,11 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   })
 
-  const currentMenuPage = isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
+  const currentMenuPage = isPosterOpen ? 'poster' : isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={isAboutOpen ? 'dark' : routeMenuTone}
+      tone={isAboutOpen || isPosterOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
       onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
@@ -646,6 +685,10 @@ function App() {
     )
   }
 
+  if (isPosterOpen) {
+    return <>{sharedMenu}<PosterProject onBack={closePosterProject} /></>
+  }
+
   return (
     <div className="portfolio-app">
       {sharedMenu}
@@ -681,10 +724,10 @@ function App() {
         {projectTransition && (
           <motion.div
             className={`project-route-transition is-${projectTransition}`}
-            initial={projectTransition === 'eko'
+            initial={projectTransition === 'eko' || projectTransition === 'poster'
               ? { clipPath: 'circle(0% at 50% 50%)' }
               : { clipPath: 'inset(49.8% 0 49.8% 0)' }}
-            animate={projectTransition === 'eko'
+            animate={projectTransition === 'eko' || projectTransition === 'poster'
               ? { clipPath: 'circle(150% at 50% 50%)' }
               : { clipPath: 'inset(0% 0 0% 0)' }}
             exit={{ opacity: 0 }}
@@ -711,11 +754,11 @@ function App() {
               transition={{ duration: reducedMotion ? 0 : 0.56, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
             >
               <img
-                src={projectTransition === 'eko' ? '/assets/eko/logo.svg' : '/assets/art-clown/source/logo-white.svg'}
+                src={projectTransition === 'poster' ? '/assets/poster/dreamcore/poster-1.webp' : projectTransition === 'eko' ? '/assets/eko/logo.svg' : '/assets/art-clown/source/logo-white.svg'}
                 alt=""
               />
-              <small>{projectTransition === 'eko' ? 'CLEAN EARTH / BRIGHT FUTURE' : 'PLAY / CREATE / BELONG'}</small>
-              <strong>{projectTransition === 'eko' ? 'E-KO' : 'ART CLOWN'}</strong>
+              <small>{projectTransition === 'poster' ? 'FOUR FRAMES / ONE DREAM' : projectTransition === 'eko' ? 'CLEAN EARTH / BRIGHT FUTURE' : 'PLAY / CREATE / BELONG'}</small>
+              <strong>{projectTransition === 'poster' ? 'DREAMCORE' : projectTransition === 'eko' ? 'E-KO' : 'ART CLOWN'}</strong>
             </motion.div>
           </motion.div>
         )}
@@ -907,7 +950,8 @@ function App() {
               className="folder-card-wrapper"
               type="button"
               onClick={() => {
-                setSelectedProject(project)
+                if (project.id === 'poster') openPosterProject()
+                else setSelectedProject(project)
               }}
               initial={{ opacity: 0, y: 45 }}
               whileInView={{ opacity: 1, y: 0 }}

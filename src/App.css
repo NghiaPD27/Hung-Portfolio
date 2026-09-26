@@ -126,6 +126,38 @@
   color: #fff5e6;
 }
 
+.project-route-transition.is-poster {
+  background: linear-gradient(120deg, rgba(255,255,255,0.36), rgba(129,186,251,0.24)), url('/assets/poster/dreamcore/background-1.webp') center / cover;
+  color: #17203c;
+}
+
+.project-route-transition.is-poster .shape-one {
+  width: min(70vw, 860px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 0 8vw rgba(255,255,255,0.1);
+}
+
+.project-route-transition.is-poster .shape-two {
+  width: min(50vw, 600px);
+  aspect-ratio: 1;
+  border: clamp(8px, 2vw, 26px) double rgba(255,255,255,0.36);
+  border-radius: 50%;
+}
+
+.project-route-transition.is-poster .project-route-copy img {
+  width: clamp(76px, 10vw, 150px);
+  height: clamp(100px, 13vw, 200px);
+  box-shadow: 0 20px 50px rgba(30,55,98,0.26);
+}
+
+.project-route-transition.is-poster .project-route-copy strong {
+  font-family: 'Dela Gothic One', sans-serif;
+  font-size: clamp(2.6rem, 10vw, 9rem);
+  letter-spacing: -0.06em;
+}
+
 .project-route-shape {
   position: absolute;
   display: block;
