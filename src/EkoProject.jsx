@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import Tilt from 'react-parallax-tilt'
+import useFineHover from './useFineHover.js'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
@@ -357,6 +358,7 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
 }
 
 export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneChange, onNavigationLockChange }) {
+  const fineHover = useFineHover()
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const gameCompleteRef = useRef(false)
@@ -511,6 +513,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
             <section className="eko-logo-stage eko-full-canvas">
               <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" />
               <div className="eko-artboard-inner eko-logo-inner">
+                <p className="eko-logo-mobile-kicker">03 / BIỂU TƯỢNG NHẬN DIỆN</p>
                 <motion.img
                   className="eko-logo-type"
                   src={`${ASSET}/logo-type.svg`}
@@ -577,15 +580,17 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
               <Reveal active={activeSlide === 5} className="eko-identity-title">
                 <h2>CHI TIẾT NHẬN DẠNG</h2>
               </Reveal>
-              <motion.div
-                className="eko-identity-pattern"
-                initial={false}
-                animate={activeSlide === 5 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
-                transition={activeSlide === 5 && !reducedMotion ? { duration: 16, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
-              >
-                <span><img src={`${ASSET}/brand-pattern-opt.png`} alt="Họa tiết nhận diện EKO" /></span>
-                <span aria-hidden="true"><img src={`${ASSET}/brand-pattern-opt.png`} alt="" /></span>
-              </motion.div>
+              <div className="eko-identity-window">
+                <motion.div
+                  className="eko-identity-pattern"
+                  initial={false}
+                  animate={activeSlide === 5 && !reducedMotion ? { x: ['0%', '-50%'] } : { x: 0 }}
+                  transition={activeSlide === 5 && !reducedMotion ? { duration: 16, repeat: Infinity, ease: 'linear' } : { duration: 0 }}
+                >
+                  <span><img src={`${ASSET}/brand-pattern-opt.png`} alt="Họa tiết nhận diện EKO" /></span>
+                  <span aria-hidden="true"><img src={`${ASSET}/brand-pattern-opt.png`} alt="" /></span>
+                </motion.div>
+              </div>
               <img className="eko-identity-strip" src={`${ASSET}/identity-strip.png`} alt="" />
             </section>
           </SlideFrame>
@@ -601,13 +606,13 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 {signs.map((sign, index) => (
                   <Tilt
                     className="eko-sign-card"
-                    tiltEnable={!reducedMotion}
+                    tiltEnable={!reducedMotion && fineHover}
                     tiltMaxAngleX={8}
                     tiltMaxAngleY={10}
                     perspective={1100}
                     scale={1.035}
                     transitionSpeed={650}
-                    glareEnable={!reducedMotion}
+                    glareEnable={!reducedMotion && fineHover}
                     glareMaxOpacity={0.28}
                     glareColor="#e9ffff"
                     glarePosition="all"
@@ -672,13 +677,13 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 {['reminder-1-opt.png', 'reminder-2-opt.png', 'reminder-3-opt.png'].map((src, index) => (
                   <Tilt
                     className="eko-reminder-tilt"
-                    tiltEnable={!reducedMotion}
+                    tiltEnable={!reducedMotion && fineHover}
                     tiltMaxAngleX={9}
                     tiltMaxAngleY={11}
                     perspective={1200}
                     scale={1.045}
                     transitionSpeed={900}
-                    glareEnable={!reducedMotion}
+                    glareEnable={!reducedMotion && fineHover}
                     glareMaxOpacity={0.24}
                     glareColor="#49ff00"
                     glarePosition="all"
@@ -710,6 +715,10 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
 
         <SwiperSlide tag="section" aria-label="Màn 9 trên 14: Tổng kết EKO">
           <SlideFrame className="eko-image-frame">
+            <div className="eko-image-mobile-heading">
+              <span>BRAND APPLICATION / 09</span>
+              <h2>DẤU ẤN EKO</h2>
+            </div>
             <motion.img
               className="eko-full-art"
               src={`${ASSET}/mockup-12.png`}
@@ -741,14 +750,14 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 ].map(([src, alt], index) => (
                   <Tilt
                     className="eko-campaign-stand-tilt"
-                    tiltEnable={!reducedMotion}
+                    tiltEnable={!reducedMotion && fineHover}
                     tiltReverse={index === 1}
                     tiltMaxAngleX={6}
                     tiltMaxAngleY={9}
                     perspective={1400}
                     scale={1.025}
                     transitionSpeed={900}
-                    glareEnable={!reducedMotion}
+                    glareEnable={!reducedMotion && fineHover}
                     glareMaxOpacity={0.2}
                     glareColor="#b9ffe5"
                     glarePosition="all"
@@ -822,6 +831,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
         <SwiperSlide tag="section" aria-label="Màn 14 trên 14: Lời cảm ơn">
           <SlideFrame className="eko-white-frame">
             <section className="eko-design-canvas eko-thank-you">
+              <h2 className="eko-thank-mobile-heading">CẢM ƠN</h2>
               <motion.div
                 className="eko-thank-logo"
                 initial={false}

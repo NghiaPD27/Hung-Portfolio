@@ -54,6 +54,8 @@
   background: #5b6470;
 }
 
+.art-billboard-mobile-heading { display: none; }
+
 .art-design-canvas {
   position: relative;
   flex: none;
@@ -266,6 +268,10 @@
   isolation: isolate;
   background: #f7f3eb;
 }
+
+.art-values-mobile-heading,
+.art-uniform-mobile-caption,
+.art-logo-types-mobile-label { display: none; }
 
 .art-values-wordmark {
   position: absolute;
@@ -1613,6 +1619,146 @@
     width: min(54%, 195px) !important;
     aspect-ratio: 0.95;
   }
+}
+
+/* Compact editorial hierarchy: keep the artwork visible and all copy in normal flow. */
+@media (max-width: 768px) {
+  .art-values {
+    gap: clamp(8px, 1.5dvh, 14px);
+    padding-inline: 16px 34px;
+  }
+
+  .art-values-mobile-heading {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto 2px;
+    color: #800020;
+    text-align: left;
+  }
+
+  .art-values-mobile-heading span {
+    display: block;
+    margin-bottom: 5px;
+    font: 800 10px/1.2 'Montserrat', sans-serif;
+    letter-spacing: 0.16em;
+  }
+
+  .art-values-mobile-heading h2 {
+    margin: 0;
+    font: 400 clamp(16px, 4.8vw, 22px)/1.22 'Dela Gothic One', sans-serif;
+  }
+
+  .art-value {
+    flex: none;
+    margin: 0 auto;
+    padding: clamp(11px, 1.8dvh, 16px) 14px;
+    border-radius: 14px;
+  }
+
+  .art-value-title {
+    font-size: clamp(14px, 4.2vw, 18px);
+    line-height: 1.27;
+  }
+
+  .art-value-description,
+  .art-value:hover .art-value-description,
+  .art-value:focus-visible .art-value-description,
+  .art-value.is-open .art-value-description {
+    max-height: none;
+    margin-top: 6px;
+    overflow: visible;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    font-size: clamp(12px, 3.45vw, 14px);
+    line-height: 1.42;
+  }
+
+  .art-balloons { opacity: 0.22; }
+
+  .art-uniform-wrap { height: clamp(180px, 36dvh, 340px); flex: none; }
+  .art-uniform-wrap img { object-position: 54% 60%; }
+  .art-uniform-mobile-caption {
+    position: absolute;
+    z-index: 2;
+    bottom: 12px;
+    left: 16px;
+    display: block;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(20, 0, 6, 0.82);
+    color: #fff;
+    font: 800 10px/1 'Montserrat', sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  .art-logo-types {
+    gap: 8px 12px;
+    padding-top: 12px;
+    align-content: center;
+  }
+
+  .art-logo-types-mobile-label {
+    display: block;
+    grid-column: 1 / -1;
+    width: 100%;
+    color: #800020;
+    font: 400 17px/1.2 'Dela Gothic One', sans-serif;
+    text-align: center;
+  }
+
+  .art-logo-tile { height: clamp(76px, 12dvh, 90px); }
+  .art-logo-standalone { width: clamp(95px, 24vw, 130px); max-height: 20dvh; }
+
+  .art-campaign h2 { line-height: 1.2; }
+  .art-campaign-grid .art-media-card { max-height: min(62dvh, 530px); }
+
+  .art-stationary h2 { line-height: 1.18; }
+  .art-stationary-hint { margin-top: 16px; }
+
+  .art-billboard-mobile-heading {
+    position: absolute;
+    z-index: 3;
+    top: max(84px, calc(env(safe-area-inset-top, 0px) + 70px));
+    left: 20px;
+    display: block;
+    width: calc(100% - 64px);
+    color: #fff;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .art-billboard-mobile-heading span {
+    display: block;
+    margin-bottom: 7px;
+    font: 800 10px/1.2 'Montserrat', sans-serif;
+    letter-spacing: 0.16em;
+  }
+
+  .art-billboard-mobile-heading h2 {
+    margin: 0;
+    font: 400 clamp(18px, 5vw, 24px)/1.25 'Dela Gothic One', sans-serif;
+    word-spacing: 0.18em;
+    text-wrap: balance;
+  }
+}
+
+@media (max-width: 768px) and (max-height: 680px) {
+  .art-values { gap: 7px; padding-top: 58px; padding-bottom: 22px; }
+  .art-values-mobile-heading h2 { font-size: 16px; }
+  .art-values-mobile-heading span { margin-bottom: 3px; }
+  .art-value { padding-block: 10px; }
+  .art-value-description,
+  .art-value:hover .art-value-description,
+  .art-value:focus-visible .art-value-description,
+  .art-value.is-open .art-value-description { font-size: 12px; line-height: 1.36; }
+  .art-logo-system { padding-top: 44px; }
+  .art-uniform-wrap { height: 34dvh; }
+  .art-logo-types { padding-bottom: 16px; }
+  .art-logo-types-mobile-label { font-size: 15px; }
+  .art-logo-standalone { width: 90px; }
 }
 
 @media (hover: none) {

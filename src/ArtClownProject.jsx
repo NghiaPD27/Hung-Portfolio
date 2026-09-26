@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './ArtClownProject.css'
+import useFineHover from './useFineHover.js'
 
 const ASSET = '/assets/art-clown/source'
 
@@ -210,6 +211,7 @@ function SlideFrame({ className = '', children }) {
 
 function MascotExperience({ reducedMotion }) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const fineHover = useFineHover()
 
   useEffect(() => {
     if (reducedMotion) return undefined
@@ -246,7 +248,7 @@ function MascotExperience({ reducedMotion }) {
             tiltMaxAngleX={8}
             tiltMaxAngleY={10}
             glareEnable={false}
-            tiltEnable={!reducedMotion}
+            tiltEnable={!reducedMotion && fineHover}
           >
             <div className="art-mascot-experience-media">
               <div className="art-mascot-experience-halo" aria-hidden="true" />
@@ -399,6 +401,10 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
           <SlideFrame className="art-slide-cream">
             <section className="art-design-canvas art-values" aria-label="Giá trị thương hiệu Art Clown">
               <ValuesWordmark reducedMotion={reducedMotion} />
+              <div className="art-values-mobile-heading">
+                <span>ART CLOWN / 02</span>
+                <h2>GIÁ TRỊ THƯƠNG HIỆU</h2>
+              </div>
               {brandValues.map((value, index) => {
                 const isOpen = openValue === index
                 return (
@@ -440,6 +446,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   onLoad={() => markLoaded('uniform')}
                   className={`art-img-fade ${isLoaded('uniform') ? 'is-loaded' : ''}`}
                 />
+                <span className="art-uniform-mobile-caption">03 / ĐỒNG PHỤC THƯƠNG HIỆU</span>
               </div>
               <div className="art-marquee" aria-label="Welcome to Art Clown">
                 <div className="art-marquee-track">
@@ -451,6 +458,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 </div>
               </div>
               <div className="art-logo-types">
+                <span className="art-logo-types-mobile-label">HỆ THỐNG LOGO</span>
                 <div className="art-logo-tile art-logo-tile-black">
                   <div className={`art-skeleton art-skeleton-dark ${isLoaded('logo-black') ? 'is-hidden' : ''}`} aria-hidden="true" />
                   <img ref={registerRef('logo-black')} src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown màu trắng trên nền đen" onLoad={() => markLoaded('logo-black')} className={`art-img-fade ${isLoaded('logo-black') ? 'is-loaded' : ''}`} />
@@ -628,6 +636,10 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         <SwiperSlide tag="section" aria-label="Màn 8 trên 8: Billboard">
           <SlideFrame className="art-slide-billboard">
             <section className="art-design-canvas art-billboard" aria-label="Billboard Art Clown">
+              <div className="art-billboard-mobile-heading">
+                <span>OUTDOOR / 08</span>
+                <h2>BILLBOARD</h2>
+              </div>
               <div className={`art-skeleton art-skeleton-slate ${isLoaded('billboard') ? 'is-hidden' : ''}`} aria-hidden="true" />
               <img
                 ref={registerRef('billboard')}
