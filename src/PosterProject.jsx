@@ -52,7 +52,7 @@ const posters = [
   },
 ]
 
-function PosterProject({ onBack }) {
+function PosterProject({ onBack, onAudioUnlock }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const [active, setActive] = useState(0)
@@ -74,7 +74,13 @@ function PosterProject({ onBack }) {
   }, [zoomOpen, onBack])
 
   return (
-    <main className="poster-project" aria-label="Bộ sưu tập poster Dreamcore">
+    <main
+      className="poster-project"
+      aria-label="Bộ sưu tập poster Dreamcore"
+      onPointerDown={(event) => {
+        if (!event.target.closest('.poster-back')) onAudioUnlock?.()
+      }}
+    >
       <Swiper
         className="poster-swiper"
         modules={[EffectCreative, Keyboard, Mousewheel]}

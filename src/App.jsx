@@ -160,6 +160,9 @@ function App() {
   const artClownValuesAudioRef = useRef(null)
   const artClownValuesAudioFade = useRef(null)
   const artClownValuesAudioRequestedActive = useRef(false)
+  const posterAudioRef = useRef(null)
+  const posterAudioFade = useRef(null)
+  const posterAudioRequestedActive = useRef(false)
 
   const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
     const audio = aboutAudioRef.current
@@ -394,6 +397,64 @@ function App() {
       .catch(() => {})
   }, [ensureArtClownValuesAudio, fadeArtClownValuesAudio])
 
+  const fadePosterAudio = useCallback((targetVolume, duration = 850, pauseAfter = false) => {
+    const audio = posterAudioRef.current
+    if (!audio) return
+    if (posterAudioFade.current) cancelAnimationFrame(posterAudioFade.current)
+    const startVolume = audio.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration)
+      const eased = 1 - ((1 - progress) ** 3)
+      audio.volume = Math.min(1, Math.max(0, startVolume + ((targetVolume - startVolume) * eased)))
+      if (progress < 1) {
+        posterAudioFade.current = requestAnimationFrame(tick)
+      } else {
+        posterAudioFade.current = null
+        if (pauseAfter) audio.pause()
+      }
+    }
+    posterAudioFade.current = requestAnimationFrame(tick)
+  }, [])
+
+  const ensurePosterAudio = useCallback(() => {
+    if (!posterAudioRef.current) {
+      const audio = new Audio('/assets/poster/dreamcore/dreamcore-ambience.m4a')
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      posterAudioRef.current = audio
+    }
+    return posterAudioRef.current
+  }, [])
+
+  const primePosterAudio = useCallback(() => {
+    const audio = ensurePosterAudio()
+    audio.volume = 0
+    audio.play().catch(() => {})
+  }, [ensurePosterAudio])
+
+  const setPosterAudioActive = useCallback((active) => {
+    const wasActive = posterAudioRequestedActive.current
+    posterAudioRequestedActive.current = active
+    if (!active) {
+      fadePosterAudio(0, 500, true)
+      return
+    }
+
+    const audio = ensurePosterAudio()
+    if (!wasActive) audio.currentTime = 0
+    audio.play()
+      .then(() => {
+        if (posterAudioRequestedActive.current) fadePosterAudio(0.52, 1200)
+      })
+      .catch(() => {})
+  }, [ensurePosterAudio, fadePosterAudio])
+
+  useEffect(() => {
+    setPosterAudioActive(isPosterOpen)
+  }, [isPosterOpen, setPosterAudioActive])
+
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -409,12 +470,15 @@ function App() {
     if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
     if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
     if (artClownValuesAudioFade.current) cancelAnimationFrame(artClownValuesAudioFade.current)
+    if (posterAudioFade.current) cancelAnimationFrame(posterAudioFade.current)
     artClownValuesAudioRequestedActive.current = false
+    posterAudioRequestedActive.current = false
     aboutAudioRef.current?.pause()
     ekoHeroAudioRef.current?.pause()
     artClownFireworksAudioRef.current?.pause()
     artClownCircusAudioRef.current?.pause()
     artClownValuesAudioRef.current?.pause()
+    posterAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở hoặc trên thiết bị cảm ứng)
@@ -475,6 +539,13 @@ function App() {
           artClownValuesAudioRef.current.currentTime = 0
           artClownValuesAudioRef.current.volume = 0
         }
+      }
+      if (!posterIsOpen && posterAudioRef.current) {
+        posterAudioRequestedActive.current = false
+        if (posterAudioFade.current) cancelAnimationFrame(posterAudioFade.current)
+        posterAudioRef.current.pause()
+        posterAudioRef.current.currentTime = 0
+        posterAudioRef.current.volume = 0
       }
       requestAnimationFrame(() => window.scrollTo({
         top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen ? 0 : productScrollPosition.current,
@@ -608,6 +679,7 @@ function App() {
     productScrollPosition.current = window.scrollY
     setSelectedProject(null)
     setMenuOpen(false)
+    primePosterAudio()
     setProjectTransition('poster')
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ poster: true }, '', '#poster')
@@ -621,6 +693,7 @@ function App() {
   }
 
   const closePosterProject = () => {
+    setPosterAudioActive(false)
     if (window.history.state?.poster) {
       window.history.back()
       return
@@ -646,6 +719,7 @@ function App() {
     stopArtClownFireworks()
     setArtClownCircusAudioActive(false)
     setArtClownValuesAudioActive(false)
+    setPosterAudioActive(false)
 
     if (destination === 'home' || destination === 'works') {
       window.history.pushState({}, '', `${window.location.pathname}${window.location.search}`)
@@ -757,7 +831,7 @@ function App() {
   }
 
   if (isPosterOpen) {
-    return <>{sharedMenu}<PosterProject onBack={closePosterProject} /></>
+    return <>{sharedMenu}<PosterProject onBack={closePosterProject} onAudioUnlock={() => setPosterAudioActive(true)} /></>
   }
 
   return (
