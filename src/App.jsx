@@ -429,6 +429,14 @@ function App() {
       vietnamese: 'BỘ NHẬN DIỆN THƯƠNG HIỆU',
       description: 'Định hình bản sắc thương hiệu qua ngôn ngữ thị giác đương đại: Logo, hệ thống màu sắc, kiểu chữ và bộ quy chuẩn ứng dụng toàn diện.',
       year: '2026'
+    },
+    {
+      id: 'poster',
+      tag: 'Poster Design',
+      title: 'POSTER',
+      vietnamese: 'THIẾT KẾ ÁP PHÍCH',
+      description: 'Các thiết kế poster truyền tải ý tưởng qua hình ảnh, bố cục và chữ.',
+      year: '2026'
     }
   ]
 
