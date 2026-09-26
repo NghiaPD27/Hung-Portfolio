@@ -372,6 +372,12 @@
   .poster-current { display: none; }
 }
 
+@media (max-width: 460px) and (max-height: 700px) {
+  .poster-art-button img { max-height: calc(100dvh - 290px); }
+  .poster-bottom-rail { gap: 10px; }
+  .poster-rail-actions button { width: 44px; height: 44px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .poster-scene-background,
   .poster-portal { animation: none; }

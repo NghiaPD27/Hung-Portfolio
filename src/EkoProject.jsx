@@ -649,6 +649,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                   </Tilt>
                 ))}
               </div>
+              <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG · 04 BIỂN BÁO <b>↗</b></span>
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -702,6 +703,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 ))}
               </div>
               <motion.p initial={false} animate={activeSlide === 7 ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}>ĐỂ NHẮC NHỞ !!!</motion.p>
+              <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG · 03 THÔNG ĐIỆP <b>↗</b></span>
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -763,6 +765,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                   </Tilt>
                 ))}
               </div>
+              <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG ĐỂ ĐỌC TỪNG STANDEE <b>↗</b></span>
             </section>
           </SlideFrame>
         </SwiperSlide>

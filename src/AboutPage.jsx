@@ -311,7 +311,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
 
         <div className="about-atmosphere" aria-hidden="true">
           <div className="about-air-particles">
-            {PARTICLES.map((particle, index) => (
+            {PARTICLES.filter((particle) => !layout.isMobile || particle.x < 480).map((particle, index) => (
               <AirParticle
                 key={`particle-${index + 1}`}
                 particle={particle}

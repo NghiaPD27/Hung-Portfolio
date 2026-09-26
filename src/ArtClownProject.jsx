@@ -575,6 +575,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 })}
               </div>
               <h2 id="art-campaign-title"><span>CAMPAIGN</span><span>POSTERS</span></h2>
+              <span className="art-campaign-mobile-hint" aria-hidden="true">VUỐT NGANG ĐỂ XEM TRỌN BỘ POSTER <b>↗</b></span>
             </section>
           </SlideFrame>
         </SwiperSlide>

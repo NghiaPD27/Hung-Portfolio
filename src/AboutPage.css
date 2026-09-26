@@ -390,7 +390,8 @@
   position: fixed;
   z-index: 100;
   top: max(16px, env(safe-area-inset-top, 16px));
-  right: max(100px, calc(env(safe-area-inset-right, 18px) + 82px));
+  right: auto;
+  left: max(72px, calc(env(safe-area-inset-left, 16px) + 56px));
   padding: 9px 14px;
   font-size: 10px;
   background: rgba(0, 41, 92, 0.45);
@@ -492,7 +493,7 @@
   font-size: clamp(14px, 4vw, 16px);
   font-weight: 600;
   line-height: 1.6;
-  text-align: justify;
+  text-align: left;
   color: #000;
   background: rgba(255, 255, 255, 0.55);
   padding: 18px 20px;
@@ -561,4 +562,14 @@
   font-size: clamp(14px, 4.2vw, 18px);
   line-height: 1.5;
   white-space: normal;
+}
+
+@media (max-width: 360px) {
+  .about-page.is-mobile-view .about-sound-toggle {
+    left: 68px;
+    gap: 6px;
+    padding: 8px 9px;
+    font-size: 8px;
+    letter-spacing: 0.05em;
+  }
 }

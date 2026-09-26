@@ -1516,6 +1516,105 @@
   }
 }
 
+/* Mobile editorial rails keep each print readable without changing the desktop frames. */
+.art-campaign-mobile-hint { display: none; }
+
+@media (max-width: 768px) {
+  .art-campaign {
+    justify-content: center;
+    gap: clamp(12px, 2.4dvh, 22px);
+    padding-inline: 16px;
+  }
+
+  .art-campaign h2 {
+    order: -1;
+    flex: none;
+    margin: 0;
+    font-size: clamp(22px, 6.6vw, 32px);
+  }
+
+  .art-campaign h2 span:first-child,
+  .art-campaign h2 span:last-child {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: clamp(16px, 5.1vw, 23px);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+  }
+
+  .art-campaign-grid {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    padding: 5px 3px 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 3px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .art-campaign-grid::-webkit-scrollbar { display: none; }
+
+  .art-campaign-grid .art-media-card {
+    flex: 0 0 min(70vw, 310px);
+    width: min(70vw, 310px);
+    height: auto;
+    max-height: 59dvh;
+    aspect-ratio: 1 / 1.414;
+    scroll-snap-align: center;
+    border-radius: 16px;
+    box-shadow: 0 14px 32px rgba(0, 55, 125, 0.16);
+  }
+
+  .art-campaign-grid .art-media-card img { object-fit: contain; }
+
+  .art-campaign-mobile-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 2px 0;
+    border-top: 1px solid rgba(2, 66, 166, 0.2);
+    color: #0242a6;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+
+  .art-campaign-mobile-hint b { font-size: 20px; line-height: 1; }
+
+  .art-mascot-experience-copy > span {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+
+  .art-stationary-card img,
+  .art-stationary-3 img {
+    object-fit: contain !important;
+    background: #ffea93;
+  }
+
+  .art-stationary-grid { justify-items: center; }
+
+  .art-stationary-grid .art-stationary-card {
+    aspect-ratio: 0.9;
+    background: #ffea93;
+  }
+
+  .art-stationary-grid .art-stationary-3 {
+    width: min(54%, 195px) !important;
+    aspect-ratio: 0.95;
+  }
+}
+
 @media (hover: none) {
   .art-logo-tile:hover,
   .art-logo-tile:hover img,
