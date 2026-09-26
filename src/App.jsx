@@ -157,6 +157,9 @@ function App() {
   const artClownFireworksAudioRef = useRef(null)
   const artClownCircusAudioRef = useRef(null)
   const artClownCircusAudioFade = useRef(null)
+  const artClownValuesAudioRef = useRef(null)
+  const artClownValuesAudioFade = useRef(null)
+  const artClownValuesAudioRequestedActive = useRef(false)
 
   const fadeAboutAudio = (targetVolume, duration = 800, pauseAfter = false) => {
     const audio = aboutAudioRef.current
@@ -338,6 +341,59 @@ function App() {
       .catch(() => {})
   }, [ensureArtClownCircusAudio, fadeArtClownCircusAudio])
 
+  const fadeArtClownValuesAudio = useCallback((targetVolume, duration = 850, pauseAfter = false) => {
+    const audio = artClownValuesAudioRef.current
+    if (!audio) return
+    if (artClownValuesAudioFade.current) cancelAnimationFrame(artClownValuesAudioFade.current)
+    const startVolume = audio.volume
+    const startedAt = performance.now()
+    const tick = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration)
+      const eased = 1 - ((1 - progress) ** 3)
+      audio.volume = Math.min(1, Math.max(0, startVolume + ((targetVolume - startVolume) * eased)))
+      if (progress < 1) {
+        artClownValuesAudioFade.current = requestAnimationFrame(tick)
+      } else {
+        artClownValuesAudioFade.current = null
+        if (pauseAfter) audio.pause()
+      }
+    }
+    artClownValuesAudioFade.current = requestAnimationFrame(tick)
+  }, [])
+
+  const ensureArtClownValuesAudio = useCallback(() => {
+    if (!artClownValuesAudioRef.current) {
+      const audio = new Audio('/assets/art-clown/source/art-clown-values-ambience.mp3')
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      artClownValuesAudioRef.current = audio
+    }
+    return artClownValuesAudioRef.current
+  }, [])
+
+  const primeArtClownValuesAudio = useCallback(() => {
+    const audio = ensureArtClownValuesAudio()
+    audio.volume = 0
+    audio.play().catch(() => {})
+  }, [ensureArtClownValuesAudio])
+
+  const setArtClownValuesAudioActive = useCallback((active) => {
+    artClownValuesAudioRequestedActive.current = active
+    if (!active) {
+      fadeArtClownValuesAudio(0, 480, true)
+      return
+    }
+
+    const audio = ensureArtClownValuesAudio()
+    if (audio.paused) audio.currentTime = 0
+    audio.play()
+      .then(() => {
+        if (artClownValuesAudioRequestedActive.current) fadeArtClownValuesAudio(0.18, 1150)
+      })
+      .catch(() => {})
+  }, [ensureArtClownValuesAudio, fadeArtClownValuesAudio])
+
   // Tự động kéo màn mở đầu sau 1.2s
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -352,10 +408,13 @@ function App() {
     if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
     if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
     if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
+    if (artClownValuesAudioFade.current) cancelAnimationFrame(artClownValuesAudioFade.current)
+    artClownValuesAudioRequestedActive.current = false
     aboutAudioRef.current?.pause()
     ekoHeroAudioRef.current?.pause()
     artClownFireworksAudioRef.current?.pause()
     artClownCircusAudioRef.current?.pause()
+    artClownValuesAudioRef.current?.pause()
   }, [])
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở hoặc trên thiết bị cảm ứng)
@@ -403,11 +462,18 @@ function App() {
       }
       if (!projectIsOpen) {
         stopArtClownFireworks()
+        artClownValuesAudioRequestedActive.current = false
         if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
+        if (artClownValuesAudioFade.current) cancelAnimationFrame(artClownValuesAudioFade.current)
         artClownCircusAudioRef.current?.pause()
+        artClownValuesAudioRef.current?.pause()
         if (artClownCircusAudioRef.current) {
           artClownCircusAudioRef.current.currentTime = 0
           artClownCircusAudioRef.current.volume = 0
+        }
+        if (artClownValuesAudioRef.current) {
+          artClownValuesAudioRef.current.currentTime = 0
+          artClownValuesAudioRef.current.volume = 0
         }
       }
       requestAnimationFrame(() => window.scrollTo({
@@ -451,6 +517,7 @@ function App() {
     setSelectedProject(null)
     primeArtClownFireworksAudio()
     primeArtClownCircusAudio()
+    primeArtClownValuesAudio()
     setProjectTransition('art-clown')
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ artClown: true }, '', '#art-clown')
@@ -466,6 +533,7 @@ function App() {
   const closeArtClownProject = () => {
     stopArtClownFireworks()
     setArtClownCircusAudioActive(false)
+    setArtClownValuesAudioActive(false)
     if (window.history.state?.artClown) {
       window.history.back()
       return
@@ -577,6 +645,7 @@ function App() {
     setEkoHeroAudioActive(false)
     stopArtClownFireworks()
     setArtClownCircusAudioActive(false)
+    setArtClownValuesAudioActive(false)
 
     if (destination === 'home' || destination === 'works') {
       window.history.pushState({}, '', `${window.location.pathname}${window.location.search}`)
@@ -615,6 +684,7 @@ function App() {
       setRouteMenuTone('dark')
       primeArtClownFireworksAudio()
       primeArtClownCircusAudio()
+      primeArtClownValuesAudio()
       return
     }
 
@@ -661,6 +731,7 @@ function App() {
           onFireworkSoundPrime={primeArtClownFireworksAudio}
           onFireworkSoundStop={stopArtClownFireworks}
           onCircusAudioStateChange={setArtClownCircusAudioActive}
+          onValuesAudioStateChange={setArtClownValuesAudioActive}
           onMenuToneChange={setRouteMenuTone}
         />
       </>

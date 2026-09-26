@@ -277,7 +277,7 @@ function MascotExperience({ reducedMotion }) {
   )
 }
 
-export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop, onCircusAudioStateChange, onMenuToneChange }) {
+export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop, onCircusAudioStateChange, onValuesAudioStateChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
   const [activeSlide, setActiveSlide] = useState(0)
@@ -323,9 +323,13 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
 
   useEffect(() => {
     onCircusAudioStateChange?.(activeSlide === 0)
-  }, [activeSlide, onCircusAudioStateChange])
+    onValuesAudioStateChange?.(activeSlide >= 1)
+  }, [activeSlide, onCircusAudioStateChange, onValuesAudioStateChange])
 
-  useEffect(() => () => onCircusAudioStateChange?.(false), [onCircusAudioStateChange])
+  useEffect(() => () => {
+    onCircusAudioStateChange?.(false)
+    onValuesAudioStateChange?.(false)
+  }, [onCircusAudioStateChange, onValuesAudioStateChange])
 
   useEffect(() => {
     const menuTones = ['dark', 'dark', 'dark', 'dark', 'light', 'dark', 'dark', 'light']
@@ -336,10 +340,14 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
     <main
       className="art-clown-project"
       aria-label="Art Clown branding project"
-      onPointerDown={() => {
-        if (activeSlide !== 0) return
-        onFireworkSoundPrime?.()
-        onCircusAudioStateChange?.(true)
+      onPointerDown={(event) => {
+        if (event.target.closest('.art-clown-back')) return
+        if (activeSlide === 0) {
+          onFireworkSoundPrime?.()
+          onCircusAudioStateChange?.(true)
+        } else {
+          onValuesAudioStateChange?.(true)
+        }
       }}
     >
       <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
