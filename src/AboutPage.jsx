@@ -309,6 +309,18 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           aria-hidden="true"
         />
 
+        {layout.isMobile && (
+          <motion.img
+            className="about-mobile-floral-frame"
+            src="/assets/about/ahf-mobile.png"
+            alt=""
+            aria-hidden="true"
+            initial={reducedMotion ? false : { opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: reducedMotion ? 0 : 1.1, ease: [0.16, 1, 0.3, 1] }}
+          />
+        )}
+
         <div className="about-atmosphere" aria-hidden="true">
           <div className="about-air-particles">
             {PARTICLES.filter((particle) => !layout.isMobile || particle.x < 480).map((particle, index) => (

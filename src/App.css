@@ -316,6 +316,11 @@
   z-index: 5001;
 }
 
+.menu-mobile-contact,
+.hero-mobile-back {
+  display: none;
+}
+
 .menu-close-btn {
   position: absolute;
   top: clamp(35px, 5vh, 55px);
@@ -1260,5 +1265,256 @@
 
   .branding-project-card:hover {
     box-shadow: inset 0 1px rgba(255, 255, 255, 0.24), inset 0 -30px 60px rgba(0, 0, 0, 0.16), 0 20px 46px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Figma Mobile / Home and navigation. Desktop composition and motion stay intact. */
+@media (max-width: 640px) {
+  .hero-section {
+    min-height: 844px;
+  }
+
+  .hero-mobile-back {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 36px;
+    left: 20px;
+    z-index: 80;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font: 38px/1 Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  .hero-text-left {
+    top: 99px;
+    left: 20px;
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+
+  .hero-text-left .title-port,
+  .hero-text-left .title-folio {
+    font-size: clamp(40px, 12vw, 48px);
+    line-height: 1;
+  }
+
+  .hero-text-left .title-folio {
+    font-family: 'Cormorant Unicase', 'Playfair Display', serif;
+    letter-spacing: -0.05em;
+    margin-left: 2px;
+  }
+
+  .layer-lotus {
+    top: 14%;
+    width: min(82vw, 320px);
+    filter: drop-shadow(0 0 30px rgba(255, 180, 220, 0.35));
+  }
+
+  .layer-person {
+    height: min(62dvh, 521px);
+    max-height: none;
+    bottom: 0 !important;
+    left: 46%;
+  }
+
+  .layer-blue-flower {
+    bottom: 19%;
+    left: -8%;
+    width: 50vw;
+    max-width: 220px;
+  }
+
+  .layer-amber-rose {
+    bottom: 17%;
+    right: -9%;
+    width: 51vw;
+    max-width: 230px;
+  }
+
+  .hero-text-right {
+    bottom: 14.5%;
+    right: 18px;
+  }
+
+  .hero-text-right .title-freedom {
+    font-size: clamp(24px, 7.4vw, 29px);
+  }
+
+  .hero-text-right .title-designer {
+    font-size: clamp(18px, 6vw, 24px);
+  }
+
+  .marquee-bar {
+    bottom: 8px;
+    padding: 5px 0;
+  }
+
+  .product-section {
+    padding: 28px 20px 70px;
+  }
+
+  .product-title-group {
+    margin-bottom: 30px;
+  }
+
+  .product-main-title {
+    font-size: clamp(28px, 8vw, 34px);
+  }
+
+  .product-sub-title {
+    display: none;
+  }
+
+  .folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 130px));
+    justify-content: start;
+    justify-items: stretch;
+    gap: 12px;
+    max-width: none;
+    margin: 0;
+  }
+
+  .folder-card-wrapper {
+    width: 130px;
+    max-width: 100%;
+    aspect-ratio: 130 / 100;
+  }
+
+  .folder-front-card {
+    top: 14px;
+    padding: 10px 9px 10px;
+    border-radius: 11px;
+  }
+
+  .folder-heading {
+    font-size: 11px;
+  }
+
+  .folder-vietnamese {
+    font-size: 7px;
+    letter-spacing: 0;
+    margin-top: 4px;
+  }
+
+  .menu-white-drawer {
+    height: 100dvh;
+    padding: 0 20px 24px;
+    overflow-y: auto;
+    box-shadow: none;
+  }
+
+  .menu-close-btn {
+    top: 36px;
+    right: 20px;
+    width: 78px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .menu-nav-list {
+    margin-top: 155px;
+    gap: 42px;
+  }
+
+  .menu-nav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .menu-nav-item .nav-item-num {
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .menu-nav-item .nav-item-title {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: clamp(49px, 16vw, 64px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .menu-nav-item.is-current {
+    color: #000;
+  }
+
+  .menu-mobile-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: auto;
+    padding-bottom: 60px;
+    color: #070707;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .menu-mobile-contact h2 {
+    margin: 0 0 2px;
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 25px;
+    font-weight: 400;
+  }
+
+  .menu-mobile-contact-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .menu-mobile-contact-line a {
+    color: inherit;
+    text-decoration: none;
+    font-size: 11px;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  .menu-mobile-socials {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 23px;
+    font-size: 11px;
+  }
+
+  .menu-mobile-socials span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .menu-mobile-socials i {
+    display: grid;
+    place-items: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .social-discord { background: #5865f2; }
+  .social-facebook { background: #1877f2; }
+  .social-instagram { background: linear-gradient(45deg, #ffbe38, #f5387f, #8a36d4); }
+
+  .hero-text-left .title-folio {
+    letter-spacing: 0.18em;
+  }
+
+  .layer-lotus {
+    width: min(100vw, 390px);
+  }
+
+  .product-title-group {
+    margin-bottom: 42px;
   }
 }

@@ -40,6 +40,10 @@
   pointer-events: none;
 }
 
+.about-mobile-floral-frame {
+  display: none;
+}
+
 .about-atmosphere {
   position: absolute;
   left: 0;
@@ -571,5 +575,164 @@
     padding: 8px 9px;
     font-size: 8px;
     letter-spacing: 0.05em;
+  }
+}
+
+/* Figma Mobile / About (390 × 844). The desktop artboard above is unchanged. */
+@media (max-width: 768px) {
+  .about-page.is-mobile-view .about-artboard.is-mobile-artboard {
+    width: 100%;
+    max-width: 600px;
+    min-height: max(844px, 100dvh);
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .about-page.is-mobile-view .about-atmosphere {
+    position: absolute;
+    opacity: 0.28;
+  }
+
+  .about-page.is-mobile-view .about-hello {
+    position: absolute;
+    top: 48px;
+    left: 12%;
+    width: 76%;
+    font-size: clamp(58px, 18vw, 74px);
+    line-height: 1.12;
+    text-align: left;
+    white-space: nowrap;
+    text-shadow: none;
+  }
+
+  .about-page.is-mobile-view .about-name {
+    position: absolute;
+    top: 124px;
+    left: 20%;
+    width: 75%;
+    margin: 0;
+    font-size: clamp(18px, 5.1vw, 22px);
+    line-height: 1.1;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 4;
+  }
+
+  .about-page.is-mobile-view .about-name-copy {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.35em;
+  }
+
+  .about-page.is-mobile-view .about-name-copy span:last-child {
+    letter-spacing: -0.04em;
+  }
+
+  .about-page.is-mobile-view .about-mobile-portrait-stage {
+    position: absolute;
+    top: 134px;
+    left: 21%;
+    width: 58%;
+    max-width: none;
+    height: 355px;
+    margin: 0;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+    z-index: 4;
+  }
+
+  .about-page.is-mobile-view .about-person-layer {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .about-page.is-mobile-view .about-ff-layer {
+    display: none;
+  }
+
+  .about-page.is-mobile-view .about-mobile-floral-frame {
+    display: block;
+    position: absolute;
+    top: -66px;
+    left: -12%;
+    width: 124%;
+    height: 844px;
+    object-fit: fill;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .about-page.is-mobile-view .about-bio,
+  .about-page.is-mobile-view .about-skill-title,
+  .about-page.is-mobile-view .about-skill-icons,
+  .about-page.is-mobile-view .about-education {
+    position: absolute;
+    left: 5.13%;
+    width: 89.74%;
+    max-width: none;
+    margin: 0;
+    z-index: 6;
+  }
+
+  .about-page.is-mobile-view .about-bio {
+    top: 581px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    font-size: 10px;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .about-page.is-mobile-view .about-skill-title {
+    top: 653px;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: left;
+    letter-spacing: 0;
+  }
+
+  .about-page.is-mobile-view .about-skill-icons {
+    top: 681px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .about-page.is-mobile-view .about-skill-icon {
+    zoom: 0.42;
+  }
+
+  .about-page.is-mobile-view .about-education {
+    top: 723px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: #080808;
+  }
+
+  .about-page.is-mobile-view .about-education h2 {
+    margin: 0 0 5px;
+    font-size: 14px;
+  }
+
+  .about-page.is-mobile-view .about-education p {
+    font-size: 10px;
+    line-height: 1.35;
+    font-weight: 700;
   }
 }

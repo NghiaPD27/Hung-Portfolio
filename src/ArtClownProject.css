@@ -55,6 +55,12 @@
 }
 
 .art-billboard-mobile-heading { display: none; }
+.art-hero-tent-mobile,
+.art-uniform-figma-mobile,
+.art-logo-figma-mobile,
+.art-logo-applications-figma-mobile,
+.art-campaign-figma-mobile,
+.art-stationary-figma-mobile { display: none; }
 
 .art-design-canvas {
   position: relative;
@@ -1786,5 +1792,287 @@
     opacity: var(--art-title-echo-opacity);
     transform: translateY(var(--art-title-echo-offset));
     animation: none !important;
+  }
+}
+
+/* The six 390 × 844 Art Clown frames on Figma's Mobile page. Desktop stays above. */
+@media (max-width: 768px) {
+  .art-clown-swiper .swiper-pagination-vertical.swiper-pagination-bullets { display: none; }
+
+  .art-clown-back {
+    top: max(16px, env(safe-area-inset-top));
+    left: max(20px, env(safe-area-inset-left));
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .art-clown-project:has(.swiper-slide-active .art-hero) .art-clown-back {
+    top: max(10dvh, env(safe-area-inset-top));
+  }
+
+  .art-clown-project:has(.swiper-slide-active .art-logo-applications) .art-clown-back {
+    top: auto;
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* Hero: the separate tent image is the exact transparent mobile artwork. */
+  .art-slide-hero {
+    background-size: auto 125%;
+    background-position: 50% 45%;
+  }
+
+  .art-hero { --art-hero-lift: 0%; overflow: hidden; }
+  .art-hero-tent,
+  .art-hero-tent-skeleton { display: none; }
+
+  .art-hero-tent-mobile {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 50%;
+    display: block;
+    width: 100%;
+    height: 41.94%;
+    object-fit: fill;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .art-hero-title {
+    top: 17.9%;
+    width: 100%;
+    height: 7%;
+    font-size: clamp(29px, 11.8vw, 46px);
+    line-height: 1;
+    letter-spacing: -0.055em;
+  }
+
+  .art-fireworks {
+    inset: auto;
+    top: 35.43%;
+    left: -21.03%;
+    width: 130.26%;
+    height: 45.14%;
+    overflow: hidden;
+  }
+
+  .art-firework-left { top: 51.18%; left: 0; width: 51.58%; height: 48.82%; }
+  .art-firework-middle { top: -6.3%; left: 0.39%; width: 108.27%; height: 102.1%; }
+  .art-firework-right { top: 44.88%; left: 50%; width: 50%; height: 47.24%; }
+  .art-peak-glow { width: 3.85%; }
+  .art-glow-middle { top: 40.94%; left: 51.57%; width: 5.91%; }
+  .art-glow-left { top: 75.59%; left: 29.53%; width: 2.95%; }
+  .art-glow-right { top: 66.67%; left: 73.62%; width: 2.76%; }
+  .art-launch-spark { width: 1.38%; }
+  .art-spark-middle { top: 43.04%; left: 53.15%; width: 2.76%; }
+  .art-spark-left { top: 76.64%; left: 30.31%; width: 1.38%; }
+  .art-spark-right { top: 67.72%; left: 74.41%; width: 1.18%; }
+
+  /* Uniform and logo variants: photo first, three marks and heading below. */
+  .art-logo-system { display: block; padding: 0; background: #fff; }
+  .art-uniform-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 41.94%; }
+  .art-uniform-wrap > img:not(.art-uniform-figma-mobile),
+  .art-uniform-wrap > .art-skeleton,
+  .art-uniform-mobile-caption { display: none; }
+
+  .art-uniform-wrap .art-uniform-figma-mobile {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: none;
+  }
+
+  .art-marquee {
+    position: absolute;
+    z-index: 3;
+    top: 20.97%;
+    left: 4.5%;
+    width: 91%;
+    height: 4.2%;
+  }
+
+  .art-marquee-track { font-size: clamp(15px, 5.13vw, 20px); }
+  .art-marquee-group { gap: 40px; padding-right: 40px; }
+  .art-logo-types,
+  .art-logo-types-label { display: none; }
+
+  .art-logo-figma-mobile {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .art-logo-figma-mobile img {
+    position: absolute;
+    left: 11.8%;
+    width: min(21vw, 82px);
+    height: min(11dvh, 93px);
+    object-fit: contain;
+  }
+
+  .art-logo-figma-mobile img:nth-child(1) { top: 47.4%; }
+  .art-logo-figma-mobile img:nth-child(2) { top: 59%; }
+  .art-logo-figma-mobile .art-figma-logo-reverse {
+    position: absolute;
+    top: 75.6%;
+    left: 5.1%;
+    width: min(33.6vw, 131px);
+    height: min(15.5dvh, 131px);
+    display: grid;
+    place-items: center;
+    border-radius: 38%;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .art-logo-figma-mobile .art-figma-logo-reverse img {
+    position: static;
+    display: block;
+    width: 78px;
+    height: 88px;
+    object-fit: contain;
+  }
+
+  .art-logo-figma-mobile h2 {
+    position: absolute;
+    top: 57%;
+    left: 49.7%;
+    margin: 0;
+    color: #be1a1a;
+    font: 400 clamp(30px, 5.7dvh, 48px)/1.45 'Dela Gothic One', sans-serif;
+    white-space: nowrap;
+  }
+
+  /* Full editorial board is the user's original mobile PNG, not the desktop grid. */
+  .art-logo-applications {
+    display: block;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    background: #f7f3eb;
+  }
+
+  .art-logo-applications-mobile { display: none; }
+  .art-logo-applications-figma-mobile {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Campaign: one legible poster per view, with the Figma arrow controls. */
+  .art-campaign { display: block; padding: 0; background: #fff; }
+  .art-campaign-grid,
+  .art-campaign-mobile-hint { display: none; }
+
+  .art-campaign h2 {
+    position: absolute;
+    top: 10.7%;
+    left: 0;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .art-campaign h2 span:first-child,
+  .art-campaign h2 span:last-child { line-height: 1.04; }
+
+  .art-campaign h2 span:first-child { font-family: 'Darumadrop One', 'Dela Gothic One', sans-serif; font-size: clamp(22px, 6.92vw, 27px); letter-spacing: -0.08em; }
+  .art-campaign h2 span:last-child { font-size: clamp(28px, 9.23vw, 36px); }
+  .art-campaign h2 span:last-child { margin-top: 4px; }
+
+  .art-campaign-figma-mobile {
+    position: absolute;
+    top: 24.76%;
+    left: 50%;
+    display: block;
+    width: min(calc(100% - 40px), 41.5dvh);
+    aspect-ratio: 350 / 437;
+    transform: translateX(-50%);
+  }
+
+  .art-campaign-figma-swiper,
+  .art-campaign-figma-swiper .swiper-slide { width: 100%; height: 100%; }
+  .art-campaign-figma-swiper { overflow: hidden; border-radius: 20px; }
+  .art-campaign-figma-swiper img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .art-campaign-figma-controls {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    display: flex;
+    width: 160px;
+    justify-content: space-between;
+    transform: translateX(-50%);
+  }
+
+  .art-campaign-figma-controls button {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #0242a6;
+    font: 400 56px/0.5 Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  .art-campaign-figma-controls button:focus-visible { outline: 2px solid #0242a6; outline-offset: 2px; }
+
+  /* Stationery and billboard retain the existing interactive gallery/assets. */
+  .art-stationary { display: block; padding: 0; background: #ffea93; }
+  .art-stationary h2 {
+    position: absolute;
+    top: 18.48%;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    font-size: clamp(29px, 9.74vw, 38px);
+    line-height: 1;
+    text-align: center;
+  }
+
+  .art-stationary-swiper,
+  .art-stationary-hint { display: none; }
+
+  .art-stationary-figma-mobile {
+    position: absolute;
+    top: 27.01%;
+    left: 50%;
+    display: block;
+    width: min(77vw, 300px);
+    height: min(46dvh, 388px);
+    overflow: hidden;
+    border-radius: 20px;
+    transform: translateX(-50%);
+  }
+
+  .art-stationary-figma-mobile .swiper-slide { width: 100%; height: 100%; }
+  .art-stationary-figma-mobile img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .art-billboard { display: block; padding: 0; background: #586573; }
+  .art-billboard-mobile-heading { display: none; }
+  .art-billboard > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 40px);
+    height: auto;
+    max-height: none;
+    aspect-ratio: 350 / 234;
+    object-fit: cover;
+    border-radius: 20px;
+    transform: translate(-50%, -50%);
   }
 }

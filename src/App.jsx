@@ -124,6 +124,18 @@ function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }
                   </motion.button>
                 ))}
               </nav>
+              <div className="menu-mobile-contact">
+                <h2>CONTACT</h2>
+                <div className="menu-mobile-contact-line">
+                  <a href="mailto:truongquochung2604@gmail.com">truongquochung2604@gmail.com</a>
+                  <a href="tel:+84799853984">0799853984</a>
+                </div>
+                <div className="menu-mobile-socials" aria-label="Social profiles">
+                  <span><i className="social-discord" aria-hidden="true">D</i>hugtruog</span>
+                  <span><i className="social-facebook" aria-hidden="true">f</i>Hùng Trương</span>
+                  <span><i className="social-instagram" aria-hidden="true">◎</i>04_.hu</span>
+                </div>
+              </div>
             </motion.div>
           </div>
         )}
@@ -966,6 +978,7 @@ function App() {
 
       {/* ================= HERO SECTION ================= */}
       <section className={`hero-section ${menuOpen ? 'menu-active' : ''}`} id="hero">
+        <button className="hero-mobile-back" type="button" onClick={() => window.history.back()} aria-label="Back">←</button>
         {/* Nền tím gradient tràn toàn màn hình */}
         <motion.img 
           src="/assets/purple-glow.png" 
