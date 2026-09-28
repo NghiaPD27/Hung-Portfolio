@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -54,7 +53,6 @@ const posters = [
 ]
 
 function PosterProject({ onBack, onAudioUnlock }) {
-  const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const [active, setActive] = useState(0)
@@ -78,7 +76,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
   return (
     <main
       className="poster-project"
-      aria-label={t("Bộ sưu tập poster Dreamcore")}
+      aria-label="Bộ sưu tập poster Dreamcore"
       onPointerDown={(event) => {
         if (!event.target.closest('.poster-back')) onAudioUnlock?.()
       }}
@@ -102,7 +100,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
       >
         {posters.map((poster, index) => (
           <SwiperSlide key={poster.number}>
-            <section className="poster-scene" style={{ '--scene-accent': poster.accent }} aria-label={t("Poster {{value0}} trên 04", { value0: poster.number })}>
+            <section className="poster-scene" style={{ '--scene-accent': poster.accent }} aria-label={`Poster ${poster.number} trên 04`}>
               <img className="poster-scene-background" src={poster.background} alt="" aria-hidden="true" />
               <div className="poster-scene-wash" aria-hidden="true" />
               <div className="poster-scene-grain" aria-hidden="true" />
@@ -131,8 +129,8 @@ function PosterProject({ onBack, onAudioUnlock }) {
                   transition={{ duration: reducedMotion ? 0 : 0.68, delay: reducedMotion ? 0 : 0.42 }}
                 >
                   <span className="poster-chapter">FRAME {poster.number} / 04</span>
-                  <p>{t(poster.caption)}</p>
-                  <small>{t(poster.note)}</small>
+                  <p>{poster.caption}</p>
+                  <small>{poster.note}</small>
                 </motion.div>
               </div>
 
@@ -143,7 +141,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
                 <motion.button
                   className="poster-art-button"
                   type="button"
-                  aria-label={t("Phóng to poster {{value0}}", { value0: poster.number })}
+                  aria-label={`Phóng to poster ${poster.number}`}
                   onClick={() => setZoomOpen(true)}
                   initial={reducedMotion ? false : { opacity: 0, scale: 0.9, rotate: 5, clipPath: 'inset(15% 0 15% 0)' }}
                   animate={active === index
@@ -153,8 +151,8 @@ function PosterProject({ onBack, onAudioUnlock }) {
                   whileHover={reducedMotion ? undefined : { y: -12, rotate: -1.1, scale: 1.015 }}
                   whileTap={{ scale: 0.985 }}
                 >
-                  <img src={poster.image} alt={t(poster.alt)} loading={index < 2 ? 'eager' : 'lazy'} draggable="false" />
-                  <span className="poster-art-view">{t("XEM CẬN CẢNH")}{" "}<span aria-hidden="true">↗</span></span>
+                  <img src={poster.image} alt={poster.alt} loading={index < 2 ? 'eager' : 'lazy'} draggable="false" />
+                  <span className="poster-art-view">XEM CẬN CẢNH <span aria-hidden="true">↗</span></span>
                 </motion.button>
               </div>
             </section>
@@ -165,23 +163,24 @@ function PosterProject({ onBack, onAudioUnlock }) {
       <motion.button
         className="poster-back"
         type="button"
-        aria-label={t("Quay về trang sản phẩm")}
+        aria-label="Quay về trang sản phẩm"
         onClick={onBack}
         whileHover={reducedMotion ? undefined : { x: -5 }}
         whileTap={{ scale: 0.94 }}
       >
-        <span aria-hidden="true">←</span>{t("BACK")}</motion.button>
+        <span aria-hidden="true">←</span> BACK
+      </motion.button>
       <div className="poster-topline" aria-hidden="true"><span>POSTER / DREAMCORE</span><span>VOL. 01 — 04</span></div>
 
       <div className="poster-bottom-rail">
-        <div className="poster-rail-caption">{t("Bốn khung hình")}<br />{t("một thế giới mơ.")}</div>
-        <nav className="poster-frames" aria-label={t("Chọn poster")}>
+        <div className="poster-rail-caption">Bốn khung hình<br />một thế giới mơ.</div>
+        <nav className="poster-frames" aria-label="Chọn poster">
           {posters.map((poster, index) => (
             <motion.button
               className={`poster-frame-thumb${active === index ? ' is-active' : ''}`}
               type="button"
               key={poster.number}
-              aria-label={t('Xem poster {{value0}}', { value0: poster.number })}
+              aria-label={`Xem poster ${poster.number}`}
               aria-current={active === index ? 'true' : undefined}
               onClick={() => goTo(index)}
               whileHover={reducedMotion ? undefined : { y: -6 }}
@@ -194,8 +193,8 @@ function PosterProject({ onBack, onAudioUnlock }) {
         </nav>
         <div className="poster-rail-actions">
           <span className="poster-current"><strong>{posters[active].number}</strong> / 04</span>
-          <button type="button" aria-label={t("Poster trước")} disabled={active === 0} onClick={() => goTo(active - 1)}>←</button>
-          <button type="button" aria-label={t("Poster tiếp theo")} disabled={active === posters.length - 1} onClick={() => goTo(active + 1)}>→</button>
+          <button type="button" aria-label="Poster trước" disabled={active === 0} onClick={() => goTo(active - 1)}>←</button>
+          <button type="button" aria-label="Poster tiếp theo" disabled={active === posters.length - 1} onClick={() => goTo(active + 1)}>→</button>
         </div>
       </div>
 
@@ -205,7 +204,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
             className="poster-lightbox"
             role="dialog"
             aria-modal="true"
-            aria-label={t("Poster {{value0}} phóng to", { value0: posters[active].number })}
+            aria-label={`Poster ${posters[active].number} phóng to`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -214,14 +213,14 @@ function PosterProject({ onBack, onAudioUnlock }) {
           >
             <motion.img
               src={posters[active].image}
-              alt={t(posters[active].alt)}
+              alt={posters[active].alt}
               initial={reducedMotion ? false : { scale: 0.87, y: 35, rotate: 2 }}
               animate={{ scale: 1, y: 0, rotate: 0 }}
               exit={{ scale: 0.93, y: 20 }}
               transition={{ duration: reducedMotion ? 0 : 0.52, ease: [0.16, 1, 0.3, 1] }}
               onClick={(event) => event.stopPropagation()}
             />
-            <button type="button" onClick={() => setZoomOpen(false)} aria-label={t("Đóng poster phóng to")}>{t("ĐÓNG ×")}</button>
+            <button type="button" onClick={() => setZoomOpen(false)} aria-label="Đóng poster phóng to">ĐÓNG ×</button>
           </motion.div>
         )}
       </AnimatePresence>

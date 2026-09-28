@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import './AboutPage.css'
@@ -286,7 +285,6 @@ function useArtboardLayout() {
 }
 
 function AboutPage({ onBack, soundOn, onToggleSound }) {
-  const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   const layout = useArtboardLayout()
 
@@ -297,7 +295,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
   })
 
   return (
-    <main className={`about-page ${layout.isMobile ? 'is-mobile-view' : ''}`} aria-label={t("About Hung Truong")}>
+    <main className={`about-page ${layout.isMobile ? 'is-mobile-view' : ''}`} aria-label="About Hung Truong">
       <img className="about-viewport-background" src="/assets/about/background-sky.png" alt="" aria-hidden="true" />
 
       <section
@@ -311,7 +309,8 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           aria-hidden="true"
         />
 
-        {layout.isMobile && <motion.img
+        {layout.isMobile && (
+          <motion.img
             className="about-mobile-floral-frame"
             src="/assets/about/ahf-mobile.png"
             alt=""
@@ -319,7 +318,8 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
             initial={reducedMotion ? false : { opacity: 0, scale: 1.04 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1.1, ease: [0.16, 1, 0.3, 1] }}
-          />}
+          />
+        )}
 
         <div className="about-atmosphere" aria-hidden="true">
           <div className="about-air-particles">
@@ -346,7 +346,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           initial={reducedMotion ? false : { opacity: 0, y: -34, scaleX: 0.9 }}
           animate={{ opacity: 1, y: 0, scaleX: 1 }}
           transition={{ duration: reducedMotion ? 0 : 0.9, ease: [0.16, 1, 0.3, 1] }}
-        >{t("HELLO")}</motion.h1>
+        >HELLO</motion.h1>
 
         <motion.div
           className="about-name"
@@ -355,7 +355,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="about-name-copy">
-            <span>{t("I’M")}</span>
+            <span>I’M</span>
             <span>HUNG TRUONG</span>
           </div>
         </motion.div>
@@ -365,7 +365,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
             <motion.img
               className="about-person-layer"
               src="/assets/about/hung.png"
-              alt={t("Portrait of Hung Truong")}
+              alt="Portrait of Hung Truong"
               initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
@@ -385,7 +385,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
             <motion.img
               className="about-person-layer"
               src="/assets/about/hung.png"
-              alt={t("Portrait of Hung Truong")}
+              alt="Portrait of Hung Truong"
               initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
@@ -407,10 +407,12 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           </>
         )}
 
-        <motion.p className="about-bio" {...reveal(0.18, 28)}>{t("I was born in 2004 and I’m a freelance web and visual designer based in Saigon. I enjoy traveling, photography, and turning my experiences into creative inspiration. I’m easygoing, open-minded, and always aim to create meaningful work with personality and soul.")}</motion.p>
+        <motion.p className="about-bio" {...reveal(0.18, 28)}>
+          I was born in 2004 and I’m a freelance web and visual designer based in Saigon. I enjoy traveling, photography, and turning my experiences into creative inspiration. I’m easygoing, open-minded, and always aim to create meaningful work with personality and soul.
+        </motion.p>
 
-        <motion.h2 className="about-skill-title" {...reveal(0.28, 20)}>{t("SKILL")}</motion.h2>
-        <div className="about-skill-icons" aria-label={t("Design software skills")}>
+        <motion.h2 className="about-skill-title" {...reveal(0.28, 20)}>SKILL</motion.h2>
+        <div className="about-skill-icons" aria-label="Design software skills">
           {SKILL_ICONS.map((icon, index) => (
             <motion.div
               className="about-skill-icon"
@@ -438,10 +440,10 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
 
         <motion.div className="about-education" {...reveal(0.44, 30)}>
           <div className="about-education-copy">
-            <h2>{t("EDUCATION")}</h2>
+            <h2>EDUCATION</h2>
             <p>12/12</p>
-            <p>{t("Van Hien University 2022 -2027")}</p>
-            <p>{t("English B2")}</p>
+            <p>Van Hien University 2022 -2027</p>
+            <p>English B2</p>
           </div>
         </motion.div>
 
@@ -449,7 +451,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           className="about-back"
           type="button"
           onClick={onBack}
-          aria-label={t("Back to portfolio")}
+          aria-label="Back to portfolio"
           whileHover={reducedMotion ? undefined : { x: -7, scale: 1.1 }}
           whileTap={reducedMotion ? undefined : { scale: 0.92 }}
           transition={{ type: 'spring', stiffness: 420, damping: 24 }}
@@ -461,7 +463,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           className={`about-sound-toggle ${soundOn ? 'is-playing' : ''}`}
           type="button"
           onClick={onToggleSound}
-          aria-label={soundOn ? t("Tắt nhạc nền About") : t("Bật nhạc nền About")}
+          aria-label={soundOn ? 'Tắt nhạc nền About' : 'Bật nhạc nền About'}
           aria-pressed={soundOn}
           initial={reducedMotion ? false : { opacity: 0, x: 18 }}
           animate={{ opacity: 1, x: 0 }}
@@ -472,7 +474,7 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           <span className="about-sound-bars" aria-hidden="true">
             <i /><i /><i /><i />
           </span>
-          <span>{soundOn ? t("AMBIENT ON") : t("AMBIENT OFF")}</span>
+          <span>{soundOn ? 'AMBIENT ON' : 'AMBIENT OFF'}</span>
         </motion.button>
       </section>
     </main>

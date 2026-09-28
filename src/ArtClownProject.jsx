@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import Tilt from 'react-parallax-tilt'
@@ -8,7 +7,6 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './ArtClownProject.css'
 import MascotExperience from './MascotExperience.jsx'
-import useLocalizedSwiperA11y from './useLocalizedSwiperA11y.js'
 
 const ASSET = '/assets/art-clown/source'
 const MOBILE_ASSET = '/assets/art-clown/mobile-figma'
@@ -19,13 +17,12 @@ const mobileValueReveal = {
 }
 
 function MobileGalleryControls({ className, onPrevious, onNext }) {
-  const { t } = useTranslation()
   return (
     <div className={`art-mobile-gallery-controls ${className}`}>
-      <button type="button" onClick={onPrevious} aria-label={t("Hình trước")}>
+      <button type="button" onClick={onPrevious} aria-label="Hình trước">
         <img className="art-gallery-arrow-previous" src={`${MOBILE_ASSET}/gallery-arrow.svg`} alt="" draggable="false" />
       </button>
-      <button type="button" onClick={onNext} aria-label={t("Hình tiếp theo")}>
+      <button type="button" onClick={onNext} aria-label="Hình tiếp theo">
         <img className="art-gallery-arrow-next" src={`${MOBILE_ASSET}/gallery-arrow.svg`} alt="" draggable="false" />
       </button>
     </div>
@@ -200,7 +197,7 @@ const brandValues = [
   },
   {
     className: 'art-value-two',
-    title: 'Trân trọng cảm xúc con người',
+    title: <>Trân trọng<br />cảm xúc con người</>,
     label: 'Trân trọng cảm xúc con người',
     description: 'Art Clown tạo không gian vui nhộn, gắn kết cộng đồng và đưa mọi người đến gần hơn với nghề chú hề.',
   },
@@ -223,7 +220,6 @@ function SlideFrame({ className = '', children }) {
 
 
 export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop, onCircusAudioStateChange, onValuesAudioStateChange, onMenuToneChange }) {
-  const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
   const [activeSlide, setActiveSlide] = useState(0)
@@ -234,9 +230,6 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
   const swiperRef = useRef(null)
   const mobilePosterSwiperRef = useRef(null)
   const mobileStationarySwiperRef = useRef(null)
-  const stationarySwiperRef = useRef(null)
-  useLocalizedSwiperA11y(swiperRef, 'Màn trước', 'Màn tiếp theo', 'Đi đến màn {{index}}')
-  useLocalizedSwiperA11y(stationarySwiperRef, 'Bộ stationary trước', 'Bộ stationary tiếp theo', 'Đi đến bộ stationary {{index}}')
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')
@@ -322,7 +315,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         }
       }}
     >
-      <button className="art-clown-back" onClick={onBack} type="button" aria-label={t("Quay về trang portfolio")}>
+      <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
         <img src={`${ASSET}/back.svg`} alt="" />
       </button>
 
@@ -336,14 +329,14 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         mousewheel={{ forceToAxis: true, releaseOnEdges: false, sensitivity: 1, thresholdDelta: 12, thresholdTime: 800 }}
         keyboard={{ enabled: true, onlyInViewport: true, pageUpDown: true }}
         pagination={{ clickable: true }}
-        a11y={{ enabled: true, prevSlideMessage: t("Màn trước", { skipInterpolation: true }), nextSlideMessage: t("Màn tiếp theo", { skipInterpolation: true }), paginationBulletMessage: t("Đi đến màn {{index}}", { skipInterpolation: true }) }}
+        a11y={{ enabled: true, prevSlideMessage: 'Màn trước', nextSlideMessage: 'Màn tiếp theo', paginationBulletMessage: 'Đi đến màn {{index}}' }}
         onSwiper={(swiper) => { swiperRef.current = swiper }}
         onSlideChange={(swiper) => {
           setMobileValuesRevealed(false)
           setActiveSlide(swiper.activeIndex)
         }}
       >
-        <SwiperSlide tag="section" aria-label={t("Màn 1 trên 8: Hero Art Clown")}>
+        <SwiperSlide tag="section" aria-label="Màn 1 trên 8: Hero Art Clown">
           <SlideFrame className="art-slide-hero">
             <section className="art-design-canvas art-hero" aria-labelledby="art-clown-title">
               <div className="art-fireworks" aria-hidden="true">
@@ -362,7 +355,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 ref={registerRef('hero-tent')}
                 className={`art-hero-tent art-img-fade ${isLoaded('hero-tent') ? 'is-loaded' : ''}`}
                 src={`${ASSET}/hero-tent.png`}
-                alt={t("Rạp xiếc Art Clown")}
+                alt="Rạp xiếc Art Clown"
                 onLoad={() => markLoaded('hero-tent')}
               />
               <img className="art-hero-tent-mobile" src={`${MOBILE_ASSET}/hero-tent-mobile.png`} alt="" aria-hidden="true" decoding="async" fetchPriority="high" />
@@ -371,13 +364,13 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 2 trên 8: Giá trị thương hiệu")}>
+        <SwiperSlide tag="section" aria-label="Màn 2 trên 8: Giá trị thương hiệu">
           <SlideFrame className="art-slide-cream">
-            <section className="art-design-canvas art-values" aria-label={t("Giá trị thương hiệu Art Clown")}>
+            <section className="art-design-canvas art-values" aria-label="Giá trị thương hiệu Art Clown">
               <ValuesWordmark reducedMotion={reducedMotion} />
               <div className="art-values-mobile-heading">
                 <span>ART CLOWN / 02</span>
-                <h2>{t("GIÁ TRỊ THƯƠNG HIỆU")}</h2>
+                <h2>GIÁ TRỊ THƯƠNG HIỆU</h2>
               </div>
               {brandValues.map((value, index) => {
                 const isOpen = isMobileLayout ? mobileValuesRevealed && activeSlide === 1 : openValue === index
@@ -387,12 +380,12 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                     key={value.className}
                     type="button"
                     aria-expanded={isOpen}
-                    aria-label={`${t(value.label || value.title)}. ${t(value.description)}`}
+                    aria-label={`${value.label || value.title}. ${value.description}`}
                     onClick={() => {
                       if (!isMobileLayout) setOpenValue(isOpen ? null : index)
                     }}
                   >
-                    <span className="art-value-title">{value.className === 'art-value-two' ? <>{t('Trân trọng')}<br />{t('cảm xúc con người')}</> : t(value.title)}</span>
+                    <span className="art-value-title">{value.title}</span>
                     {isMobileLayout ? (
                       <motion.span
                         className="art-value-description"
@@ -401,9 +394,9 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                         animate={isOpen ? 'open' : 'closed'}
                         transition={{ duration: reducedMotion ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
                         aria-hidden={!isOpen}
-                      >{t(value.description)}</motion.span>
+                      >{value.description}</motion.span>
                     ) : (
-                      <span className="art-value-description">{t(value.description)}</span>
+                      <span className="art-value-description">{value.description}</span>
                     )}
                   </button>
                 )
@@ -413,28 +406,28 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 ref={registerRef('balloons')}
                 className={`art-balloons art-img-fade ${isLoaded('balloons') ? 'is-loaded' : ''}`}
                 src={`${ASSET}/balloons.png`}
-                alt={t("Chùm bóng bay đỏ")}
+                alt="Chùm bóng bay đỏ"
                 onLoad={() => markLoaded('balloons')}
               />
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 3 trên 8: Đồng phục và các dạng logo")}>
+        <SwiperSlide tag="section" aria-label="Màn 3 trên 8: Đồng phục và các dạng logo">
           <SlideFrame className="art-slide-white">
-            <section className="art-design-canvas art-logo-system" aria-label={t("Đồng phục và các dạng logo Art Clown")}>
+            <section className="art-design-canvas art-logo-system" aria-label="Đồng phục và các dạng logo Art Clown">
               <div className="art-uniform-wrap">
                 <div className={`art-skeleton art-skeleton-light ${isLoaded('uniform') ? 'is-hidden' : ''}`} aria-hidden="true" />
                 <img
                   ref={registerRef('uniform')}
                   src={`${ASSET}/uniform.png`}
-                  alt={t("Đồng phục Art Clown")}
+                  alt="Đồng phục Art Clown"
                   loading="lazy"
                   onLoad={() => markLoaded('uniform')}
                   className={`art-img-fade ${isLoaded('uniform') ? 'is-loaded' : ''}`}
                 />
-                <span className="art-uniform-mobile-caption">{t("03 / ĐỒNG PHỤC THƯƠNG HIỆU")}</span>
-                <img className="art-uniform-figma-mobile" src={`${MOBILE_ASSET}/welcome-uniform.png`} alt={t("Đồng phục Art Clown tại rạp xiếc")} loading="lazy" decoding="async" />
+                <span className="art-uniform-mobile-caption">03 / ĐỒNG PHỤC THƯƠNG HIỆU</span>
+                <img className="art-uniform-figma-mobile" src={`${MOBILE_ASSET}/welcome-uniform.png`} alt="Đồng phục Art Clown tại rạp xiếc" loading="lazy" decoding="async" />
               </div>
               <div className="art-marquee" aria-label="Welcome to Art Clown">
                 <div className="art-marquee-track">
@@ -446,38 +439,38 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 </div>
               </div>
               <div className="art-logo-types">
-                <span className="art-logo-types-mobile-label">{t("HỆ THỐNG LOGO")}</span>
+                <span className="art-logo-types-mobile-label">HỆ THỐNG LOGO</span>
                 <div className="art-logo-tile art-logo-tile-black">
                   <div className={`art-skeleton art-skeleton-dark ${isLoaded('logo-black') ? 'is-hidden' : ''}`} aria-hidden="true" />
-                  <img ref={registerRef('logo-black')} src={`${ASSET}/logo-on-black.svg`} alt={t("Logo Art Clown màu trắng trên nền đen")} onLoad={() => markLoaded('logo-black')} className={`art-img-fade ${isLoaded('logo-black') ? 'is-loaded' : ''}`} />
+                  <img ref={registerRef('logo-black')} src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown màu trắng trên nền đen" onLoad={() => markLoaded('logo-black')} className={`art-img-fade ${isLoaded('logo-black') ? 'is-loaded' : ''}`} />
                 </div>
                 <div className="art-logo-tile art-logo-tile-white">
                   <div className={`art-skeleton art-skeleton-light ${isLoaded('logo-red') ? 'is-hidden' : ''}`} aria-hidden="true" />
-                  <img ref={registerRef('logo-red')} src={`${ASSET}/logo-red-standalone.svg`} alt={t("Logo Art Clown màu đen trên nền trắng")} onLoad={() => markLoaded('logo-red')} className={`art-img-fade ${isLoaded('logo-red') ? 'is-loaded' : ''}`} />
+                  <img ref={registerRef('logo-red')} src={`${ASSET}/logo-red-standalone.svg`} alt="Logo Art Clown màu đen trên nền trắng" onLoad={() => markLoaded('logo-red')} className={`art-img-fade ${isLoaded('logo-red') ? 'is-loaded' : ''}`} />
                 </div>
-                <img className="art-logo-standalone" src={`${ASSET}/logo-on-white.svg`} alt={t("Logo Art Clown màu đỏ")} />
+                <img className="art-logo-standalone" src={`${ASSET}/logo-on-white.svg`} alt="Logo Art Clown màu đỏ" />
               </div>
-              <img className="art-logo-types-label" src={`${ASSET}/logo-types-label.svg`} alt={t("Các dạng logo")} />
-              <div className="art-logo-figma-mobile" aria-label={t("Ba dạng logo Art Clown")}>
-                <img src={`${MOBILE_ASSET}/logo-red.svg`} alt={t("Logo Art Clown màu đỏ")} />
-                <img src={`${MOBILE_ASSET}/logo-black.svg`} alt={t("Logo Art Clown màu đen")} />
-                <div className="art-figma-logo-reverse"><img src={`${MOBILE_ASSET}/logo-white.svg`} alt={t("Logo Art Clown âm bản trên nền đen")} /></div>
-                <h2 aria-label={t('Các dạng logo')}>{t("CÁC")}<br />{t("DẠNG")}<br />{t("Logo variations ending")}</h2>
+              <img className="art-logo-types-label" src={`${ASSET}/logo-types-label.svg`} alt="Các dạng logo" />
+              <div className="art-logo-figma-mobile" aria-label="Ba dạng logo Art Clown">
+                <img src={`${MOBILE_ASSET}/logo-red.svg`} alt="Logo Art Clown màu đỏ" />
+                <img src={`${MOBILE_ASSET}/logo-black.svg`} alt="Logo Art Clown màu đen" />
+                <div className="art-figma-logo-reverse"><img src={`${MOBILE_ASSET}/logo-white.svg`} alt="Logo Art Clown âm bản trên nền đen" /></div>
+                <h2>CÁC<br />DẠNG<br />LOGO</h2>
               </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 4 trên 8: Logo Applications")}>
+        <SwiperSlide tag="section" aria-label="Màn 4 trên 8: Logo Applications">
           <SlideFrame className="art-slide-cream">
-            <section className="art-design-canvas art-logo-applications" aria-label={t("Ứng dụng logo Art Clown")}>
+            <section className="art-design-canvas art-logo-applications" aria-label="Ứng dụng logo Art Clown">
               {/* Desktop artwork — 1440x690 canvas centered inside the slide */}
               <div className="art-logo-applications-art">
                 <div className={`art-skeleton art-skeleton-cream ${isLoaded('logo-applications') ? 'is-hidden' : ''}`} aria-hidden="true" />
                 <img
                   ref={registerRef('logo-applications')}
                   src={`${ASSET}/logo-applications.png`}
-                  alt={t("Các ứng dụng logo Art Clown")}
+                  alt="Các ứng dụng logo Art Clown"
                   loading="lazy"
                   onLoad={() => markLoaded('logo-applications')}
                   className={`art-img-fade ${isLoaded('logo-applications') ? 'is-loaded' : ''}`}
@@ -485,59 +478,59 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
               </div>
 
               {/* Mobile native editorial identity board */}
-              <div className="art-logo-applications-mobile" aria-label={t("Hệ thống ứng dụng logo Art Clown")}>
+              <div className="art-logo-applications-mobile" aria-label="Hệ thống ứng dụng logo Art Clown">
                 <header className="art-app-header">
                   <div className="art-app-eyebrow">
                     <span className="art-app-num">03</span>
                     <span className="art-app-slash">/</span>
-                    <span className="art-app-guide">{t("BRAND GUIDELINES 2026")}</span>
+                    <span className="art-app-guide">BRAND GUIDELINES 2026</span>
                   </div>
-                  <h2 className="art-app-title">{t("Logo Applications")}</h2>
-                  <p className="art-app-subtitle">{t("Hệ phiên bản logo")}</p>
+                  <h2 className="art-app-title">Logo Applications</h2>
+                  <p className="art-app-subtitle">Hệ phiên bản logo</p>
                 </header>
 
                 <div className="art-app-grid">
                   <div className="art-app-card art-app-card-primary">
                     <div className="art-app-card-preview">
-                      <img src={`${ASSET}/logo-on-white.svg`} alt={t("Logo Art Clown bản chính")} />
+                      <img src={`${ASSET}/logo-on-white.svg`} alt="Logo Art Clown bản chính" />
                     </div>
                     <div className="art-app-card-meta">
-                      <span className="art-app-card-name">{t("PRIMARY")}</span>
+                      <span className="art-app-card-name">PRIMARY</span>
                       <span className="art-app-card-slash">/</span>
-                      <span className="art-app-card-vn">{t("Chính")}</span>
+                      <span className="art-app-card-vn">Chính</span>
                     </div>
                   </div>
 
                   <div className="art-app-card art-app-card-reversed">
                     <div className="art-app-card-preview">
-                      <img src={`${ASSET}/logo-white.svg`} alt={t("Logo Art Clown âm bản")} />
+                      <img src={`${ASSET}/logo-white.svg`} alt="Logo Art Clown âm bản" />
                     </div>
                     <div className="art-app-card-meta">
-                      <span className="art-app-card-name">{t("REVERSED")}</span>
+                      <span className="art-app-card-name">REVERSED</span>
                       <span className="art-app-card-slash">/</span>
-                      <span className="art-app-card-vn">{t("Âm bản")}</span>
+                      <span className="art-app-card-vn">Âm bản</span>
                     </div>
                   </div>
 
                   <div className="art-app-card art-app-card-mono">
                     <div className="art-app-card-preview">
-                      <img src={`${ASSET}/logo-on-black.svg`} alt={t("Logo Art Clown đơn sắc")} />
+                      <img src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown đơn sắc" />
                     </div>
                     <div className="art-app-card-meta">
-                      <span className="art-app-card-name">{t("MONO")}</span>
+                      <span className="art-app-card-name">MONO</span>
                       <span className="art-app-card-slash">/</span>
-                      <span className="art-app-card-vn">{t("Đơn sắc")}</span>
+                      <span className="art-app-card-vn">Đơn sắc</span>
                     </div>
                   </div>
 
                   <div className="art-app-card art-app-card-mark">
                     <div className="art-app-card-preview">
-                      <img src={`${ASSET}/logo-mark-only.svg`} alt={t("Logo Art Clown biểu tượng")} />
+                      <img src={`${ASSET}/logo-mark-only.svg`} alt="Logo Art Clown biểu tượng" />
                     </div>
                     <div className="art-app-card-meta">
-                      <span className="art-app-card-name">{t("MARK-ONLY")}</span>
+                      <span className="art-app-card-name">MARK-ONLY</span>
                       <span className="art-app-card-slash">/</span>
-                      <span className="art-app-card-vn">{t("Biểu tượng")}</span>
+                      <span className="art-app-card-vn">Biểu tượng</span>
                     </div>
                   </div>
                 </div>
@@ -548,17 +541,17 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 </footer>
               </div>
               <div className="art-logo-applications-figma-mobile">
-                <img className="art-applications-board" src={`${MOBILE_ASSET}/logo-applications-mobile.png`} alt={t("Logo Applications — hệ phiên bản logo Art Clown")} loading="lazy" decoding="async" />
+                <img className="art-applications-board" src={`${MOBILE_ASSET}/logo-applications-mobile.png`} alt="Logo Applications — hệ phiên bản logo Art Clown" loading="lazy" decoding="async" />
               </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 5 trên 8: Mascot")}>
+        <SwiperSlide tag="section" aria-label="Màn 5 trên 8: Mascot">
           <MascotExperience reducedMotion={reducedMotion} active={activeSlide === 4} />
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 6 trên 8: Campaign Posters")}>
+        <SwiperSlide tag="section" aria-label="Màn 6 trên 8: Campaign Posters">
           <SlideFrame className="art-slide-white">
             <section className="art-design-canvas art-campaign" aria-labelledby="art-campaign-title">
               <div className="art-campaign-grid">
@@ -579,8 +572,8 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   )
                 })}
               </div>
-              <h2 id="art-campaign-title"><span>{t("CAMPAIGN")}</span><span>{t("POSTERS")}</span></h2>
-              <span className="art-campaign-mobile-hint" aria-hidden="true">{t("VUỐT NGANG ĐỂ XEM TRỌN BỘ POSTER")}{" "}<b>↗</b></span>
+              <h2 id="art-campaign-title"><span>CAMPAIGN</span><span>POSTERS</span></h2>
+              <span className="art-campaign-mobile-hint" aria-hidden="true">VUỐT NGANG ĐỂ XEM TRỌN BỘ POSTER <b>↗</b></span>
               <div className="art-campaign-figma-mobile">
                 <Swiper
                   className="art-campaign-figma-swiper"
@@ -591,10 +584,10 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   nested
                   grabCursor
                   onSwiper={(swiper) => { mobilePosterSwiperRef.current = swiper }}
-                  a11y={{ enabled: true, prevSlideMessage: t("Poster trước", { skipInterpolation: true }), nextSlideMessage: t("Poster tiếp theo", { skipInterpolation: true }) }}
+                  a11y={{ enabled: true, prevSlideMessage: 'Poster trước', nextSlideMessage: 'Poster tiếp theo' }}
                 >
                   {mobileCampaignPosters.map((src, index) => (
-                    <SwiperSlide key={src} tag="div" aria-label={t("Poster chiến dịch {{value0}} trên 4", { value0: index + 1 })}>
+                    <SwiperSlide key={src} tag="div" aria-label={`Poster chiến dịch ${index + 1} trên 4`}>
                       <img src={`${MOBILE_ASSET}/${src}`} alt={`Poster Art Clown ${index + 1}`} loading="lazy" decoding="async" />
                     </SwiperSlide>
                   ))}
@@ -605,13 +598,12 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 7 trên 8: Stationary")}>
+        <SwiperSlide tag="section" aria-label="Màn 7 trên 8: Stationary">
           <SlideFrame className="art-slide-yellow">
             <section className="art-design-canvas art-stationary" aria-labelledby="stationary-title">
-              <h2 id="stationary-title">{t("STATIONARY")}</h2>
+              <h2 id="stationary-title">STATIONARY</h2>
               <Swiper
                 className="art-stationary-swiper"
-                onSwiper={(swiper) => { stationarySwiperRef.current = swiper }}
                 modules={[Mousewheel, Pagination, A11y]}
                 direction="horizontal"
                 slidesPerView={1}
@@ -621,10 +613,10 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 preventInteractionOnTransition
                 mousewheel={{ forceToAxis: false, releaseOnEdges: true, sensitivity: 0.8, thresholdDelta: 12, thresholdTime: 800 }}
                 pagination={{ clickable: true }}
-                a11y={{ enabled: true, prevSlideMessage: t("Bộ stationary trước", { skipInterpolation: true }), nextSlideMessage: t("Bộ stationary tiếp theo", { skipInterpolation: true }), paginationBulletMessage: t("Đi đến bộ stationary {{index}}", { skipInterpolation: true }) }}
+                a11y={{ enabled: true, prevSlideMessage: 'Bộ stationary trước', nextSlideMessage: 'Bộ stationary tiếp theo', paginationBulletMessage: 'Đi đến bộ stationary {{index}}' }}
               >
                 {stationaryGroups.map((group, groupIndex) => (
-                  <SwiperSlide tag="div" aria-label={t("Bộ stationary {{value0}} trên {{value1}}", { value0: groupIndex + 1, value1: stationaryGroups.length })} key={`stationary-group-${groupIndex + 1}`}>
+                  <SwiperSlide tag="div" aria-label={`Bộ stationary ${groupIndex + 1} trên ${stationaryGroups.length}`} key={`stationary-group-${groupIndex + 1}`}>
                     <div className={`art-stationary-grid${groupIndex === 1 ? ' art-stationary-grid-new' : ''}`}>
                       {group.map((src, index) => {
                         const key = `stationary-${src}`
@@ -634,7 +626,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                             <img
                               ref={registerRef(key)}
                               src={`${ASSET}/${src}`}
-                              alt={t("Ứng dụng văn phòng phẩm Art Clown {{value0}}", { value0: groupIndex * 3 + index + 1 })}
+                              alt={`Ứng dụng văn phòng phẩm Art Clown ${groupIndex * 3 + index + 1}`}
                               loading="lazy"
                               onLoad={() => markLoaded(key)}
                               className={`art-img-fade ${isLoaded(key) ? 'is-loaded' : ''}`}
@@ -658,27 +650,27 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   grabCursor
                   onSwiper={(swiper) => { mobileStationarySwiperRef.current = swiper }}
                   onSlideChange={(swiper) => setMobileStationaryIndex(swiper.activeIndex)}
-                  a11y={{ enabled: true, prevSlideMessage: t("Ứng dụng trước", { skipInterpolation: true }), nextSlideMessage: t("Ứng dụng tiếp theo", { skipInterpolation: true }) }}
+                  a11y={{ enabled: true, prevSlideMessage: 'Ứng dụng trước', nextSlideMessage: 'Ứng dụng tiếp theo' }}
                 >
                   {[...stationary, ...stationaryExtra].map((src, index) => (
-                    <SwiperSlide key={src} tag="div" aria-label={t("Ứng dụng văn phòng phẩm {{value0}} trên 6", { value0: index + 1 })}>
-                      <img src={`${ASSET}/${src}`} alt={t("Ứng dụng văn phòng phẩm Art Clown {{value0}}", { value0: index + 1 })} loading="lazy" decoding="async" />
+                    <SwiperSlide key={src} tag="div" aria-label={`Ứng dụng văn phòng phẩm ${index + 1} trên 6`}>
+                      <img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" decoding="async" />
                     </SwiperSlide>
                   ))}
                 </Swiper>
                 <div className="art-stationary-mobile-copy">
-                  <span className="art-stationary-mobile-count" aria-live="polite">{t("ỨNG DỤNG NHẬN DIỆN /")}{" "}{String(mobileStationaryIndex + 1).padStart(2, '0')} — 06</span>
-                  <h3>{t("MORE ART. MORE SMILES.")}</h3>
-                  <p>{t("Mang tinh thần Art Clown vào từng điểm chạm — từ quà tặng đến những vật phẩm đồng hành mỗi ngày.")}</p>
+                  <span className="art-stationary-mobile-count" aria-live="polite">ỨNG DỤNG NHẬN DIỆN / {String(mobileStationaryIndex + 1).padStart(2, '0')} — 06</span>
+                  <h3>MORE ART. MORE SMILES.</h3>
+                  <p>Mang tinh thần Art Clown vào từng điểm chạm — từ quà tặng đến những vật phẩm đồng hành mỗi ngày.</p>
                   <MobileGalleryControls className="art-stationary-mobile-controls" onPrevious={() => mobileStationarySwiperRef.current?.slidePrev()} onNext={() => mobileStationarySwiperRef.current?.slideNext()} />
-                  <span className="art-stationary-mobile-instruction">{t("VUỐT NGANG / SCROLL · DRAG")}</span>
+                  <span className="art-stationary-mobile-instruction">VUỐT NGANG / SCROLL · DRAG</span>
                 </div>
               </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
 
-        <SwiperSlide tag="section" aria-label={t("Màn 8 trên 8: Billboard")}>
+        <SwiperSlide tag="section" aria-label="Màn 8 trên 8: Billboard">
           <SlideFrame className="art-slide-billboard">
             <section className="art-design-canvas art-billboard" aria-label="Billboard Art Clown">
               <div className="art-billboard-mobile-heading">

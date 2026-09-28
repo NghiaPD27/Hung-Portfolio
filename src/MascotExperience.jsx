@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -19,7 +18,6 @@ const poses = [
 ]
 
 export default function MascotExperience({ reducedMotion, active }) {
-  const { t } = useTranslation()
   const root = useRef(null)
   const previousIndex = useRef(0)
   const [index, setIndex] = useState(0)
@@ -61,34 +59,34 @@ export default function MascotExperience({ reducedMotion, active }) {
   return (
     <section ref={root} className="art-circus" aria-labelledby="art-mascot-title">
       <div className="circus-ticket">
-        <header className="circus-ticket-header"><span>ART CLOWN / 05</span><span>{t("THE CHARACTER SHOW")}</span></header>
+        <header className="circus-ticket-header"><span>ART CLOWN / 05</span><span>THE CHARACTER SHOW</span></header>
         <div className="circus-copy">
-          <p className="circus-eyebrow">{t("BRAND / COMPANION")}</p>
-          <h2 id="art-mascot-title">{t("MAS")}<span>{t("COT")}</span></h2>
-          <p className="circus-description">{t("Một người bạn tinh nghịch, hài hước, luôn đồng hành để lan tỏa niềm vui và giúp Art Clown trở nên gần gũi, đáng nhớ hơn.")}</p>
-          <div className="circus-stamp" aria-hidden="true">{t("MORE ART.")}<br />{t("MORE SMILES.")}<span>✦</span></div>
+          <p className="circus-eyebrow">BRAND / COMPANION</p>
+          <h2 id="art-mascot-title">MAS<span>COT</span></h2>
+          <p className="circus-description">Một người bạn tinh nghịch, hài hước, luôn đồng hành để lan tỏa niềm vui và giúp Art Clown trở nên gần gũi, đáng nhớ hơn.</p>
+          <div className="circus-stamp" aria-hidden="true">MORE ART.<br />MORE SMILES.<span>✦</span></div>
         </div>
         <div className="circus-show">
           <div className="circus-stage">
             <div className="circus-stage-rays" aria-hidden="true" />
             <span className="circus-star circus-star-one" aria-hidden="true">✦</span>
             <span className="circus-star circus-star-two" aria-hidden="true">✧</span>
-            <span className="circus-stage-label">{t("THE ART OF JOY")}</span>
+            <span className="circus-stage-label">THE ART OF JOY</span>
             <div className="circus-cast">
-              {poses.map((pose, i) => <img key={pose.src} className="circus-pose" src={`/assets/art-clown/source/${pose.src}`} style={{ '--pose-scale': pose.scale }} alt={i === index ? `Mascot Art Clown — ${t(pose.label)}` : ''} aria-hidden={i !== index} draggable="false" />)}
+              {poses.map((pose, i) => <img key={pose.src} className="circus-pose" src={`/assets/art-clown/source/${pose.src}`} style={{ '--pose-scale': pose.scale }} alt={i === index ? `Mascot Art Clown — ${pose.label}` : ''} aria-hidden={i !== index} draggable="false" />)}
             </div>
             <div className="circus-curtain circus-curtain-left" aria-hidden="true" />
             <div className="circus-curtain circus-curtain-right" aria-hidden="true" />
             <div className="circus-footlights" aria-hidden="true" />
           </div>
-          <div className="circus-act"><span>{t("ACT")}{" "}{String(index + 1).padStart(2, '0')}</span><p aria-live={autoplay ? 'off' : 'polite'}>{t(poses[index].label)}</p><button type="button" onClick={() => setPlaying((value) => !value)} aria-label={autoplay ? t("Dừng tự chuyển Mascot") : t("Bật tự chuyển Mascot")} disabled={reducedMotion} aria-pressed={autoplay}>{autoplay ? 'Ⅱ' : '▷'}</button></div>
-          <nav className="circus-controls" aria-label={t("Các tư thế Mascot")}>
-            <button type="button" onClick={() => change(-1)} aria-label={t("Mascot trước")}>{t("← PREV")}</button>
+          <div className="circus-act"><span>ACT {String(index + 1).padStart(2, '0')}</span><p aria-live={autoplay ? 'off' : 'polite'}>{poses[index].label}</p><button type="button" onClick={() => setPlaying((value) => !value)} aria-label={autoplay ? 'Dừng tự chuyển Mascot' : 'Bật tự chuyển Mascot'} disabled={reducedMotion} aria-pressed={autoplay}>{autoplay ? 'Ⅱ' : '▷'}</button></div>
+          <nav className="circus-controls" aria-label="Các tư thế Mascot">
+            <button type="button" onClick={() => change(-1)} aria-label="Mascot trước">← PREV</button>
             <span>{String(index + 1).padStart(2, '0')} / 09</span>
-            <button type="button" onClick={() => change(1)} aria-label={t("Mascot tiếp theo")}>{t("NEXT →")}</button>
+            <button type="button" onClick={() => change(1)} aria-label="Mascot tiếp theo">NEXT →</button>
           </nav>
         </div>
-        <footer className="circus-ticket-footer"><span>{t("ONE LITTLE CLOWN. A WORLD OF JOY.")}</span><span>{t("ADMIT ONE ✦")}</span></footer>
+        <footer className="circus-ticket-footer"><span>ONE LITTLE CLOWN. A WORLD OF JOY.</span><span>ADMIT ONE ✦</span></footer>
       </div>
     </section>
   )
