@@ -271,6 +271,15 @@
   text-shadow: 0 2px 18px rgba(255, 255, 255, 0.5);
 }
 
+.menu-mobile-socials img { display: block; flex: none; }
+
+@media (max-width: 768px) {
+  .app-header.global-menu-header .menu-trigger { padding: 6px 12px; border-radius: 999px; font-size: 20px; }
+  .app-header.global-menu-header .menu-trigger.is-dark { color: #090b10; background: rgba(255, 255, 255, 0.9); text-shadow: none; }
+  .app-header.global-menu-header .menu-trigger.is-light { color: #fff; background: rgba(5, 12, 22, 0.82); text-shadow: none; }
+  .app-header.global-menu-header .menu-trigger:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+}
+
 .menu-trigger:disabled {
   cursor: not-allowed;
   opacity: 0.48;

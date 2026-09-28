@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { cleanupSensors } from './ekoCleanupSensors.js'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
@@ -47,6 +47,48 @@ const outdoorPosters = [
 
 function SlideFrame({ children, className = '' }) {
   return <div className={`eko-slide-frame ${className}`}>{children}</div>
+}
+
+// Keep the desktop layout intact; mobile uses the existing Swiper library for a single-card view.
+function ResponsiveEkoGallery({ children, className, label }) {
+  const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
+  const [index, setIndex] = useState(0)
+  const swiperRef = useRef(null)
+  const reducedMotion = useReducedMotion()
+  const cards = Children.toArray(children)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    const update = () => { setMobile(media.matches); setIndex(0) }
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  if (!mobile) return <div className={className}>{children}</div>
+
+  return (
+    <div className={`${className} eko-mobile-gallery`} aria-label={label}>
+      <Swiper
+        className="eko-mobile-gallery-swiper"
+        modules={[A11y]}
+        slidesPerView={1}
+        speed={reducedMotion ? 0 : 550}
+        preventInteractionOnTransition
+        allowTouchMove={false}
+        nested
+        onSwiper={(swiper) => { swiperRef.current = swiper }}
+        onSlideChange={(swiper) => setIndex(swiper.activeIndex)}
+        a11y={{ enabled: true }}
+      >
+        {cards.map((card) => <SwiperSlide key={card.key}>{card}</SwiperSlide>)}
+      </Swiper>
+      <div className="eko-mobile-gallery-controls swiper-no-swiping">
+        <button type="button" aria-label={`${label}: hình trước`} disabled={index === 0} onClick={() => swiperRef.current?.slidePrev()}><img src={`${MOBILE_ASSET}/gallery-arrow.svg`} className="eko-gallery-arrow-prev" alt="" /></button>
+        <span aria-live="polite">{String(index + 1).padStart(2, '0')} / {String(cards.length).padStart(2, '0')}</span>
+        <button type="button" aria-label={`${label}: hình tiếp theo`} disabled={index === cards.length - 1} onClick={() => swiperRef.current?.slideNext()}><img src={`${MOBILE_ASSET}/gallery-arrow.svg`} className="eko-gallery-arrow-next" alt="" /></button>
+      </div>
+    </div>
+  )
 }
 
 function Reveal({ active, children, className = '', delay = 0 }) {
@@ -123,7 +165,7 @@ function EkoHero({ active, reducedMotion }) {
   )
 }
 
-function DraggableTrash({ item, collected, onKeyboardCollect }) {
+function DraggableTrash({ item, collected }) {
   const { ref, isDragging } = useDraggable({ id: item.id, disabled: collected })
 
   if (collected) return null
@@ -133,15 +175,7 @@ function DraggableTrash({ item, collected, onKeyboardCollect }) {
       ref={ref}
       type="button"
       className={`eko-trash-piece swiper-no-swiping ${item.className} ${isDragging ? 'is-dragging' : ''}`}
-      aria-label={`${item.label}. Kéo hoặc chạm để bỏ rác vào thùng.`}
-      onClick={() => onKeyboardCollect(item.id)}
-      onKeyDownCapture={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          event.stopPropagation()
-          onKeyboardCollect(item.id)
-        }
-      }}
+      aria-label={`${item.label}. Nắm, kéo và thả vào thùng. Dùng bàn phím: Enter để nắm, phím mũi tên để di chuyển, Enter để thả.`}
     >
       <span className="eko-trash-crop">
         <img src={`${ASSET}/${item.src}`} alt="" draggable={false} />
@@ -226,7 +260,6 @@ function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
               <DraggableTrash
                 item={item}
                 collected={collected.includes(item.id)}
-                onKeyboardCollect={collect}
                 key={item.id}
               />
             ))}
@@ -624,7 +657,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
               <Reveal active={activeSlide === 6} className="eko-signs-title">
                 <h2>NHÌN BIỂN BÁO, HÀNH ĐỘNG ĐẸP!</h2>
               </Reveal>
-              <div className="eko-sign-grid">
+              <ResponsiveEkoGallery className="eko-sign-grid" label="Biển báo EKO">
                 {signs.map((sign, index) => (
                   <Tilt
                     className="eko-sign-card"
@@ -664,18 +697,21 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                         transition={{ duration: 2.8, delay: 0.35 + index * 0.24, repeat: Infinity, ease: 'easeOut' }}
                       />
                       <div className="eko-sign-image">
+                        <picture style={{ display: 'contents' }}>
+                        <source media="(max-width: 768px)" srcSet={index === 0 ? `${MOBILE_ASSET}/sign-primary.png` : `${ASSET}/${sign.src}`} />
                         <motion.img
                           src={`${ASSET}/${sign.src}`}
                           alt={sign.caption}
                           animate={activeSlide === 6 && !reducedMotion ? { y: [0, -1.5, 0] } : { y: 0 }}
                           transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
                         />
+                        </picture>
                       </div>
                       <span className="eko-sign-action">{sign.action}<b aria-hidden="true">↗</b></span>
                     </motion.article>
                   </Tilt>
                 ))}
-              </div>
+              </ResponsiveEkoGallery>
               <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG · 04 BIỂN BÁO <b>↗</b></span>
             </section>
           </SlideFrame>
@@ -695,7 +731,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 animate={activeSlide === 7 && !reducedMotion ? { x: ['-140%', '280%'], opacity: [0, 0.28, 0] } : { x: '-140%', opacity: 0 }}
                 transition={activeSlide === 7 && !reducedMotion ? { duration: 3.4, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' } : { duration: 0 }}
               />
-              <div className="eko-reminder-grid">
+              <ResponsiveEkoGallery className="eko-reminder-grid" label="Thông điệp nhắc nhở EKO">
                 {['reminder-1-opt.png', 'reminder-2-opt.png', 'reminder-3-opt.png'].map((src, index) => (
                   <Tilt
                     className="eko-reminder-tilt"
@@ -728,7 +764,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                     </motion.div>
                   </Tilt>
                 ))}
-              </div>
+              </ResponsiveEkoGallery>
               <motion.p initial={false} animate={activeSlide === 7 ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}>ĐỂ NHẮC NHỞ !!!</motion.p>
               <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG · 03 THÔNG ĐIỆP <b>↗</b></span>
             </section>
@@ -764,7 +800,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
               >
                 TUYÊN TRUYỀN, HÀNH ĐỘNG
               </motion.h2>
-              <div className="eko-campaign-stands">
+              <ResponsiveEkoGallery className="eko-campaign-stands" label="Standee EKO">
                 {[
                   ['campaign-stand-left-opt.jpg', 'Standee bảo vệ môi trường'],
                   ['campaign-stand-middle-opt.jpg', 'Standee phân loại rác'],
@@ -795,7 +831,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                     />
                   </Tilt>
                 ))}
-              </div>
+              </ResponsiveEkoGallery>
               <span className="eko-mobile-swipe-hint" aria-hidden="true">VUỐT NGANG ĐỂ ĐỌC TỪNG STANDEE <b>↗</b></span>
             </section>
           </SlideFrame>
@@ -832,6 +868,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
         <SwiperSlide tag="section" aria-label="Màn 13 trên 14: Bộ poster chiến dịch EKO">
           <SlideFrame className="eko-poster-frame">
             <section className="eko-design-canvas eko-poster-pair">
+              <ResponsiveEkoGallery className="eko-poster-gallery" label="Poster chiến dịch EKO">
               {[
                 ['poster-future-opt.jpg', 'EKO — Mang bình, mang tương lai'],
                 ['poster-brandboard-opt.jpg', 'Bộ nhận diện thương hiệu EKO'],
@@ -846,6 +883,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                   key={src}
                 />
               ))}
+              </ResponsiveEkoGallery>
             </section>
           </SlideFrame>
         </SwiperSlide>

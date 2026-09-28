@@ -6,6 +6,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prevent touch highlight/text selection on controls, without removing keyboard focus. */
+:where(button, a, [role='button']) {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+:where(button, a, [role='button']) * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+:where(button, a, [role='button']):focus:not(:focus-visible) { outline: none; }
+
 :root {
   color-scheme: dark;
   --sat: env(safe-area-inset-top, 0px);

@@ -344,6 +344,7 @@
 /* 14 — Poster pair */
 .eko-poster-frame { background: #0a1730; }
 .eko-poster-pair { display: flex; align-items: center; justify-content: center; gap: min(5vw, 9dvh); background: radial-gradient(circle at 50% 44%, #19315c 0, #0a1730 52%, #061023 100%); }
+.eko-poster-gallery { display: contents; }
 .eko-poster-pair img { position: relative; display: block; width: auto; height: min(77.778dvh, 38.889vw); object-fit: contain; box-shadow: 0 2.8dvh 7dvh rgba(0, 0, 0, 0.34); }
 
 /* 15 — Thank you */
@@ -1328,7 +1329,7 @@
   .eko-project:has(.swiper-slide-active .eko-hero) .eko-back::after { display: none; }
   .eko-hero-background { inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .eko-hero-wave { top: 45.498%; bottom: auto; width: 100%; height: auto; aspect-ratio: 390 / 163; }
-  .eko-hero-logo-anchor { top: 45.438%; left: 49.487%; width: 51.282%; height: auto; aspect-ratio: 200 / 171; overflow: hidden; }
+  .eko-hero-logo-anchor { top: 45.438%; left: 49.487%; width: 43.59%; height: auto; aspect-ratio: 200 / 171; overflow: hidden; }
   .eko-hero-logo { width: 100%; height: 161.45%; object-fit: fill; filter: none; }
 
   .eko-cleanup-inner { display: block; padding: 0; overflow: visible; }
@@ -1337,21 +1338,23 @@
   .eko-cleanup-title-desktop { display: none; }
   .eko-cleanup-title-mobile { display: block; }
   .eko-cleanup-heading > span { font-size: 10px; margin-top: 6px; letter-spacing: 0.02em; }
-  .eko-trash-bin { top: 37.915%; bottom: auto; left: 5.128%; right: auto; width: 59.231%; height: auto; aspect-ratio: 231 / 411; margin: 0; }
-  .eko-trash-bin img { object-fit: contain; }
+  .eko-trash-bin { top: 43.009%; bottom: auto; left: 5.128%; right: auto; width: 55.128%; height: auto; aspect-ratio: 215 / 331; margin: 0; overflow: hidden; }
+  .eko-trash-bin img { position: absolute; top: -9.67%; left: -7.51%; width: 107.59%; height: 124.17%; object-fit: contain; }
   .eko-trash-bin span { display: none; }
   .eko-trash-piece { right: auto; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
   .eko-trash-piece::before { position: absolute; inset: -7px; content: ''; }
   .eko-trash-crop, .eko-trash-crop img { pointer-events: none; }
-  .eko-trash-one { top: 67.77%; left: 65.7%; width: 15.276vw !important; height: 20.831vw !important; }
+  .eko-trash-one { top: 70.5%; left: 65.7%; width: 15.276vw !important; height: 20.831vw !important; }
   .eko-trash-one .eko-trash-crop { transform: rotate(-122.64deg) scaleY(-1); }
-  .eko-trash-two { top: 65.038%; left: 32.513%; width: 32.925vw !important; height: 32.692vw !important; }
-  .eko-trash-three { top: 72.038%; left: 57.436%; width: 37.436vw !important; height: 20.256vw !important; }
-  .eko-trash-four { top: 76.582%; left: 43.908%; width: 9.373vw !important; height: 12.046vw !important; }
+  .eko-trash-two { top: 69.895%; left: 38.41%; width: 32.925vw !important; height: 32.692vw !important; }
+  .eko-trash-three { top: 76.185%; left: 57.436%; width: 37.436vw !important; height: 20.256vw !important; }
+  .eko-trash-four { top: 79.463%; left: 37.285%; width: 9.373vw !important; height: 12.046vw !important; }
   .eko-pattern-marquee { height: 3.318%; }
   .eko-pattern-marquee-top { top: 0; bottom: auto; display: block; }
   .eko-pattern-track img { object-fit: fill; }
-  .eko-cleanup-complete { top: 22%; }
+  .eko-cleanup-complete { top: 10%; left: 5.128%; right: auto; width: 39%; max-width: 154px; margin: 0; padding: 10px 12px; align-items: flex-start; gap: 7px; border-radius: 10px; border-left-width: 3px; box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12); }
+  .eko-cleanup-complete strong { font-size: clamp(9px, 2.56vw, 11px); text-align: left; }
+  .eko-cleanup-complete button { min-height: 32px; padding: 6px 10px; font-size: 9px; letter-spacing: 0.06em; }
 
   .eko-logo-stage .eko-logo-inner { display: block; padding: 0; }
   .eko-logo-stage .eko-logo-mobile-kicker, .eko-logo-stage .eko-logo-type { display: none; }
@@ -1359,4 +1362,80 @@
   .eko-logo-type-mobile p { margin: 0; font-weight: 900; line-height: min(38.462vw, 17.773dvh); letter-spacing: max(-13.846vw, -6.398dvh); }
   .eko-logo-type-mobile p:last-child { font-weight: 400; letter-spacing: max(-21.538vw, -9.953dvh); }
   .eko-logo-stage .eko-logo-render { position: absolute !important; top: 54.621% !important; left: 23.333% !important; right: auto !important; width: min(53.333vw, 24.645dvh); height: auto; aspect-ratio: 208 / 258; max-height: none; margin: 0; filter: none; object-fit: contain; }
+}
+
+/* Mobile single-card Swiper galleries: dedicated text/image rows, no adjacent-card peeking. */
+@media (max-width: 768px) {
+  .eko-signs, .eko-reminders, .eko-campaign { padding-inline: 20px; }
+  .eko-signs .eko-mobile-swipe-hint,
+  .eko-reminders .eko-mobile-swipe-hint,
+  .eko-campaign .eko-mobile-swipe-hint { display: none; }
+
+  .eko-mobile-gallery.eko-sign-grid,
+  .eko-mobile-gallery.eko-reminder-grid,
+  .eko-mobile-gallery.eko-campaign-stands,
+  .eko-mobile-gallery.eko-poster-gallery {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transform: none;
+    scroll-snap-type: none;
+  }
+  .eko-mobile-gallery-swiper { width: 100%; min-width: 0; height: min(52dvh, 440px); overflow: hidden; }
+  .eko-mobile-gallery-swiper > .swiper-wrapper > .swiper-slide { display: grid; place-items: center; padding: 12px; box-sizing: border-box; overflow: hidden; }
+  .eko-mobile-gallery-controls { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px; }
+  .eko-mobile-gallery-controls button { width: 44px; height: 44px; padding: 0; border: 1px solid currentColor; border-radius: 50%; background: transparent; color: inherit; font: 400 25px/1 'Montserrat', sans-serif; cursor: pointer; touch-action: manipulation; }
+  .eko-mobile-gallery-controls button:disabled { opacity: 0.3; cursor: default; }
+  .eko-mobile-gallery-controls button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  .eko-mobile-gallery-controls button img { display: block; width: 24px; height: 24px; margin: auto; pointer-events: none; }
+  .eko-gallery-arrow-prev { transform: rotate(-90deg); }
+  .eko-gallery-arrow-next { transform: rotate(90deg); }
+  .eko-reminders .eko-mobile-gallery-controls button img,
+  .eko-poster-gallery .eko-mobile-gallery-controls button img { filter: brightness(0) invert(1); }
+  .eko-mobile-gallery-controls span { font-size: 11px; font-weight: 900; letter-spacing: 0.1em; }
+
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: min(100%, 320px) !important; height: 100% !important; aspect-ratio: auto; flex: none; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-surface { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 15px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-caption { position: relative; inset: auto; order: 2; padding: 0; font-size: clamp(15px, 5.64vw, 22px); line-height: 1.35; text-align: left; transform: none; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-image { position: relative; inset: auto; order: 1; width: 100%; height: 100%; min-height: 0; margin: 0; transform: none; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-image img { position: absolute; top: -16.6%; left: 0; width: 100%; height: 148.94%; object-fit: cover; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-action { display: none; }
+  .eko-signs { justify-content: flex-start; padding-top: 8.77dvh; padding-bottom: 3dvh; }
+  .eko-signs-title h2 { font-size: clamp(22px, 8.72vw, 34px); line-height: 1.2; }
+  .eko-signs .eko-sign-grid.eko-mobile-gallery { position: absolute; top: 42.536%; left: 20px; width: calc(100% - 40px); height: 54%; gap: 0; }
+  .eko-signs .eko-mobile-gallery-swiper { height: min(34.5dvh, 290px); }
+  .eko-signs .eko-mobile-gallery-swiper > .swiper-wrapper > .swiper-slide { padding: 0; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: 100% !important; max-width: none; border-radius: 0; }
+  .eko-signs .eko-mobile-gallery-controls { align-self: end; justify-content: space-around; }
+
+  .eko-reminder-grid.eko-mobile-gallery .eko-reminder-tilt { flex: none; width: min(100%, 300px); height: calc(min(52dvh, 440px) - 48px); aspect-ratio: auto; }
+  .eko-reminder-grid.eko-mobile-gallery .eko-reminder-card img { object-fit: contain; }
+  /* Reserve the heading, navigation and safe-area space before sizing the full standee. */
+  .eko-campaign { --eko-standee-height: min(62dvh, 560px, calc(100dvh - 200px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))); }
+  .eko-campaign-stands .eko-mobile-gallery-swiper { height: var(--eko-standee-height); }
+  .eko-campaign-stands.eko-mobile-gallery .eko-campaign-stand-tilt { flex: none; width: min(100%, calc((var(--eko-standee-height) - 24px) * 0.444444)); height: calc(var(--eko-standee-height) - 24px); max-height: none; aspect-ratio: 1 / 2.25; }
+  .eko-campaign-stands.eko-mobile-gallery .eko-campaign-stand-tilt img { object-fit: contain; }
+
+  .eko-poster-pair { display: grid; place-items: center; padding: 64px 20px 48px; overflow: hidden; }
+  .eko-poster-pair::after { display: none; }
+  .eko-poster-gallery .eko-mobile-gallery-swiper { height: min(64dvh, 560px); }
+  .eko-poster-gallery .swiper-slide img { width: 100%; height: calc(min(64dvh, 560px) - 24px); max-height: none; object-fit: contain; }
+  .eko-poster-gallery .eko-mobile-gallery-controls { color: #b5ff92; }
+
+  /* Each repeat uses the complete source width: object-cover was creating a seam mid-pattern. */
+  .eko-identity-pattern { width: max-content; }
+  .eko-identity-pattern span { flex: none; width: auto; height: 100%; aspect-ratio: 1600 / 992; }
+  .eko-identity-pattern img { width: 100%; height: 100%; object-fit: contain; }
+  .eko-identity-strip { height: auto; object-fit: contain; border-radius: 0; }
+  .eko-thank-logo img { filter: none; }
+  .eko-image-frame .eko-image-mobile-heading,
+  .eko-image-frame .eko-full-art { width: 100%; max-width: 334px; margin-inline: auto; }
 }

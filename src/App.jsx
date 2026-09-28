@@ -63,11 +63,12 @@ const globalMenuItems = [
   { num: '02', title: 'ABOUT', destination: 'about' },
 ]
 
-function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }) {
+function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNavigate }) {
   const reducedMotion = useReducedMotion()
   return (
     <>
-      <header className="app-header global-menu-header">
+      <AnimatePresence>
+      {!hidden && !open && !locked && <motion.header key="menu-trigger" className="app-header global-menu-header" exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.15 }}>
         <motion.button
           className={`menu-trigger is-${tone}`}
           onClick={onOpen}
@@ -77,13 +78,15 @@ function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }
           disabled={locked}
           initial={reducedMotion ? false : { opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
           transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : 0.2, ease: 'easeOut' }}
           whileHover={locked ? undefined : { scale: 1.05 }}
           whileTap={locked ? undefined : { scale: 0.95 }}
         >
           Menu +
         </motion.button>
-      </header>
+      </motion.header>}
+      </AnimatePresence>
 
       <AnimatePresence>
         {open && (
@@ -131,9 +134,9 @@ function GlobalMenu({ open, tone, current, locked, onOpen, onClose, onNavigate }
                   <a href="tel:+84799853984">0799853984</a>
                 </div>
                 <div className="menu-mobile-socials" aria-label="Social profiles">
-                  <span><i className="social-discord" aria-hidden="true">D</i>hugtruog</span>
-                  <span><i className="social-facebook" aria-hidden="true">f</i>Hùng Trương</span>
-                  <span><i className="social-instagram" aria-hidden="true">◎</i>04_.hu</span>
+                  <span><img src="/assets/contact/discord.svg" alt="Discord" />hugtruog</span>
+                  <span><img src="/assets/contact/facebook.svg" alt="Facebook" />Hùng Trương</span>
+                  <span><img src="/assets/contact/instagram.svg" alt="Instagram" />04_.hu</span>
                 </div>
               </div>
             </motion.div>
@@ -815,9 +818,10 @@ function App() {
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={isAboutOpen || isPosterOpen ? 'dark' : routeMenuTone}
+      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isPosterOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
+      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition}
       onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
       onClose={() => setMenuOpen(false)}
       onNavigate={navigateFromGlobalMenu}

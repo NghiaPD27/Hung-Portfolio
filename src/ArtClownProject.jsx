@@ -622,13 +622,6 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
               </div>
               <div className="art-logo-applications-figma-mobile">
                 <img className="art-applications-board" src={`${MOBILE_ASSET}/logo-applications-mobile.png`} alt="Logo Applications — hệ phiên bản logo Art Clown" loading="lazy" decoding="async" />
-                {/* Restore the three marks missing from the uploaded mobile board. */}
-                <div className="art-applications-restored-reversed">
-                  <img src={`${ASSET}/logo-white.svg`} alt="REVERSED / Logo âm bản màu trắng" />
-                  <span>REVERSED / Âm bản</span>
-                </div>
-                <img className="art-applications-restored art-applications-restored-mono" src={`${ASSET}/logo-on-black.svg`} alt="MONO / Logo đơn sắc màu trắng" />
-                <img className="art-applications-restored art-applications-restored-mark" src={`${ASSET}/logo-mark-only.svg`} alt="MARK-ONLY / Biểu tượng Art Clown" />
               </div>
             </section>
           </SlideFrame>

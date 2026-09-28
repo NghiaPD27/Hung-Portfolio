@@ -1589,7 +1589,7 @@
   }
 
   .art-values .art-value-title {
-    font-size: clamp(17px, 5.128vw, 20px);
+    font-size: clamp(14px, 4.1vw, 16px);
     line-height: 1.45;
   }
 
@@ -2037,10 +2037,10 @@
 
   /* Full editorial board is the user's original mobile PNG, not the desktop grid. */
   .art-logo-applications {
-    display: block;
-    padding: 0;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
+    display: grid;
+    place-items: center;
+    padding: 56px 0 0;
+    overflow: hidden;
     background: #f7f3eb;
   }
 
@@ -2048,27 +2048,11 @@
   .art-logo-applications-figma-mobile {
     position: relative;
     display: block;
-    width: 100%;
-    height: auto;
+    width: min(100%, calc((100dvh - 56px) * 0.46263));
+    height: 100%;
   }
 
-  .art-applications-board { display: block; width: 100%; height: auto; }
-  .art-applications-restored { position: absolute; height: auto; object-fit: contain; pointer-events: none; }
-  .art-applications-restored-reversed {
-    position: absolute;
-    top: 38.67%;
-    left: 8.72%;
-    width: 82.56%;
-    height: 20.76%;
-    display: grid;
-    place-items: center;
-    padding-bottom: 24px;
-    background: radial-gradient(ellipse at 55% 45%, #df2520, #be1a1a 78%);
-  }
-  .art-applications-restored-reversed img { width: 34%; height: auto; }
-  .art-applications-restored-reversed span { position: absolute; bottom: 12px; left: 14px; color: #fff; font: 700 10px/1 'Montserrat', sans-serif; letter-spacing: 0.08em; }
-  .art-applications-restored-mono { top: 62.5%; left: 40%; width: 20%; }
-  .art-applications-restored-mark { top: 79.5%; left: 39%; width: 22%; }
+  .art-applications-board { display: block; width: 100%; height: 100%; object-fit: contain; }
 
   /* Campaign: one legible poster per view, with the Figma arrow controls. */
   .art-campaign { display: block; padding: 0; background: #fff; }
@@ -2163,7 +2147,7 @@
     top: 27.01%;
     left: 50%;
     display: block;
-    width: min(76.923vw, 35.545dvh);
+    width: min(84.615vw, 39.1dvh);
     transform: translateX(-50%);
   }
 
