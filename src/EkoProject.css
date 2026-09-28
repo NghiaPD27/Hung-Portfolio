@@ -1344,11 +1344,13 @@
   .eko-trash-piece { right: auto; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
   .eko-trash-piece::before { position: absolute; inset: -7px; content: ''; }
   .eko-trash-crop, .eko-trash-crop img { pointer-events: none; }
-  .eko-trash-one { top: 70.5%; left: 65.7%; width: 15.276vw !important; height: 20.831vw !important; }
+  /* All loose pieces share the bag's ground line instead of floating above it. */
+  .eko-trash-field { --eko-trash-ground: calc(69.895% + 32.692vw); }
+  .eko-trash-one { top: calc(var(--eko-trash-ground) - 20.831vw); left: 65.7%; z-index: 2; width: 15.276vw !important; height: 20.831vw !important; }
   .eko-trash-one .eko-trash-crop { transform: rotate(-122.64deg) scaleY(-1); }
   .eko-trash-two { top: 69.895%; left: 38.41%; width: 32.925vw !important; height: 32.692vw !important; }
-  .eko-trash-three { top: 76.185%; left: 57.436%; width: 37.436vw !important; height: 20.256vw !important; }
-  .eko-trash-four { top: 79.463%; left: 37.285%; width: 9.373vw !important; height: 12.046vw !important; }
+  .eko-trash-three { top: calc(var(--eko-trash-ground) - 20.256vw); left: 57.436%; width: 37.436vw !important; height: 20.256vw !important; }
+  .eko-trash-four { top: calc(var(--eko-trash-ground) - 12.046vw); left: 37.285%; width: 9.373vw !important; height: 12.046vw !important; }
   .eko-pattern-marquee { height: 3.318%; }
   .eko-pattern-marquee-top { top: 0; bottom: auto; display: block; }
   .eko-pattern-track img { object-fit: fill; }
@@ -1358,10 +1360,8 @@
 
   .eko-logo-stage .eko-logo-inner { display: block; padding: 0; }
   .eko-logo-stage .eko-logo-mobile-kicker, .eko-logo-stage .eko-logo-type { display: none; }
-  .eko-logo-type-mobile { position: absolute; top: 9.479%; left: 19.487%; display: block; color: #49ff00; font-family: 'Montserrat', sans-serif; font-size: min(51.282vw, 23.697dvh); }
-  .eko-logo-type-mobile p { margin: 0; font-weight: 900; line-height: min(38.462vw, 17.773dvh); letter-spacing: max(-13.846vw, -6.398dvh); }
-  .eko-logo-type-mobile p:last-child { font-weight: 400; letter-spacing: max(-21.538vw, -9.953dvh); }
-  .eko-logo-stage .eko-logo-render { position: absolute !important; top: 54.621% !important; left: 23.333% !important; right: auto !important; width: min(53.333vw, 24.645dvh); height: auto; aspect-ratio: 208 / 258; max-height: none; margin: 0; filter: none; object-fit: contain; }
+  .eko-logo-type-mobile { position: absolute; top: 9.479%; left: 0; right: 0; display: block; width: min(62vw, 29dvh); height: auto; margin-inline: auto; object-fit: contain; }
+  .eko-logo-stage .eko-logo-render { position: absolute !important; top: 54.621% !important; left: 0 !important; right: 0 !important; width: min(53.333vw, 24.645dvh); height: auto; max-height: none; margin-inline: auto; filter: none; object-fit: contain; }
 }
 
 /* Mobile single-card Swiper galleries: dedicated text/image rows, no adjacent-card peeking. */
@@ -1404,7 +1404,7 @@
 
   .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: min(100%, 320px) !important; height: 100% !important; aspect-ratio: auto; flex: none; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-surface { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 15px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-  .eko-sign-grid.eko-mobile-gallery .eko-sign-caption { position: relative; inset: auto; order: 2; padding: 0; font-size: clamp(15px, 5.64vw, 22px); line-height: 1.35; text-align: left; transform: none; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-caption { position: relative; inset: auto; order: 2; padding: 0; font-size: clamp(16px, 5vw, 22px); line-height: 1.35; text-align: left; text-wrap: balance; transform: none; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-image { position: relative; inset: auto; order: 1; width: 100%; height: 100%; min-height: 0; margin: 0; transform: none; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-action { display: none; }
@@ -1413,7 +1413,8 @@
   .eko-signs .eko-sign-grid.eko-mobile-gallery { position: absolute; top: 32%; bottom: max(72px, calc(env(safe-area-inset-bottom, 0px) + 32px)); left: 20px; width: calc(100% - 40px); height: auto; grid-template-rows: minmax(0, 1fr) 44px; gap: 14px; }
   .eko-signs .eko-mobile-gallery-swiper { height: 100%; min-height: 0; }
   .eko-signs .eko-mobile-gallery-swiper > .swiper-wrapper > .swiper-slide { padding: 0; }
-  .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: 100% !important; max-width: none; border-radius: 0; }
+  /* Match the caption's left edge to the complete square image, including short screens. */
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: min(100%, calc(68dvh - max(72px, calc(env(safe-area-inset-bottom, 0px) + 32px)) - 133px)) !important; max-width: none; margin-inline: auto; border-radius: 0; }
   .eko-signs .eko-mobile-gallery-controls { align-self: end; justify-content: space-around; }
 
   .eko-reminder-grid.eko-mobile-gallery .eko-reminder-tilt { flex: none; width: min(100%, 300px); height: calc(min(52dvh, 440px) - 48px); aspect-ratio: auto; }

@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './ArtClownProject.css'
-import useFineHover from './useFineHover.js'
+import MascotExperience from './MascotExperience.jsx'
 
 const ASSET = '/assets/art-clown/source'
 const MOBILE_ASSET = '/assets/art-clown/mobile-figma'
@@ -213,91 +213,11 @@ const mobileCampaignPosters = ['poster-layer-1.png', 'poster-layer-2.png', 'post
 const stationary = ['stationary-new-1.png', 'stationary-new-2.png', 'stationary-new-3.png']
 const stationaryExtra = ['stationary-extra-1.png', 'stationary-extra-2.png', 'stationary-extra-3.png']
 const stationaryGroups = [stationary, stationaryExtra]
-const mascotShowcase = [
-  { src: 'mascot-main.png', alt: 'Mascot Art Clown chính diện', scale: 0.91 },
-  { src: 'mascot-pose-1.png', alt: 'Mascot Art Clown vẫy tay', scale: 1.52 },
-  { src: 'mascot-pose-2.png', alt: 'Mascot Art Clown đang vẽ', scale: 1.39 },
-  { src: 'mascot-pose-3.png', alt: 'Mascot Art Clown chống tay tạo dáng', scale: 0.88 },
-  { src: 'mascot-pose-4.png', alt: 'Mascot Art Clown trình bày tác phẩm', scale: 1.58 },
-  { src: 'mascot-pose-5.png', alt: 'Mascot Art Clown nhảy vui vẻ', scale: 0.93 },
-  { src: 'mascot-pose-6.png', alt: 'Mascot Art Clown cười vui', scale: 0.96 },
-  { src: 'mascot-pose-7.png', alt: 'Mascot Art Clown cúi chào', scale: 0.91 },
-  { src: 'mascot-pose-8.png', alt: 'Mascot Art Clown suy nghĩ', scale: 0.89 },
-]
 
 function SlideFrame({ className = '', children }) {
   return <div className={`art-slide-frame ${className}`}>{children}</div>
 }
 
-function MascotExperience({ reducedMotion }) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const fineHover = useFineHover()
-
-  useEffect(() => {
-    if (reducedMotion) return undefined
-    const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % mascotShowcase.length)
-    }, 3200)
-    return () => window.clearInterval(timer)
-  }, [reducedMotion])
-
-  const changeMascot = (direction) => {
-    setActiveIndex((current) => (current + direction + mascotShowcase.length) % mascotShowcase.length)
-  }
-
-  return (
-    <section className="art-mascot-experience" aria-labelledby="art-mascot-title">
-      <div className="art-mascot-experience-panel">
-        <header className="art-mascot-experience-topbar">
-          <span>ART CLOWN / 05</span>
-          <span>AUTO PLAY · 3.2S</span>
-        </header>
-
-        <div className="art-mascot-experience-body">
-          <div className="art-mascot-experience-copy">
-            <p>BRAND / COMPANION</p>
-            <h2 id="art-mascot-title">MASCOT</h2>
-            <span>Một người bạn tinh nghịch, hài hước, luôn đồng hành để lan tỏa niềm vui và giúp Art Clown trở nên gần gũi, đáng nhớ hơn.</span>
-          </div>
-
-          <Tilt
-            className="art-mascot-experience-tilt"
-            perspective={1400}
-            scale={1.012}
-            transitionSpeed={850}
-            tiltMaxAngleX={8}
-            tiltMaxAngleY={10}
-            glareEnable={false}
-            tiltEnable={!reducedMotion && fineHover}
-          >
-            <div className="art-mascot-experience-media">
-              <div className="art-mascot-experience-halo" aria-hidden="true" />
-              {mascotShowcase.map((mascot, index) => (
-                <img
-                  className={index === activeIndex ? 'is-active' : ''}
-                  key={mascot.src}
-                  src={`${ASSET}/${mascot.src}`}
-                  style={{ '--mascot-scale': mascot.scale }}
-                  alt={index === activeIndex ? mascot.alt : ''}
-                  aria-hidden={index !== activeIndex}
-                  loading="eager"
-                  decoding="async"
-                />
-              ))}
-              <span className="art-mascot-experience-badge">AUTO</span>
-            </div>
-          </Tilt>
-
-          <div className="art-mascot-experience-controls">
-            <button type="button" onClick={() => changeMascot(-1)} aria-label="Mascot trước">← PREV</button>
-            <span>{String(activeIndex + 1).padStart(2, '0')} / {String(mascotShowcase.length).padStart(2, '0')}</span>
-            <button type="button" onClick={() => changeMascot(1)} aria-label="Mascot tiếp theo">NEXT →</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
 
 export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoundPrime, onFireworkSoundStop, onCircusAudioStateChange, onValuesAudioStateChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
@@ -376,7 +296,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
   }, [onCircusAudioStateChange, onValuesAudioStateChange])
 
   useEffect(() => {
-    const menuTones = ['dark', 'dark', 'dark', 'dark', 'light', 'dark', 'dark', 'light']
+    const menuTones = ['dark', 'dark', 'dark', 'dark', 'dark', 'dark', 'dark', 'light']
     const mobileUniformTone = window.matchMedia('(max-width: 768px)').matches && activeSlide === 2
     onMenuToneChange?.(mobileUniformTone ? 'light' : menuTones[activeSlide] || 'dark')
   }, [activeSlide, onMenuToneChange])
@@ -628,7 +548,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 5 trên 8: Mascot">
-          <MascotExperience reducedMotion={reducedMotion} />
+          <MascotExperience reducedMotion={reducedMotion} active={activeSlide === 4} />
         </SwiperSlide>
 
         <SwiperSlide tag="section" aria-label="Màn 6 trên 8: Campaign Posters">

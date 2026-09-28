@@ -411,7 +411,14 @@ function OutdoorPosterCarousel({ active, reducedMotion }) {
 
 export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneChange, onNavigationLockChange }) {
   const fineHover = useFineHover()
+  const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
   const reducedMotion = useReducedMotion()
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    const update = () => setMobile(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
   const swiperRef = useRef(null)
   const gameCompleteRef = useRef(false)
   const [activeSlide, setActiveSlide] = useState(() => {
@@ -566,9 +573,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
               <MobileEkoPicture mobileSrc="logo-pattern.png"><img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" decoding="async" /></MobileEkoPicture>
               <div className="eko-artboard-inner eko-logo-inner">
                 <p className="eko-logo-mobile-kicker">03 / BIỂU TƯỢNG NHẬN DIỆN</p>
-                <motion.div className="eko-logo-type-mobile" aria-label="LOGO" initial={false} animate={activeSlide === 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }} transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}>
-                  <p>LO</p><p>GO</p>
-                </motion.div>
+                <motion.img className="eko-logo-type-mobile" src={`${ASSET}/logo-type.svg`} alt="LOGO" initial={false} animate={activeSlide === 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }} transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }} />
                 <motion.img
                   className="eko-logo-type"
                   src={`${ASSET}/logo-type.svg`}
@@ -577,14 +582,14 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                   animate={activeSlide === 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
                   transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}
                 />
-                <motion.img
+                <MobileEkoPicture mobileSrc="hero-logo.png"><motion.img
                   className="eko-logo-render"
                   src={`${ASSET}/logo-render.png`}
                   alt="Biểu tượng EKO"
                   initial={false}
                   animate={activeSlide === 2 ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.8, rotate: 8 }}
                   transition={{ duration: reducedMotion ? 0 : 0.9, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-                />
+                /></MobileEkoPicture>
               </div>
             </section>
           </SlideFrame>
@@ -702,7 +707,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                         <motion.img
                           src={`${ASSET}/${sign.src}`}
                           alt={sign.caption}
-                          animate={activeSlide === 6 && !reducedMotion ? { y: [0, -1.5, 0] } : { y: 0 }}
+                          animate={activeSlide === 6 && !reducedMotion ? { y: [0, mobile ? -8 : -1.5, 0] } : { y: 0 }}
                           transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
                         />
                         </picture>
