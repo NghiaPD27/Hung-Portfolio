@@ -14,11 +14,13 @@
     "@dnd-kit/react": "^0.5.0",
     "@fontsource/dela-gothic-one": "^5.3.0",
     "@gsap/react": "^2.1.2",
+    "@radix-ui/react-dialog": "^1.1.23",
     "framer-motion": "^13.2.0",
     "gsap": "^3.15.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-parallax-tilt": "^1.7.341",
+    "react-responsive-masonry": "^2.9.0",
     "swiper": "14.2.0"
   },
   "devDependencies": {

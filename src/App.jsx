@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
 import EkoProject from './EkoProject'
 import PosterProject from './PosterProject'
 import './App.css'
+
+const LogoProject = lazy(() => import('./LogoProject'))
 
 function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
   const cardRef = useRef(null)
@@ -155,6 +157,8 @@ function App() {
   const [isAboutOpen, setIsAboutOpen] = useState(() => window.location.hash.startsWith('#about'))
   const [isEkoOpen, setIsEkoOpen] = useState(() => window.location.hash.startsWith('#eko'))
   const [isPosterOpen, setIsPosterOpen] = useState(() => window.location.hash.startsWith('#poster'))
+  const [isLogoOpen, setIsLogoOpen] = useState(() => window.location.hash === '#logo')
+  const [logoDetailOpen, setLogoDetailOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
@@ -524,10 +528,13 @@ function App() {
       const aboutIsOpen = window.location.hash.startsWith('#about')
       const ekoIsOpen = window.location.hash.startsWith('#eko')
       const posterIsOpen = window.location.hash.startsWith('#poster')
+      const logoIsOpen = window.location.hash === '#logo'
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)
       setIsPosterOpen(posterIsOpen)
+      setIsLogoOpen(logoIsOpen)
+      setLogoDetailOpen(false)
       setProjectTransition(null)
       if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
         aboutAudioRef.current.pause()
@@ -565,10 +572,10 @@ function App() {
       }
       if (!projectIsOpen && !ekoIsOpen && returnToBrandingPicker.current) {
         returnToBrandingPicker.current = false
-        if (!aboutIsOpen && !posterIsOpen) setSelectedProject({ id: 'branding' })
+        if (!aboutIsOpen && !posterIsOpen && !logoIsOpen) setSelectedProject({ id: 'branding' })
       }
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen
+        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen || logoIsOpen
           ? 0
           : (productScrollPosition.current || document.getElementById('product')?.offsetTop || 0),
         behavior: 'auto'
@@ -600,6 +607,14 @@ function App() {
       vietnamese: 'THIẾT KẾ ÁP PHÍCH',
       description: 'Các thiết kế poster truyền tải ý tưởng qua hình ảnh, bố cục và chữ.',
       year: '2026'
+    },
+    {
+      id: 'logo',
+      tag: 'Logo Design',
+      title: 'LOGO',
+      vietnamese: 'THIẾT KẾ LOGO',
+      description: 'Bộ sưu tập logo với những dấu hiệu và bản sắc riêng.',
+      year: '2026'
     }
   ]
 
@@ -616,6 +631,7 @@ function App() {
     projectTransitionTimer.current = window.setTimeout(() => {
       window.history.pushState({ artClown: true }, '', '#art-clown')
       setIsArtClownOpen(true)
+      setIsLogoOpen(false)
       setIsAboutOpen(false)
       setIsEkoOpen(false)
       setIsPosterOpen(false)
@@ -652,6 +668,7 @@ function App() {
       window.history.pushState({ about: true }, '', '#about')
       setIsArtClownOpen(false)
       setIsAboutOpen(true)
+      setIsLogoOpen(false)
       setIsPosterOpen(false)
       setIsAboutTransitioning(false)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
@@ -683,6 +700,7 @@ function App() {
       setIsArtClownOpen(false)
       setIsAboutOpen(false)
       setIsEkoOpen(true)
+      setIsLogoOpen(false)
       setIsPosterOpen(false)
       setProjectTransition(null)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
@@ -717,6 +735,7 @@ function App() {
       setIsAboutOpen(false)
       setIsEkoOpen(false)
       setIsPosterOpen(true)
+      setIsLogoOpen(false)
       setProjectTransition(null)
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
     }, reducedMotion ? 80 : 850)
@@ -733,6 +752,33 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current, behavior: 'auto' }))
   }
 
+  const openLogoProject = () => {
+    if (projectTransition) return
+    productScrollPosition.current = window.scrollY
+    returnToBrandingPicker.current = false
+    setSelectedProject(null)
+    setMenuOpen(false)
+    window.history.pushState({ logo: true }, '', '#logo')
+    setIsLogoOpen(true)
+    setLogoDetailOpen(false)
+    setIsArtClownOpen(false)
+    setIsAboutOpen(false)
+    setIsEkoOpen(false)
+    setIsPosterOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
+  const closeLogoProject = () => {
+    setLogoDetailOpen(false)
+    if (window.history.state?.logo) {
+      window.history.back()
+      return
+    }
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
+    setIsLogoOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current || document.getElementById('product')?.offsetTop || 0, behavior: 'auto' }))
+  }
+
   const navigateFromGlobalMenu = (destination) => {
     if (routeNavigationLocked) return
     setMenuOpen(false)
@@ -745,6 +791,9 @@ function App() {
     ) return
 
     returnToBrandingPicker.current = false
+
+    setIsLogoOpen(false)
+    setLogoDetailOpen(false)
 
     stopAboutAudio()
     setEkoHeroAudioActive(false)
@@ -767,7 +816,7 @@ function App() {
     }
 
     if (destination === 'about') {
-      if (!isArtClownOpen && !isEkoOpen && !isPosterOpen) {
+      if (!isArtClownOpen && !isEkoOpen && !isPosterOpen && !isLogoOpen) {
         openAboutPage()
         return
       }
@@ -814,14 +863,14 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   })
 
-  const currentMenuPage = isPosterOpen ? 'poster' : isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
+  const currentMenuPage = isLogoOpen ? 'logo' : isPosterOpen ? 'poster' : isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isPosterOpen ? 'dark' : routeMenuTone}
+      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isPosterOpen || isLogoOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
-      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition}
+      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition || logoDetailOpen}
       onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
       onClose={() => setMenuOpen(false)}
       onNavigate={navigateFromGlobalMenu}
@@ -865,6 +914,10 @@ function App() {
 
   if (isPosterOpen) {
     return <>{sharedMenu}<PosterProject onBack={closePosterProject} onAudioUnlock={() => setPosterAudioActive(true)} /></>
+  }
+
+  if (isLogoOpen) {
+    return <>{sharedMenu}<Suspense fallback={<div style={{ minHeight: '100svh', background: '#f5f3ed', color: '#24251f', padding: '120px 24px' }}>Đang mở bộ sưu tập Logo…</div>}><LogoProject onBack={closeLogoProject} onDetailOpenChange={setLogoDetailOpen} /></Suspense></>
   }
 
   return (
@@ -1129,6 +1182,7 @@ function App() {
               type="button"
               onClick={() => {
                 if (project.id === 'poster') openPosterProject()
+                else if (project.id === 'logo') openLogoProject()
                 else setSelectedProject(project)
               }}
               initial={{ opacity: 0, y: 45 }}
