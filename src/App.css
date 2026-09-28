@@ -274,9 +274,9 @@
 .menu-mobile-socials img { display: block; flex: none; }
 
 @media (max-width: 768px) {
-  .app-header.global-menu-header .menu-trigger { padding: 6px 12px; border-radius: 999px; font-size: 20px; }
-  .app-header.global-menu-header .menu-trigger.is-dark { color: #090b10; background: rgba(255, 255, 255, 0.9); text-shadow: none; }
-  .app-header.global-menu-header .menu-trigger.is-light { color: #fff; background: rgba(5, 12, 22, 0.82); text-shadow: none; }
+  .app-header.global-menu-header .menu-trigger { padding: 6px 0; border-radius: 0; background: transparent; font-size: 18px; }
+  .app-header.global-menu-header .menu-trigger.is-dark { color: #090b10; background: transparent; text-shadow: none; }
+  .app-header.global-menu-header .menu-trigger.is-light { color: #fff; background: transparent; text-shadow: none; }
   .app-header.global-menu-header .menu-trigger:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 }
 
@@ -1050,7 +1050,7 @@
   }
 
   .app-header.global-menu-header .menu-trigger {
-    font-size: clamp(20px, 5.5vw, 26px);
+    font-size: clamp(18px, 4.6vw, 20px);
   }
 
   .menu-backdrop-left {

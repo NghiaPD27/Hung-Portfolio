@@ -898,7 +898,10 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                 animate={activeSlide === 13 ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 36, scale: 0.94 }}
                 transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                <img src={`${ASSET}/thank-you-logo.png`} alt="Biểu tượng EKO" />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet={`${ASSET}/logo.svg`} />
+                  <img src={`${ASSET}/thank-you-logo.png`} alt="Biểu tượng EKO" />
+                </picture>
               </motion.div>
               <motion.p
                 initial={false}

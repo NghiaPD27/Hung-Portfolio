@@ -1406,12 +1406,12 @@
   .eko-sign-grid.eko-mobile-gallery .eko-sign-surface { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 15px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-caption { position: relative; inset: auto; order: 2; padding: 0; font-size: clamp(15px, 5.64vw, 22px); line-height: 1.35; text-align: left; transform: none; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-image { position: relative; inset: auto; order: 1; width: 100%; height: 100%; min-height: 0; margin: 0; transform: none; }
-  .eko-sign-grid.eko-mobile-gallery .eko-sign-image img { position: absolute; top: -16.6%; left: 0; width: 100%; height: 148.94%; object-fit: cover; }
+  .eko-sign-grid.eko-mobile-gallery .eko-sign-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-action { display: none; }
   .eko-signs { justify-content: flex-start; padding-top: 8.77dvh; padding-bottom: 3dvh; }
   .eko-signs-title h2 { font-size: clamp(22px, 8.72vw, 34px); line-height: 1.2; }
-  .eko-signs .eko-sign-grid.eko-mobile-gallery { position: absolute; top: 42.536%; left: 20px; width: calc(100% - 40px); height: 54%; gap: 0; }
-  .eko-signs .eko-mobile-gallery-swiper { height: min(34.5dvh, 290px); }
+  .eko-signs .eko-sign-grid.eko-mobile-gallery { position: absolute; top: 32%; bottom: max(72px, calc(env(safe-area-inset-bottom, 0px) + 32px)); left: 20px; width: calc(100% - 40px); height: auto; grid-template-rows: minmax(0, 1fr) 44px; gap: 14px; }
+  .eko-signs .eko-mobile-gallery-swiper { height: 100%; min-height: 0; }
   .eko-signs .eko-mobile-gallery-swiper > .swiper-wrapper > .swiper-slide { padding: 0; }
   .eko-sign-grid.eko-mobile-gallery .eko-sign-card { width: 100% !important; max-width: none; border-radius: 0; }
   .eko-signs .eko-mobile-gallery-controls { align-self: end; justify-content: space-around; }
@@ -1436,6 +1436,8 @@
   .eko-identity-pattern img { width: 100%; height: 100%; object-fit: contain; }
   .eko-identity-strip { height: auto; object-fit: contain; border-radius: 0; }
   .eko-thank-logo img { filter: none; }
+  .eko-thank-logo { width: min(28vw, 110px); aspect-ratio: 195.53 / 188.14; }
+  .eko-thank-logo picture { display: contents; }
   .eko-image-frame .eko-image-mobile-heading,
   .eko-image-frame .eko-full-art { width: 100%; max-width: 334px; margin-inline: auto; }
 }

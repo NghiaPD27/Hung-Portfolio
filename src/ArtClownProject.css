@@ -2127,10 +2127,10 @@
   .art-mobile-gallery-controls button:focus-visible { outline: 2px solid #0242a6; outline-offset: 2px; }
 
   /* Stationery and billboard retain the existing interactive gallery/assets. */
-  .art-stationary { display: block; padding: 0; background: #ffea93; }
+  .art-stationary { display: block; padding: 0; background: #ffea93; --stationary-copy-and-nav-space: 220px; }
   .art-stationary h2 {
     position: absolute;
-    top: 18.48%;
+    top: 14.2%;
     left: 0;
     width: 100%;
     margin: 0;
@@ -2144,10 +2144,11 @@
 
   .art-stationary-figma-gallery {
     position: absolute;
-    top: 27.01%;
+    top: 22%;
     left: 50%;
     display: block;
-    width: min(84.615vw, 39.1dvh);
+    /* Keep the enlarged image, but reserve copy, controls and phone navigation space. */
+    width: min(84.615vw, 39.1dvh, calc((78dvh - var(--stationary-copy-and-nav-space) - env(safe-area-inset-bottom, 0px)) * 0.773196));
     transform: translateX(-50%);
   }
 
@@ -2183,4 +2184,8 @@
     border-radius: 20px;
     transform: none;
   }
+}
+
+@media (max-width: 768px) and (max-height: 680px) {
+  .art-stationary { --stationary-copy-and-nav-space: 240px; }
 }
