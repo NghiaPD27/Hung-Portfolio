@@ -978,7 +978,6 @@ function App() {
 
       {/* ================= HERO SECTION ================= */}
       <section className={`hero-section ${menuOpen ? 'menu-active' : ''}`} id="hero">
-        <button className="hero-mobile-back" type="button" onClick={() => window.history.back()} aria-label="Back">←</button>
         {/* Nền tím gradient tràn toàn màn hình */}
         <motion.img 
           src="/assets/purple-glow.png" 

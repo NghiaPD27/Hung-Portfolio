@@ -16,6 +16,19 @@ const mobileValueReveal = {
   open: { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0 },
 }
 
+function MobileGalleryControls({ className, onPrevious, onNext }) {
+  return (
+    <div className={`art-mobile-gallery-controls ${className}`}>
+      <button type="button" onClick={onPrevious} aria-label="Hình trước">
+        <img className="art-gallery-arrow-previous" src={`${MOBILE_ASSET}/gallery-arrow.svg`} alt="" draggable="false" />
+      </button>
+      <button type="button" onClick={onNext} aria-label="Hình tiếp theo">
+        <img className="art-gallery-arrow-next" src={`${MOBILE_ASSET}/gallery-arrow.svg`} alt="" draggable="false" />
+      </button>
+    </div>
+  )
+}
+
 function useImageSkeleton() {
   const [loadedKeys, setLoadedKeys] = useState(() => new Set())
 
@@ -292,9 +305,11 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
   const [activeSlide, setActiveSlide] = useState(0)
   const [isMobileLayout, setIsMobileLayout] = useState(() => window.matchMedia('(max-width: 768px)').matches)
   const [mobileValuesRevealed, setMobileValuesRevealed] = useState(false)
+  const [mobileStationaryIndex, setMobileStationaryIndex] = useState(0)
   const { isLoaded, markLoaded, registerRef } = useImageSkeleton()
   const swiperRef = useRef(null)
   const mobilePosterSwiperRef = useRef(null)
+  const mobileStationarySwiperRef = useRef(null)
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')
@@ -517,9 +532,9 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
               </div>
               <img className="art-logo-types-label" src={`${ASSET}/logo-types-label.svg`} alt="Các dạng logo" />
               <div className="art-logo-figma-mobile" aria-label="Ba dạng logo Art Clown">
-                <img src={`${ASSET}/logo-on-white.svg`} alt="Logo Art Clown màu đỏ" />
-                <img src={`${ASSET}/logo-black.svg`} alt="Logo Art Clown màu đen" />
-                <div className="art-figma-logo-reverse"><img src={`${ASSET}/logo-on-black.svg`} alt="Logo Art Clown âm bản trên nền đen" /></div>
+                <img src={`${MOBILE_ASSET}/logo-red.svg`} alt="Logo Art Clown màu đỏ" />
+                <img src={`${MOBILE_ASSET}/logo-black.svg`} alt="Logo Art Clown màu đen" />
+                <div className="art-figma-logo-reverse"><img src={`${MOBILE_ASSET}/logo-white.svg`} alt="Logo Art Clown âm bản trên nền đen" /></div>
                 <h2>CÁC<br />DẠNG<br />LOGO</h2>
               </div>
             </section>
@@ -605,7 +620,16 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                   <span className="art-app-tag">SYSTEM · IDENTITY</span>
                 </footer>
               </div>
-              <img className="art-logo-applications-figma-mobile" src={`${MOBILE_ASSET}/logo-applications-mobile.png`} alt="Logo Applications: bốn phiên bản logo Art Clown — chính, âm bản, đơn sắc và biểu tượng" loading="lazy" decoding="async" />
+              <div className="art-logo-applications-figma-mobile">
+                <img className="art-applications-board" src={`${MOBILE_ASSET}/logo-applications-mobile.png`} alt="Logo Applications — hệ phiên bản logo Art Clown" loading="lazy" decoding="async" />
+                {/* Restore the three marks missing from the uploaded mobile board. */}
+                <div className="art-applications-restored-reversed">
+                  <img src={`${ASSET}/logo-white.svg`} alt="REVERSED / Logo âm bản màu trắng" />
+                  <span>REVERSED / Âm bản</span>
+                </div>
+                <img className="art-applications-restored art-applications-restored-mono" src={`${ASSET}/logo-on-black.svg`} alt="MONO / Logo đơn sắc màu trắng" />
+                <img className="art-applications-restored art-applications-restored-mark" src={`${ASSET}/logo-mark-only.svg`} alt="MARK-ONLY / Biểu tượng Art Clown" />
+              </div>
             </section>
           </SlideFrame>
         </SwiperSlide>
@@ -655,10 +679,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                <div className="art-campaign-figma-controls">
-                  <button type="button" onClick={() => mobilePosterSwiperRef.current?.slidePrev()} aria-label="Poster trước">‹</button>
-                  <button type="button" onClick={() => mobilePosterSwiperRef.current?.slideNext()} aria-label="Poster tiếp theo">›</button>
-                </div>
+                <MobileGalleryControls className="art-campaign-figma-controls" onPrevious={() => mobilePosterSwiperRef.current?.slidePrev()} onNext={() => mobilePosterSwiperRef.current?.slideNext()} />
               </div>
             </section>
           </SlideFrame>
@@ -705,22 +726,33 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 ))}
               </Swiper>
               <span className="art-stationary-hint" aria-hidden="true">SCROLL / DRAG</span>
-              <Swiper
-                className="art-stationary-figma-mobile"
-                modules={[A11y]}
-                direction="horizontal"
-                slidesPerView={1}
-                speed={reducedMotion ? 0 : 750}
-                nested
-                grabCursor
-                a11y={{ enabled: true, prevSlideMessage: 'Ứng dụng trước', nextSlideMessage: 'Ứng dụng tiếp theo' }}
-              >
-                {[...stationary, ...stationaryExtra].map((src, index) => (
-                  <SwiperSlide key={src} tag="div" aria-label={`Ứng dụng văn phòng phẩm ${index + 1} trên 6`}>
-                    <img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" decoding="async" />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <div className="art-stationary-figma-gallery">
+                <Swiper
+                  className="art-stationary-figma-mobile"
+                  modules={[A11y]}
+                  direction="horizontal"
+                  slidesPerView={1}
+                  speed={reducedMotion ? 0 : 750}
+                  nested
+                  grabCursor
+                  onSwiper={(swiper) => { mobileStationarySwiperRef.current = swiper }}
+                  onSlideChange={(swiper) => setMobileStationaryIndex(swiper.activeIndex)}
+                  a11y={{ enabled: true, prevSlideMessage: 'Ứng dụng trước', nextSlideMessage: 'Ứng dụng tiếp theo' }}
+                >
+                  {[...stationary, ...stationaryExtra].map((src, index) => (
+                    <SwiperSlide key={src} tag="div" aria-label={`Ứng dụng văn phòng phẩm ${index + 1} trên 6`}>
+                      <img src={`${ASSET}/${src}`} alt={`Ứng dụng văn phòng phẩm Art Clown ${index + 1}`} loading="lazy" decoding="async" />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div className="art-stationary-mobile-copy">
+                  <span className="art-stationary-mobile-count" aria-live="polite">ỨNG DỤNG NHẬN DIỆN / {String(mobileStationaryIndex + 1).padStart(2, '0')} — 06</span>
+                  <h3>MORE ART. MORE SMILES.</h3>
+                  <p>Mang tinh thần Art Clown vào từng điểm chạm — từ quà tặng đến những vật phẩm đồng hành mỗi ngày.</p>
+                  <MobileGalleryControls className="art-stationary-mobile-controls" onPrevious={() => mobileStationarySwiperRef.current?.slidePrev()} onNext={() => mobileStationarySwiperRef.current?.slideNext()} />
+                  <span className="art-stationary-mobile-instruction">VUỐT NGANG / SCROLL · DRAG</span>
+                </div>
+              </div>
             </section>
           </SlideFrame>
         </SwiperSlide>

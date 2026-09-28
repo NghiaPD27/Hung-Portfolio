@@ -580,6 +580,16 @@
 
 /* Figma Mobile / About (390 × 844). The desktop artboard above is unchanged. */
 @media (max-width: 768px) {
+  .about-page.is-mobile-view .about-background-layer {
+    display: block;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
   .about-page.is-mobile-view .about-artboard.is-mobile-artboard {
     width: 100%;
     max-width: 600px;

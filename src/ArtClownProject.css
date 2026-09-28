@@ -60,7 +60,8 @@
 .art-logo-figma-mobile,
 .art-logo-applications-figma-mobile,
 .art-campaign-figma-mobile,
-.art-stationary-figma-mobile { display: none; }
+.art-stationary-figma-mobile,
+.art-stationary-figma-gallery { display: none; }
 
 .art-design-canvas {
   position: relative;
@@ -1604,8 +1605,8 @@
     border: 0;
     border-radius: 0;
     box-shadow: none;
-    font-size: clamp(10.5px, 2.95vw, 11.5px);
-    line-height: 1.4;
+    font-size: clamp(9.5px, 2.56vw, 10px);
+    line-height: 1.45;
     transform: none;
     transition: none;
   }
@@ -1994,20 +1995,21 @@
 
   .art-logo-figma-mobile img {
     position: absolute;
-    left: 11.8%;
-    width: min(21vw, 82px);
-    height: min(11dvh, 93px);
+    left: 11.79%;
+    width: min(20.256vw, 9.36dvh);
+    height: auto;
     object-fit: contain;
   }
 
-  .art-logo-figma-mobile img:nth-child(1) { top: 47.4%; }
-  .art-logo-figma-mobile img:nth-child(2) { top: 59%; }
+  .art-logo-figma-mobile > img:nth-child(1) { top: 47.51%; }
+  .art-logo-figma-mobile > img:nth-child(2) { top: 61.55%; left: 11.76%; width: min(20.412vw, 9.432dvh); }
   .art-logo-figma-mobile .art-figma-logo-reverse {
     position: absolute;
-    top: 75.6%;
-    left: 5.1%;
-    width: min(33.6vw, 131px);
-    height: min(15.5dvh, 131px);
+    top: 75.592%;
+    left: 5.128%;
+    width: min(33.59vw, 15.521dvh);
+    height: auto;
+    aspect-ratio: 1;
     display: grid;
     place-items: center;
     border-radius: 38%;
@@ -2018,18 +2020,18 @@
   .art-logo-figma-mobile .art-figma-logo-reverse img {
     position: static;
     display: block;
-    width: 78px;
-    height: 88px;
+    width: 60.761%;
+    height: auto;
     object-fit: contain;
   }
 
   .art-logo-figma-mobile h2 {
     position: absolute;
-    top: 57%;
-    left: 49.7%;
+    top: 56.872%;
+    left: 49.744%;
     margin: 0;
     color: #be1a1a;
-    font: 400 clamp(30px, 5.7dvh, 48px)/1.45 'Dela Gothic One', sans-serif;
+    font: 400 min(12.308vw, 5.687dvh)/1.45 'Dela Gothic One', sans-serif;
     white-space: nowrap;
   }
 
@@ -2044,10 +2046,29 @@
 
   .art-logo-applications-mobile { display: none; }
   .art-logo-applications-figma-mobile {
+    position: relative;
     display: block;
     width: 100%;
     height: auto;
   }
+
+  .art-applications-board { display: block; width: 100%; height: auto; }
+  .art-applications-restored { position: absolute; height: auto; object-fit: contain; pointer-events: none; }
+  .art-applications-restored-reversed {
+    position: absolute;
+    top: 38.67%;
+    left: 8.72%;
+    width: 82.56%;
+    height: 20.76%;
+    display: grid;
+    place-items: center;
+    padding-bottom: 24px;
+    background: radial-gradient(ellipse at 55% 45%, #df2520, #be1a1a 78%);
+  }
+  .art-applications-restored-reversed img { width: 34%; height: auto; }
+  .art-applications-restored-reversed span { position: absolute; bottom: 12px; left: 14px; color: #fff; font: 700 10px/1 'Montserrat', sans-serif; letter-spacing: 0.08em; }
+  .art-applications-restored-mono { top: 62.5%; left: 40%; width: 20%; }
+  .art-applications-restored-mark { top: 79.5%; left: 39%; width: 22%; }
 
   /* Campaign: one legible poster per view, with the Figma arrow controls. */
   .art-campaign { display: block; padding: 0; background: #fff; }
@@ -2098,7 +2119,7 @@
     transform: translateX(-50%);
   }
 
-  .art-campaign-figma-controls button {
+  .art-mobile-gallery-controls button {
     display: grid;
     width: 48px;
     height: 48px;
@@ -2107,11 +2128,19 @@
     border: 0;
     background: transparent;
     color: #0242a6;
-    font: 400 56px/0.5 Arial, sans-serif;
     cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 50%;
   }
 
-  .art-campaign-figma-controls button:focus-visible { outline: 2px solid #0242a6; outline-offset: 2px; }
+  .art-mobile-gallery-controls button img { display: block; width: 24px; height: 24px; pointer-events: none; }
+  .art-gallery-arrow-previous { transform: rotate(-90deg); }
+  .art-gallery-arrow-next { transform: rotate(90deg); }
+  .art-mobile-gallery-controls button:focus:not(:focus-visible) { outline: none; }
+  .art-mobile-gallery-controls button:focus-visible { outline: 2px solid #0242a6; outline-offset: 2px; }
 
   /* Stationery and billboard retain the existing interactive gallery/assets. */
   .art-stationary { display: block; padding: 0; background: #ffea93; }
@@ -2129,33 +2158,45 @@
   .art-stationary-swiper,
   .art-stationary-hint { display: none; }
 
-  .art-stationary-figma-mobile {
+  .art-stationary-figma-gallery {
     position: absolute;
     top: 27.01%;
     left: 50%;
     display: block;
-    width: min(77vw, 300px);
-    height: min(46dvh, 388px);
-    overflow: hidden;
-    border-radius: 20px;
+    width: min(76.923vw, 35.545dvh);
     transform: translateX(-50%);
   }
 
-  .art-stationary-figma-mobile .swiper-slide { width: 100%; height: 100%; }
-  .art-stationary-figma-mobile img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .art-stationary-figma-mobile {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 300 / 388;
+    overflow: hidden;
+    border-radius: 20px;
+  }
 
-  .art-billboard { display: block; padding: 0; background: #586573; }
+  .art-stationary-figma-mobile .swiper-slide { width: 100%; height: 100%; }
+  .art-stationary-figma-mobile img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+  .art-stationary-mobile-copy { margin-top: 14px; color: #800020; text-align: left; }
+  .art-stationary-mobile-count { display: block; font: 700 9px/1.4 'Montserrat', sans-serif; letter-spacing: 0.08em; }
+  .art-stationary-mobile-copy h3 { margin: 7px 0; font: 400 clamp(11px, 3.25vw, 14px)/1.4 'Dela Gothic One', sans-serif; }
+  .art-stationary-mobile-copy p { margin: 0; font: 500 10px/1.5 'Montserrat', sans-serif; }
+  .art-stationary-mobile-controls { display: flex; justify-content: space-between; margin-top: 8px; }
+  .art-stationary-mobile-instruction { display: block; font: 700 8px/1.4 'Montserrat', sans-serif; text-align: center; letter-spacing: 0.08em; }
+
+  .art-billboard { display: grid; place-items: center; padding: 0; background: #586573; }
   .art-billboard-mobile-heading { display: none; }
   .art-billboard > img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: static;
     width: calc(100% - 40px);
     height: auto;
     max-height: none;
     aspect-ratio: 350 / 234;
     object-fit: cover;
     border-radius: 20px;
-    transform: translate(-50%, -50%);
+    transform: none;
   }
 }

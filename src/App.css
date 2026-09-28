@@ -402,6 +402,21 @@
 }
 
 /* =================== HERO SECTION =================== */
+@media (min-width: 769px) {
+  .menu-white-drawer { height: 100dvh; overflow-y: auto; padding-bottom: clamp(32px, 6vh, 64px); }
+  .menu-mobile-contact { display: flex; flex: none; flex-direction: column; align-items: flex-start; margin-top: auto; padding-top: 48px; color: #070707; font-family: 'Montserrat', sans-serif; }
+  .menu-mobile-contact h2 { margin: 0 0 8px; font: 400 clamp(25px, 2.3vw, 36px)/1.3 'Dela Gothic One', sans-serif; }
+  .menu-mobile-contact-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; width: 100%; }
+  .menu-mobile-contact-line a { color: inherit; text-decoration: none; font-size: clamp(12px, 0.95vw, 15px); line-height: 1.6; }
+  .menu-mobile-contact-line a:hover { text-decoration: underline; }
+  .menu-mobile-socials { display: flex; flex-direction: column; gap: 9px; margin-top: 28px; font-size: 13px; }
+  .menu-mobile-socials span { display: flex; align-items: center; gap: 7px; }
+  .menu-mobile-socials i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; color: #fff; font: 800 13px/1 'Montserrat', sans-serif; }
+  .social-discord { background: #5865f2; }
+  .social-facebook { background: #1877f2; }
+  .social-instagram { background: linear-gradient(45deg, #ffbe38, #f5387f, #8a36d4); }
+}
+
 .hero-section {
   position: relative;
   width: 100%;

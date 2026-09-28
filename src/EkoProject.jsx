@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
+import { cleanupSensors } from './ekoCleanupSensors.js'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import Tilt from 'react-parallax-tilt'
 import useFineHover from './useFineHover.js'
@@ -10,7 +11,17 @@ import 'swiper/css/pagination'
 import './EkoProject.css'
 
 const ASSET = '/assets/eko'
+const MOBILE_ASSET = `${ASSET}/mobile-figma`
 const TOTAL_SLIDES = 14
+
+function MobileEkoPicture({ mobileSrc, children }) {
+  return (
+    <picture>
+      <source media="(max-width: 768px)" srcSet={`${MOBILE_ASSET}/${mobileSrc}`} />
+      {children}
+    </picture>
+  )
+}
 
 const trashItems = [
   { id: 'trash-1', src: 'trash-1.png', label: 'Mảnh rác thứ nhất', className: 'eko-trash-one' },
@@ -83,12 +94,14 @@ function EkoHero({ active, reducedMotion }) {
       onPointerMove={updatePointer}
       onPointerLeave={resetPointer}
     >
-      <motion.img
+      <MobileEkoPicture mobileSrc="hero-background.webp"><motion.img
         className="eko-hero-background"
         src={`${ASSET}/hero-background-opt.jpg`}
         alt="Phong cảnh thiên nhiên xanh"
+        decoding="async"
+        fetchPriority="high"
         style={{ x: backgroundX, y: backgroundY }}
-      />
+      /></MobileEkoPicture>
       <motion.img
         className="eko-hero-wave"
         src={`${ASSET}/hero-wave.png`}
@@ -96,7 +109,7 @@ function EkoHero({ active, reducedMotion }) {
         style={{ y: grassY }}
       />
       <div className="eko-hero-logo-anchor">
-        <motion.img
+        <MobileEkoPicture mobileSrc="hero-logo.png"><motion.img
           className="eko-hero-logo"
           src={`${ASSET}/logo.svg`}
           alt="EKO"
@@ -104,7 +117,7 @@ function EkoHero({ active, reducedMotion }) {
           initial={false}
           animate={active ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.75, rotate: -10 }}
           transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }}
-        />
+        /></MobileEkoPicture>
       </div>
     </section>
   )
@@ -131,7 +144,7 @@ function DraggableTrash({ item, collected, onKeyboardCollect }) {
       }}
     >
       <span className="eko-trash-crop">
-        <img src={`${ASSET}/${item.src}`} alt="" draggable="false" />
+        <img src={`${ASSET}/${item.src}`} alt="" draggable={false} />
       </span>
     </button>
   )
@@ -147,7 +160,7 @@ function TrashBin({ complete }) {
       animate={complete ? { rotate: [0, -2, 2, 0], scale: [1, 1.035, 1] } : { rotate: 0, scale: 1 }}
       transition={{ duration: 0.65 }}
     >
-      <img src={`${ASSET}/trash-bin.png`} alt="Thùng rác EKO" draggable="false" />
+      <img src={`${ASSET}/trash-bin.png`} alt="Thùng rác EKO" draggable={false} />
       <span>{isDropTarget ? 'THẢ VÀO ĐÂY' : complete ? 'SẠCH RỒI!' : 'DROP ZONE'}</span>
     </motion.div>
   )
@@ -198,11 +211,11 @@ function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
   }
 
   return (
-    <DragDropProvider onDragStart={() => onDraggingChange(true)} onDragEnd={handleDragEnd}>
+    <DragDropProvider sensors={cleanupSensors} onDragStart={() => onDraggingChange(true)} onDragEnd={handleDragEnd}>
       <section className={`eko-cleanup eko-full-canvas ${active ? 'is-active' : ''}`} aria-labelledby="eko-cleanup-title">
         <div className="eko-artboard-inner eko-cleanup-inner">
           <Reveal active={active} className="eko-cleanup-heading">
-            <h2 id="eko-cleanup-title">Lụm rác bỏ vô chứ nhìn cái gì!</h2>
+            <h2 id="eko-cleanup-title"><span className="eko-cleanup-title-desktop">Lụm rác bỏ vô chứ nhìn cái gì!</span><span className="eko-cleanup-title-mobile">Lụm rác bỏ vô<br />chứ nhìn cái gì !</span></h2>
             <span>Kéo từng mảnh rác vào thùng · {collected.length}/4</span>
           </Reveal>
 
@@ -232,6 +245,12 @@ function CleanupGame({ active, onDraggingChange, onCompleteChange }) {
           )}
         </div>
 
+        <div className="eko-pattern-marquee eko-pattern-marquee-top" aria-hidden="true">
+          <div className="eko-pattern-track">
+            <img src={`${ASSET}/pattern-strip.png`} alt="" />
+            <img src={`${ASSET}/pattern-strip.png`} alt="" />
+          </div>
+        </div>
         <div className="eko-pattern-marquee" aria-hidden="true">
           <div className="eko-pattern-track">
             <img src={`${ASSET}/pattern-strip.png`} alt="" />
@@ -511,9 +530,12 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
         <SwiperSlide tag="section" aria-label="Màn 3 trên 14: Logo EKO">
           <SlideFrame className="eko-black-frame">
             <section className="eko-logo-stage eko-full-canvas">
-              <img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" />
+              <MobileEkoPicture mobileSrc="logo-pattern.png"><img className="eko-brand-pattern" src={`${ASSET}/brand-pattern-opt.png`} alt="" decoding="async" /></MobileEkoPicture>
               <div className="eko-artboard-inner eko-logo-inner">
                 <p className="eko-logo-mobile-kicker">03 / BIỂU TƯỢNG NHẬN DIỆN</p>
+                <motion.div className="eko-logo-type-mobile" aria-label="LOGO" initial={false} animate={activeSlide === 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }} transition={{ duration: reducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1] }}>
+                  <p>LO</p><p>GO</p>
+                </motion.div>
                 <motion.img
                   className="eko-logo-type"
                   src={`${ASSET}/logo-type.svg`}
