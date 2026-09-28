@@ -1,0 +1,39 @@
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 64px;
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111;
+  font: 600 12px/1 'Montserrat', sans-serif;
+  cursor: pointer;
+}
+
+.language-switch.is-light { color: #fff; }
+.language-switch .is-current { font-weight: 900; text-decoration: underline; text-underline-offset: 4px; }
+.language-switch-divider { opacity: .5; }
+.language-switch:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.global-language-control {
+  position: fixed;
+  top: clamp(24px, 4.4vh, 50px);
+  right: calc(max(4.5%, 28px) + 142px);
+  z-index: 4999;
+}
+.menu-white-drawer > .language-switch.in-menu { position: absolute; top: 26px; left: 28px; }
+.menu-white-drawer .menu-close-btn { width: auto; white-space: nowrap; }
+html[lang='en'] .art-app-card-vn,
+html[lang='en'] .art-app-card-slash { display: none; }
+html[lang='vi'] .circus-copy h2 { column-gap: .14em; }
+html[lang='vi'] .about-hello { font-size: 110px; }
+html[lang='vi'] .about-page.is-mobile-view .about-hello { font-size: clamp(32px, 9vw, 50px); }
+
+@media (max-width: 900px) {
+  .global-language-control { top: max(16px, env(safe-area-inset-top, 16px)); right: calc(max(18px, env(safe-area-inset-right, 18px)) + 91px); }
+  .language-switch { font-size: 11px; }
+  .menu-white-drawer > .language-switch.in-menu { top: 18px; left: 18px; }
+}

@@ -1,12 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
 import EkoProject from './EkoProject'
 import PosterProject from './PosterProject'
+import LanguageSwitch from './LanguageSwitch'
 import './App.css'
 
 function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
+  const { t } = useTranslation()
   const cardRef = useRef(null)
   const pointerX = useMotionValue(50)
   const pointerY = useMotionValue(50)
@@ -52,8 +55,8 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
       <span className="branding-card-index">{index}</span>
       <img src={image} alt={imageAlt} />
       <span className="branding-project-name">{name}</span>
-      <small>{tagline}</small>
-      <span className="branding-card-action">XEM DỰ ÁN <b>↗</b></span>
+      <small>{t(tagline)}</small>
+      <span className="branding-card-action">{t("XEM DỰ ÁN")}{" "}<b>↗</b></span>
     </motion.button>
   )
 }
@@ -64,15 +67,17 @@ const globalMenuItems = [
 ]
 
 function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNavigate }) {
+  const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   return (
     <>
+      {!hidden && !open && <div className="global-language-control"><LanguageSwitch tone={tone} /></div>}
       <AnimatePresence>
       {!hidden && !open && !locked && <motion.header key="menu-trigger" className="app-header global-menu-header" exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.15 }}>
         <motion.button
           className={`menu-trigger is-${tone}`}
           onClick={onOpen}
-          aria-label={locked ? 'Hoàn thành thử thách nhặt rác để mở menu' : 'Open Navigation Menu'}
+          aria-label={locked ? t("Hoàn thành thử thách nhặt rác để mở menu") : t("Open Navigation Menu")}
           aria-expanded={open}
           aria-disabled={locked}
           disabled={locked}
@@ -82,9 +87,7 @@ function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNa
           transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : 0.2, ease: 'easeOut' }}
           whileHover={locked ? undefined : { scale: 1.05 }}
           whileTap={locked ? undefined : { scale: 0.95 }}
-        >
-          Menu +
-        </motion.button>
+        >{t("Menu +")}</motion.button>
       </motion.header>}
       </AnimatePresence>
 
@@ -107,11 +110,10 @@ function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNa
               exit={{ x: '100%' }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <button className="menu-close-btn" onClick={onClose} aria-label="Close Menu" type="button">
-                Close X
-              </button>
+              <LanguageSwitch inMenu />
+              <button className="menu-close-btn" onClick={onClose} aria-label={t("Close Menu")} type="button">{t("Close X")}</button>
 
-              <nav className="menu-nav-list" aria-label="Điều hướng chính">
+              <nav className="menu-nav-list" aria-label={t("Điều hướng chính")}>
                 {globalMenuItems.map((item, index) => (
                   <motion.button
                     key={item.num}
@@ -123,17 +125,17 @@ function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNa
                     transition={{ duration: 0.45, delay: 0.15 + index * 0.07, ease: [0.16, 1, 0.3, 1] }}
                   >
                     <span className="nav-item-num">{item.num}</span>
-                    <span className="nav-item-title">{item.title}</span>
+                    <span className="nav-item-title">{t(item.title)}</span>
                   </motion.button>
                 ))}
               </nav>
               <div className="menu-mobile-contact">
-                <h2>CONTACT</h2>
+                <h2>{t("CONTACT")}</h2>
                 <div className="menu-mobile-contact-line">
                   <a href="mailto:truongquochung2604@gmail.com">truongquochung2604@gmail.com</a>
                   <a href="tel:+84799853984">0799853984</a>
                 </div>
-                <div className="menu-mobile-socials" aria-label="Social profiles">
+                <div className="menu-mobile-socials" aria-label={t("Social profiles")}>
                   <span><img src="/assets/contact/discord.svg" alt="Discord" />hugtruog</span>
                   <span><img src="/assets/contact/facebook.svg" alt="Facebook" />Hùng Trương</span>
                   <span><img src="/assets/contact/instagram.svg" alt="Instagram" />04_.hu</span>
@@ -148,6 +150,7 @@ function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNa
 }
 
 function App() {
+  const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
@@ -821,7 +824,7 @@ function App() {
       tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isPosterOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
-      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition}
+      hidden={(currentMenuPage === 'home' && !!selectedProject) || isAboutTransitioning || !!projectTransition}
       onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
       onClose={() => setMenuOpen(false)}
       onNavigate={navigateFromGlobalMenu}
@@ -892,15 +895,14 @@ function App() {
               animate={{ opacity: 1, y: 0, letterSpacing: '0.08em' }}
               transition={{ duration: reducedMotion ? 0 : 0.58, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >
-              <small>ENTERING / PERSONAL SPACE</small>
-              <strong>HELLO.</strong>
+              <small>{t("ENTERING / PERSONAL SPACE")}</small>
+              <strong>{t("HELLO.")}</strong>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {projectTransition && (
-          <motion.div
+        {projectTransition && <motion.div
             className={`project-route-transition is-${projectTransition}`}
             initial={projectTransition === 'eko' || projectTransition === 'poster'
               ? { clipPath: 'circle(0% at 50% 50%)' }
@@ -938,8 +940,7 @@ function App() {
               <small>{projectTransition === 'poster' ? 'FOUR FRAMES / ONE DREAM' : projectTransition === 'eko' ? 'CLEAN EARTH / BRIGHT FUTURE' : 'PLAY / CREATE / BELONG'}</small>
               <strong>{projectTransition === 'poster' ? 'DREAMCORE' : projectTransition === 'eko' ? 'E-KO' : 'ART CLOWN'}</strong>
             </motion.div>
-          </motion.div>
-        )}
+          </motion.div>}
       </AnimatePresence>
       {/* ================= MÀN MỞ ĐẦU ĐIỆN ẢNH (CINEMATIC INTRO CURTAIN) ================= */}
       <AnimatePresence>
@@ -973,9 +974,7 @@ function App() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
-            >
-              The idea becomes visual
-            </motion.p>
+            >{t("The idea becomes visual")}</motion.p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1084,9 +1083,7 @@ function App() {
             initial={reducedMotion ? false : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            DESIGNER
-          </motion.h3>
+          >{t("DESIGNER")}</motion.h3>
         </div>
 
         {/* Dải Marquee Chữ Chạy Vô Tận */}
@@ -1097,12 +1094,12 @@ function App() {
           transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.7 }}
         >
           <div className="marquee-inner">
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
-            <span className="marquee-item">! The idea becomes visual ! !&nbsp;&nbsp;</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
+            <span className="marquee-item">{t("! The idea becomes visual ! !")}{" "}</span>
           </div>
         </motion.div>
       </section>
@@ -1116,8 +1113,8 @@ function App() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="product-main-title">PRODUCT</h2>
-          <p className="product-sub-title">SẢN PHẨM</p>
+          <h2 className="product-main-title">{t("PRODUCT")}</h2>
+          <p className="product-sub-title">{t("SẢN PHẨM")}</p>
         </motion.div>
 
         {/* Danh sách thẻ dạng Folder với Motion */}
@@ -1156,8 +1153,8 @@ function App() {
 
               {/* Lớp thân thẻ phía trước: Màu kem sáng bo tròn 4 góc 18px */}
               <div className="folder-front-card">
-                <h3 className="folder-heading">{project.title}</h3>
-                <p className="folder-vietnamese">{project.vietnamese}</p>
+                <h3 className="folder-heading">{t(project.title)}</h3>
+                <p className="folder-vietnamese">{t(project.vietnamese)}</p>
               </div>
             </motion.button>
           ))}
@@ -1190,9 +1187,9 @@ function App() {
               </button>
               {selectedProject.id === 'branding' ? (
                 <>
-                  <span className="folder-tag">BRANDING PROJECTS • 2026</span>
-                  <h3 className="modal-title branding-picker-title">CHỌN DỰ ÁN</h3>
-                  <p className="branding-picker-copy">Hai bộ nhận diện, hai thế giới thương hiệu khác nhau.</p>
+                  <span className="folder-tag">{t("BRANDING PROJECTS • 2026")}</span>
+                  <h3 className="modal-title branding-picker-title">{t("CHỌN DỰ ÁN")}</h3>
+                  <p className="branding-picker-copy">{t("Hai bộ nhận diện, hai thế giới thương hiệu khác nhau.")}</p>
                   <div className="branding-project-grid">
                     <BrandingProjectCard
                       className="is-art-clown"
@@ -1216,10 +1213,10 @@ function App() {
                 </>
               ) : (
                 <>
-                  <span className="folder-tag">{selectedProject.tag} • {selectedProject.year}</span>
-                  <h3 className="modal-title">{selectedProject.title}</h3>
-                  <h4 className="modal-subtitle">{selectedProject.vietnamese}</h4>
-                  <p className="modal-content">{selectedProject.description}</p>
+                  <span className="folder-tag">{t(selectedProject.tag)} • {selectedProject.year}</span>
+                  <h3 className="modal-title">{t(selectedProject.title)}</h3>
+                  <h4 className="modal-subtitle">{t(selectedProject.vietnamese)}</h4>
+                  <p className="modal-content">{t(selectedProject.description)}</p>
                 </>
               )}
             </motion.div>
