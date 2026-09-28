@@ -11,6 +11,11 @@ import useFineHover from './useFineHover.js'
 const ASSET = '/assets/art-clown/source'
 const MOBILE_ASSET = '/assets/art-clown/mobile-figma'
 
+const mobileValueReveal = {
+  closed: { clipPath: 'inset(0% 0% 100% 0%)', opacity: 0, y: -6 },
+  open: { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0 },
+}
+
 function useImageSkeleton() {
   const [loadedKeys, setLoadedKeys] = useState(() => new Set())
 
@@ -450,7 +455,8 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                       <motion.span
                         className="art-value-description"
                         initial={false}
-                        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -6 }}
+                        variants={mobileValueReveal}
+                        animate={isOpen ? 'open' : 'closed'}
                         transition={{ duration: reducedMotion ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
                         aria-hidden={!isOpen}
                       >{value.description}</motion.span>

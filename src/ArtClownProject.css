@@ -1544,9 +1544,10 @@
     top: auto;
     bottom: 0;
     left: calc(50% + 0.5px);
-    width: 76.667%;
-    height: 85.545%;
-    object-fit: fill;
+    /* Fit both viewport axes without changing the source image's 700:1690 ratio. */
+    width: min(76.667vw, 35.433dvh);
+    height: auto;
+    object-fit: contain;
     opacity: 1;
     transform: translateX(-50%) scaleX(-1);
     pointer-events: none;
@@ -1598,9 +1599,11 @@
     max-height: none;
     margin: 0;
     overflow: hidden;
-    padding: 0 0;
-    background: rgba(247, 243, 235, 0.94);
-    border-radius: 4px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     font-size: clamp(10.5px, 2.95vw, 11.5px);
     line-height: 1.4;
     transform: none;
