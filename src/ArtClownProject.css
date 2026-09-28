@@ -1528,6 +1528,86 @@
   }
 }
 
+/* Mobile Frame 11 / 700:50 — leave the desktop values interaction unchanged. */
+@media (max-width: 768px) {
+  .art-clown-project .art-values {
+    display: block;
+    padding: 0;
+    background: #f7f3eb;
+  }
+
+  .art-values .art-values-mobile-heading,
+  .art-values .art-values-wordmark,
+  .art-values .art-balloons-skeleton { display: none; }
+
+  .art-values .art-balloons {
+    top: auto;
+    bottom: 0;
+    left: calc(50% + 0.5px);
+    width: 76.667%;
+    height: 85.545%;
+    object-fit: fill;
+    opacity: 1;
+    transform: translateX(-50%) scaleX(-1);
+    pointer-events: none;
+  }
+
+  .art-values .art-value {
+    position: absolute !important;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .art-values .art-value-one {
+    top: 7.82% !important;
+    left: 5.128% !important;
+    right: auto !important;
+    width: 89.744% !important;
+  }
+
+  .art-values .art-value-two {
+    top: 67.299% !important;
+    left: 38.718% !important;
+    right: 5.128% !important;
+    width: 56.154% !important;
+    text-align: right !important;
+  }
+
+  .art-values .art-value-three {
+    top: 85.19% !important;
+    left: 5.128% !important;
+    right: auto !important;
+    width: 89.744% !important;
+  }
+
+  .art-values .art-value-title {
+    font-size: clamp(17px, 5.128vw, 20px);
+    line-height: 1.45;
+  }
+
+  .art-values .art-value-description,
+  .art-values .art-value:hover .art-value-description,
+  .art-values .art-value:focus-visible .art-value-description,
+  .art-values .art-value.is-open .art-value-description {
+    max-height: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 0;
+    background: rgba(247, 243, 235, 0.94);
+    border-radius: 4px;
+    font-size: clamp(10.5px, 2.95vw, 11.5px);
+    line-height: 1.4;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Mobile editorial rails keep each print readable without changing the desktop frames. */
 .art-campaign-mobile-hint { display: none; }
 

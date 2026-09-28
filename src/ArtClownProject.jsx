@@ -285,16 +285,35 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
   const reducedMotion = useReducedMotion()
   const [openValue, setOpenValue] = useState(null)
   const [activeSlide, setActiveSlide] = useState(0)
+  const [isMobileLayout, setIsMobileLayout] = useState(() => window.matchMedia('(max-width: 768px)').matches)
+  const [mobileValuesRevealed, setMobileValuesRevealed] = useState(false)
   const { isLoaded, markLoaded, registerRef } = useImageSkeleton()
   const swiperRef = useRef(null)
   const mobilePosterSwiperRef = useRef(null)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    const update = () => {
+      setMobileValuesRevealed(false)
+      setIsMobileLayout(media.matches)
+    }
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (!isMobileLayout || activeSlide !== 1) return undefined
+    // Each visit starts collapsed; leaving cancels the pending reveal.
+    const revealTimer = window.setTimeout(() => setMobileValuesRevealed(true), 2500)
+    return () => window.clearTimeout(revealTimer)
+  }, [activeSlide, isMobileLayout])
 
   useEffect(() => {
     const handleHash = () => {
       const match = window.location.hash.match(/^#art-clown-(\d+)$/)
       if (match) {
         const target = parseInt(match[1], 10)
-        if (target !== activeSlide && swiperRef.current) {
+        if (swiperRef.current && target !== swiperRef.current.activeIndex) {
           swiperRef.current.slideTo(target, 0)
         }
         setActiveSlide(target)
@@ -303,7 +322,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
     handleHash()
     window.addEventListener('hashchange', handleHash)
     return () => window.removeEventListener('hashchange', handleHash)
-  }, [activeSlide])
+  }, [])
 
   useEffect(() => {
     if (activeSlide !== 0 || reducedMotion) {
@@ -372,7 +391,10 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         pagination={{ clickable: true }}
         a11y={{ enabled: true, prevSlideMessage: 'Màn trước', nextSlideMessage: 'Màn tiếp theo', paginationBulletMessage: 'Đi đến màn {{index}}' }}
         onSwiper={(swiper) => { swiperRef.current = swiper }}
-        onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+        onSlideChange={(swiper) => {
+          setMobileValuesRevealed(false)
+          setActiveSlide(swiper.activeIndex)
+        }}
       >
         <SwiperSlide tag="section" aria-label="Màn 1 trên 8: Hero Art Clown">
           <SlideFrame className="art-slide-hero">
@@ -411,7 +433,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                 <h2>GIÁ TRỊ THƯƠNG HIỆU</h2>
               </div>
               {brandValues.map((value, index) => {
-                const isOpen = openValue === index
+                const isOpen = isMobileLayout ? mobileValuesRevealed && activeSlide === 1 : openValue === index
                 return (
                   <button
                     className={`art-value ${value.className}${isOpen ? ' is-open' : ''}`}
@@ -419,10 +441,22 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
                     type="button"
                     aria-expanded={isOpen}
                     aria-label={`${value.label || value.title}. ${value.description}`}
-                    onClick={() => setOpenValue(isOpen ? null : index)}
+                    onClick={() => {
+                      if (!isMobileLayout) setOpenValue(isOpen ? null : index)
+                    }}
                   >
                     <span className="art-value-title">{value.title}</span>
-                    <span className="art-value-description">{value.description}</span>
+                    {isMobileLayout ? (
+                      <motion.span
+                        className="art-value-description"
+                        initial={false}
+                        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -6 }}
+                        transition={{ duration: reducedMotion ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+                        aria-hidden={!isOpen}
+                      >{value.description}</motion.span>
+                    ) : (
+                      <span className="art-value-description">{value.description}</span>
+                    )}
                   </button>
                 )
               })}
