@@ -183,7 +183,7 @@ function ValuesWordmark({ reducedMotion }) {
       viewport={{ amount: 0.55 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
     >
-      <span className="art-values-wordmark-art">ART</span>
+      <span className="art-values-wordmark-art" data-mobile-word="A R T">ART</span>
       <span className="art-values-wordmark-clown">CLOWN</span>
     </motion.div>
   )

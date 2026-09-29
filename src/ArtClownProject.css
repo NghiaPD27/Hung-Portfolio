@@ -285,7 +285,7 @@
   z-index: 0;
   inset: 0;
   overflow: hidden;
-  color: rgba(128, 0, 32, 0.11);
+  color: rgba(2, 66, 166, 0.16);
   font-family: 'Dela Gothic One', sans-serif;
   font-weight: 400;
   line-height: 0.78;
@@ -329,7 +329,7 @@
   display: block;
   padding: 0;
   border: 0;
-  color: #800020;
+  color: #0242a6;
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -368,7 +368,7 @@
 }
 
 .art-value:focus-visible {
-  outline: 0.18cqw solid rgba(128, 0, 32, 0.45);
+  outline: 0.18cqw solid rgba(2, 66, 166, 0.45);
   outline-offset: 0.6cqw;
   border-radius: 0.4cqw;
 }
@@ -1317,15 +1317,38 @@
   }
 
   .art-values .art-values-mobile-heading,
-  .art-values .art-values-wordmark,
   .art-values .art-balloons-skeleton { display: none; }
+
+  .art-values .art-values-wordmark { display: block; }
+  .art-values .art-values-wordmark-art {
+    top: 29.5%;
+    left: 5.128%;
+    width: 89.744%;
+    font-size: 0;
+    letter-spacing: .02em;
+    text-align: justify;
+    text-align-last: justify;
+  }
+  .art-values .art-values-wordmark-art::before {
+    content: attr(data-mobile-word);
+    display: block;
+    font-size: 19.5cqw;
+  }
+  .art-values .art-values-wordmark-clown {
+    top: 60%;
+    bottom: auto;
+    left: 5.128%;
+    right: auto;
+    font-size: 19.5cqw;
+    letter-spacing: -.055em;
+  }
 
   .art-values .art-balloons {
     top: auto;
     bottom: 0;
     left: calc(50% + 0.5px);
     /* Fit both viewport axes without changing the source image's 700:1690 ratio. */
-    width: min(76.667vw, 35.433dvh);
+    width: min(60vw, 27.73dvh);
     height: auto;
     object-fit: contain;
     opacity: 1;
@@ -1346,14 +1369,14 @@
   }
 
   .art-values .art-value-one {
-    top: 7.82% !important;
+    top: 8.65% !important;
     left: 5.128% !important;
     right: auto !important;
     width: 89.744% !important;
   }
 
   .art-values .art-value-two {
-    top: 67.299% !important;
+    top: 24.3% !important;
     left: 38.718% !important;
     right: 5.128% !important;
     width: 56.154% !important;
@@ -1361,14 +1384,14 @@
   }
 
   .art-values .art-value-three {
-    top: 85.19% !important;
+    top: 78.55% !important;
     left: 5.128% !important;
     right: auto !important;
     width: 89.744% !important;
   }
 
   .art-values .art-value-title {
-    font-size: clamp(14px, 4.1vw, 16px);
+    font-size: clamp(16px, 5.13cqw, 22px);
     line-height: 1.45;
   }
 
