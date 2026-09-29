@@ -349,7 +349,7 @@
 
 /* 15 — Thank you */
 .eko-thank-you { background: #fff; color: #000; }
-.eko-thank-logo { position: absolute; top: 23.667%; right: 0; left: 0; width: min(21.319vw, 34.111dvh); height: min(19.861vw, 31.778dvh); margin-inline: auto; overflow: hidden; }
+.eko-thank-logo { position: absolute; top: 27%; right: 0; left: 0; width: min(12vw, 20dvh); height: auto; aspect-ratio: 195.53 / 188.14; margin-inline: auto; overflow: hidden; }
 .eko-thank-logo img { display: block; width: 100%; height: 100%; max-width: none; object-fit: contain; }
 .eko-thank-you > p {
   position: absolute;
@@ -1438,7 +1438,6 @@
   .eko-identity-strip { height: auto; object-fit: contain; border-radius: 0; }
   .eko-thank-logo img { filter: none; }
   .eko-thank-logo { width: min(28vw, 110px); aspect-ratio: 195.53 / 188.14; }
-  .eko-thank-logo picture { display: contents; }
   .eko-image-frame .eko-image-mobile-heading,
   .eko-image-frame .eko-full-art { width: 100%; max-width: 334px; margin-inline: auto; }
 }
