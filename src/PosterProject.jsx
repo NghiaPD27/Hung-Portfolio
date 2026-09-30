@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCreative, Keyboard, Mousewheel } from 'swiper/modules'
+import { EffectCreative, Keyboard } from 'swiper/modules'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
@@ -52,38 +53,78 @@ const posters = [
   },
 ]
 
-function PosterProject({ onBack, onAudioUnlock }) {
+const vietnamPosters = [
+  { number: '01', image: '/assets/poster/vietnam/1.webp', thumbnail: '/assets/poster/vietnam/1-thumb.webp', alt: 'Poster Nguyễn Huệ với kiến trúc xanh và bầu trời Sài Gòn', title: 'Nguyễn Huệ sau 5 giờ', category: 'ĐÔ THỊ / SÀI GÒN', color: '#075f79' },
+  { number: '02', image: '/assets/poster/vietnam/2.webp', thumbnail: '/assets/poster/vietnam/2-thumb.webp', alt: 'Poster cà phê bệt Sài Gòn trên thảm cỏ', title: 'Cà phê bệt Sài Gòn', category: 'ĐỜI SỐNG / VĂN HÓA', color: '#448922' },
+  { number: '03', image: '/assets/poster/vietnam/3.webp', thumbnail: '/assets/poster/vietnam/3-thumb.webp', alt: 'Poster Việt Nam Quốc Tự với mái chùa trên nền đỏ', title: 'Việt Nam Quốc Tự', category: 'DI SẢN / KIẾN TRÚC', color: '#bd2e21' },
+  { number: '04', image: '/assets/poster/vietnam/4.webp?v=2', thumbnail: '/assets/poster/vietnam/4-thumb.webp?v=2', alt: 'Poster Hương Sắc Việt với trang phục truyền thống, hoa xuân và họa tiết mây', title: 'Hương Sắc Việt', category: 'TRANG PHỤC / VĂN HÓA', color: '#ad5445' },
+]
+
+function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
+  const dreamcoreSectionRef = useRef(null)
+  const dreamcoreInView = useInView(dreamcoreSectionRef, { amount: 0.5 })
+  const vietnamSectionRef = useRef(null)
+  const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
   const [active, setActive] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
+  const [vietnamZoom, setVietnamZoom] = useState(null)
+
+  useEffect(() => {
+    onMenuToneChange?.(vietnamInView ? 'light' : 'dark')
+  }, [onMenuToneChange, vietnamInView])
+
+  useEffect(() => {
+    onDreamcoreVisibilityChange?.(dreamcoreInView)
+  }, [onDreamcoreVisibilityChange, dreamcoreInView])
 
   const goTo = useCallback((index) => {
     setZoomOpen(false)
     swiperRef.current?.slideTo(index)
   }, [])
 
+  const scrollToSection = useCallback((id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
+  }, [reducedMotion])
+
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key !== 'Escape') return
       if (zoomOpen) setZoomOpen(false)
+      else if (vietnamZoom) setVietnamZoom(null)
       else onBack()
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [zoomOpen, onBack])
+  }, [zoomOpen, vietnamZoom, onBack])
 
   return (
     <main
-      className="poster-project"
-      aria-label="Bộ sưu tập poster Dreamcore"
-      onPointerDown={(event) => {
-        if (!event.target.closest('.poster-back')) onAudioUnlock?.()
-      }}
+      className={`poster-project${zoomOpen || vietnamZoom ? ' has-lightbox' : ''}`}
+      aria-label="Bộ sưu tập poster"
     >
+      <section className="poster-index" id="poster-index" aria-labelledby="poster-index-title">
+        <div className="poster-index-grid" aria-hidden="true" />
+        <motion.div className="poster-index-copy" initial={reducedMotion ? false : { opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
+          <span className="poster-index-overline"><i /> VISUAL STORIES / SELECTED POSTERS</span>
+          <h1 id="poster-index-title">POSTER<span>.</span></h1>
+          <p>Mỗi tấm poster là một thế giới riêng — từ giấc mơ siêu thực đến nhịp sống Việt Nam đương đại.</p>
+          <div className="poster-index-meta"><span>02 CHƯƠNG</span><span>{String(posters.length + vietnamPosters.length).padStart(2, '0')} TÁC PHẨM</span><span>2026</span></div>
+          <button className="poster-index-enter" type="button" onClick={() => scrollToSection('poster-dreamcore')}>KHÁM PHÁ BỘ SƯU TẬP <span aria-hidden="true">↓</span></button>
+        </motion.div>
+        <div className="poster-index-preview" aria-hidden="true">
+          <motion.figure className="poster-index-preview-card is-dream" initial={reducedMotion ? false : { opacity: 0, rotate: -15, y: 110 }} animate={{ opacity: 1, rotate: -8, y: 0 }} transition={{ duration: 0.95, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}><img src={posters[0].thumbnail} alt="" /><figcaption>01 / DREAMCORE</figcaption></motion.figure>
+          <motion.figure className="poster-index-preview-card is-vietnam" initial={reducedMotion ? false : { opacity: 0, rotate: 17, y: 130 }} animate={{ opacity: 1, rotate: 7, y: 0 }} transition={{ duration: 0.95, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}><img src={vietnamPosters[2].thumbnail} alt="" /><figcaption>02 / VIỆT NAM</figcaption></motion.figure>
+          <motion.span className="poster-index-stamp" initial={reducedMotion ? false : { scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: -16 }} transition={{ type: 'spring', stiffness: 180, damping: 15, delay: 0.56 }}>HÌNH ẢNH<br />KỂ CHUYỆN ↗</motion.span>
+        </div>
+        <span className="poster-index-edge">SCROLL TO EXPLORE ↘</span>
+      </section>
+
+      <section className="poster-dreamcore-section" id="poster-dreamcore" ref={dreamcoreSectionRef} aria-label="Chương 1: Dreamcore" onPointerDown={() => onDreamcoreVisibilityChange?.(true)}>
       <Swiper
         className="poster-swiper"
-        modules={[EffectCreative, Keyboard, Mousewheel]}
+        modules={[EffectCreative, Keyboard]}
         effect="creative"
         creativeEffect={{
           limitProgress: 1,
@@ -91,8 +132,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
           next: { translate: ['105%', 0, -280], rotate: [0, 0, 7], opacity: 0.25 },
         }}
         speed={reducedMotion ? 0 : 950}
-        keyboard={{ enabled: true }}
-        mousewheel={{ enabled: true, releaseOnEdges: true, thresholdDelta: 18, thresholdTime: 550 }}
+        keyboard={{ enabled: true, onlyInViewport: true }}
         preventInteractionOnTransition
         grabCursor
         onSwiper={(swiper) => { swiperRef.current = swiper }}
@@ -114,14 +154,14 @@ function PosterProject({ onBack, onAudioUnlock }) {
                 >
                   VISUAL EXPERIMENT / 2026
                 </motion.span>
-                <motion.h1
+                <motion.h2
                   className="poster-series-title"
                   initial={reducedMotion ? false : { opacity: 0, x: -30 }}
                   animate={active === index ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                   transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : 0.27, ease: [0.16, 1, 0.3, 1] }}
                 >
                   DREAM<br /><span>CORE</span><b aria-hidden="true">.</b>
-                </motion.h1>
+                </motion.h2>
                 <motion.div
                   className="poster-scene-caption"
                   initial={reducedMotion ? false : { opacity: 0, y: 26 }}
@@ -170,7 +210,7 @@ function PosterProject({ onBack, onAudioUnlock }) {
       >
         <span aria-hidden="true">←</span> BACK
       </motion.button>
-      <div className="poster-topline" aria-hidden="true"><span>POSTER / DREAMCORE</span><span>VOL. 01 — 04</span></div>
+      <div className="poster-topline" aria-hidden="true"><span>POSTER / DREAMCORE</span><span>CHAPTER 01 — 02</span></div>
 
       <div className="poster-bottom-rail">
         <div className="poster-rail-caption">Bốn khung hình<br />một thế giới mơ.</div>
@@ -197,6 +237,32 @@ function PosterProject({ onBack, onAudioUnlock }) {
           <button type="button" aria-label="Poster tiếp theo" disabled={active === posters.length - 1} onClick={() => goTo(active + 1)}>→</button>
         </div>
       </div>
+      <button className="poster-next-chapter" type="button" onClick={() => scrollToSection('poster-vietnam')}>TIẾP THEO / VIỆT NAM <span aria-hidden="true">↓</span></button>
+      </section>
+
+      <section className="poster-vietnam-section" id="poster-vietnam" ref={vietnamSectionRef} aria-labelledby="poster-vietnam-title">
+        <div className="poster-vietnam-topline"><span>TẬP SAN THỊ GIÁC / 02</span><span>ĐẤT NƯỚC · CON NGƯỜI</span></div>
+        <motion.header className="poster-vietnam-header" initial={reducedMotion ? false : { opacity: 0, y: 48 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
+          <div><span className="poster-vietnam-kicker">NHỮNG LÁT CẮT ĐƯƠNG ĐẠI</span><h2 id="poster-vietnam-title">VIỆT<span> NAM</span></h2></div>
+          <p>Nét phố, nếp sống, di sản — Việt Nam trong bốn khung hình.</p>
+          <div className="poster-vietnam-seal" aria-hidden="true"><strong>04</strong><span>KHUNG<br />HÌNH</span></div>
+        </motion.header>
+        <div className="poster-vietnam-gallery">
+          <div className="poster-vietnam-guide"><span>BỐN TÁC PHẨM / MỘT HÀNH TRÌNH</span><span>CHẠM VÀO TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
+          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 700: 4 }} gutterBreakPoints={{ 0: '9px', 700: '18px' }}>
+            <Masonry className="poster-vietnam-masonry" sequential>
+              {vietnamPosters.map((poster, index) => (
+                <motion.button className="poster-vietnam-card" type="button" key={poster.number} style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} initial={reducedMotion ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : index * 0.1, ease: [0.16, 1, 0.3, 1] }} whileHover={reducedMotion ? undefined : { y: -8 }} whileTap={{ scale: 0.98 }} aria-label={`Phóng to poster ${poster.title}`}>
+                  <span className="poster-vietnam-card-top"><span>TÁC PHẨM {poster.number} / 04</span><span>VIỆT NAM</span></span>
+                  <img src={poster.image} alt={poster.alt} loading="lazy" draggable="false" />
+                  <span className="poster-vietnam-card-foot"><strong>{poster.title}</strong><small>{poster.category}</small></span>
+                </motion.button>
+              ))}
+            </Masonry>
+          </ResponsiveMasonry>
+        </div>
+        <div className="poster-vietnam-footer"><span>NHỮNG CÂU CHUYỆN TỪ NƠI MÌNH SỐNG</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU TRANG ↑</button></div>
+      </section>
 
       <AnimatePresence>
         {zoomOpen && (
@@ -221,6 +287,14 @@ function PosterProject({ onBack, onAudioUnlock }) {
               onClick={(event) => event.stopPropagation()}
             />
             <button type="button" onClick={() => setZoomOpen(false)} aria-label="Đóng poster phóng to">ĐÓNG ×</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {vietnamZoom && (
+          <motion.div className="poster-lightbox" role="dialog" aria-modal="true" aria-label={`Poster ${vietnamZoom.title} phóng to`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.28 }} onClick={() => setVietnamZoom(null)}>
+            <motion.img src={vietnamZoom.image} alt={vietnamZoom.alt} initial={reducedMotion ? false : { scale: 0.87, y: 35, rotate: 2 }} animate={{ scale: 1, y: 0, rotate: 0 }} exit={{ scale: 0.93, y: 20 }} transition={{ duration: reducedMotion ? 0 : 0.52, ease: [0.16, 1, 0.3, 1] }} onClick={(event) => event.stopPropagation()} />
+            <button type="button" onClick={() => setVietnamZoom(null)} aria-label="Đóng poster phóng to">ĐÓNG ×</button>
           </motion.div>
         )}
       </AnimatePresence>

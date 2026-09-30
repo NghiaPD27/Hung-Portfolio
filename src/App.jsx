@@ -164,7 +164,7 @@ function App() {
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
   const [projectTransition, setProjectTransition] = useState(null)
   const [isAboutSoundOn, setIsAboutSoundOn] = useState(false)
-  const [routeMenuTone, setRouteMenuTone] = useState('light')
+  const [routeMenuTone, setRouteMenuTone] = useState(() => window.location.hash.startsWith('#poster') ? 'dark' : 'light')
   const [routeNavigationLocked, setRouteNavigationLocked] = useState(false)
   const productScrollPosition = useRef(0)
   const returnToBrandingPicker = useRef(false)
@@ -472,7 +472,7 @@ function App() {
   }, [ensurePosterAudio, fadePosterAudio])
 
   useEffect(() => {
-    setPosterAudioActive(isPosterOpen)
+    if (!isPosterOpen) setPosterAudioActive(false)
   }, [isPosterOpen, setPosterAudioActive])
 
   // Tự động kéo màn mở đầu sau 1.2s
@@ -727,18 +727,15 @@ function App() {
     productScrollPosition.current = window.scrollY
     setSelectedProject(null)
     setMenuOpen(false)
+    setRouteMenuTone('dark')
     primePosterAudio()
-    setProjectTransition('poster')
-    projectTransitionTimer.current = window.setTimeout(() => {
-      window.history.pushState({ poster: true }, '', '#poster')
-      setIsArtClownOpen(false)
-      setIsAboutOpen(false)
-      setIsEkoOpen(false)
-      setIsPosterOpen(true)
-      setIsLogoOpen(false)
-      setProjectTransition(null)
-      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
-    }, reducedMotion ? 80 : 850)
+    window.history.pushState({ poster: true }, '', '#poster')
+    setIsArtClownOpen(false)
+    setIsAboutOpen(false)
+    setIsEkoOpen(false)
+    setIsPosterOpen(true)
+    setIsLogoOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
   }
 
   const closePosterProject = () => {
@@ -867,7 +864,7 @@ function App() {
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isPosterOpen || isLogoOpen ? 'dark' : routeMenuTone}
+      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isLogoOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
       hidden={!!selectedProject || isAboutTransitioning || !!projectTransition || logoDetailOpen}
@@ -913,7 +910,7 @@ function App() {
   }
 
   if (isPosterOpen) {
-    return <>{sharedMenu}<PosterProject onBack={closePosterProject} onAudioUnlock={() => setPosterAudioActive(true)} /></>
+    return <>{sharedMenu}<PosterProject onBack={closePosterProject} onDreamcoreVisibilityChange={setPosterAudioActive} onMenuToneChange={setRouteMenuTone} /></>
   }
 
   if (isLogoOpen) {
