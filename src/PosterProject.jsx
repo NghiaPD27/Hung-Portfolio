@@ -58,6 +58,7 @@ const vietnamPosters = [
   { number: '02', image: '/assets/poster/vietnam/2.webp', thumbnail: '/assets/poster/vietnam/2-thumb.webp', alt: 'Poster cà phê bệt Sài Gòn trên thảm cỏ', title: 'Cà phê bệt Sài Gòn', category: 'ĐỜI SỐNG / VĂN HÓA', color: '#448922' },
   { number: '03', image: '/assets/poster/vietnam/3.webp', thumbnail: '/assets/poster/vietnam/3-thumb.webp', alt: 'Poster Việt Nam Quốc Tự với mái chùa trên nền đỏ', title: 'Việt Nam Quốc Tự', category: 'DI SẢN / KIẾN TRÚC', color: '#bd2e21' },
   { number: '04', image: '/assets/poster/vietnam/4.webp?v=2', thumbnail: '/assets/poster/vietnam/4-thumb.webp?v=2', alt: 'Poster Hương Sắc Việt với trang phục truyền thống, hoa xuân và họa tiết mây', title: 'Hương Sắc Việt', category: 'TRANG PHỤC / VĂN HÓA', color: '#ad5445' },
+  { number: '05', image: '/assets/poster/vietnam/5.webp', thumbnail: '/assets/poster/vietnam/5-thumb.webp', alt: 'Poster Hoa Nhiên với áo Nhật Bình thời Nguyễn trên nền xanh và họa tiết mây vàng', title: 'Hoa Nhiên', category: 'ÁO NHẬT BÌNH / TRIỀU NGUYỄN', color: '#176b83' },
 ]
 
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
@@ -244,22 +245,26 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
         <div className="poster-vietnam-topline"><span>TẬP SAN THỊ GIÁC / 02</span><span>ĐẤT NƯỚC · CON NGƯỜI</span></div>
         <motion.header className="poster-vietnam-header" initial={reducedMotion ? false : { opacity: 0, y: 48 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
           <div><span className="poster-vietnam-kicker">NHỮNG LÁT CẮT ĐƯƠNG ĐẠI</span><h2 id="poster-vietnam-title">VIỆT<span> NAM</span></h2></div>
-          <p>Nét phố, nếp sống, di sản — Việt Nam trong bốn khung hình.</p>
-          <div className="poster-vietnam-seal" aria-hidden="true"><strong>04</strong><span>KHUNG<br />HÌNH</span></div>
+          <p>Nét phố, nếp sống, di sản — Việt Nam trong năm khung hình.</p>
+          <div className="poster-vietnam-seal" aria-hidden="true"><strong>{String(vietnamPosters.length).padStart(2, '0')}</strong><span>KHUNG<br />HÌNH</span></div>
         </motion.header>
         <div className="poster-vietnam-gallery">
-          <div className="poster-vietnam-guide"><span>BỐN TÁC PHẨM / MỘT HÀNH TRÌNH</span><span>CHẠM VÀO TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
-          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 700: 4 }} gutterBreakPoints={{ 0: '9px', 700: '18px' }}>
+          <div className="poster-vietnam-guide"><span>NĂM TÁC PHẨM / MỘT HÀNH TRÌNH</span><span>CHẠM VÀO TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
+          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 700: 3, 1200: 5 }} gutterBreakPoints={{ 0: '9px', 700: '18px' }}>
             <Masonry className="poster-vietnam-masonry" sequential>
               {vietnamPosters.map((poster, index) => (
-                <motion.button className="poster-vietnam-card" type="button" key={poster.number} style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} initial={reducedMotion ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : index * 0.1, ease: [0.16, 1, 0.3, 1] }} whileHover={reducedMotion ? undefined : { y: -8 }} whileTap={{ scale: 0.98 }} aria-label={`Phóng to poster ${poster.title}`}>
-                  <span className="poster-vietnam-card-top"><span>TÁC PHẨM {poster.number} / 04</span><span>VIỆT NAM</span></span>
+                <motion.button className={`poster-vietnam-card${index === vietnamPosters.length - 1 ? ' is-finale' : ''}`} type="button" key={poster.number} style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} initial={reducedMotion ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : index * 0.1, ease: [0.16, 1, 0.3, 1] }} whileHover={reducedMotion ? undefined : { y: -8 }} whileTap={{ scale: 0.98 }} aria-label={`Phóng to poster ${poster.title}`}>
+                  <span className="poster-vietnam-card-top"><span>TÁC PHẨM {poster.number} / {String(vietnamPosters.length).padStart(2, '0')}</span><span>VIỆT NAM</span></span>
                   <img src={poster.image} alt={poster.alt} loading="lazy" draggable="false" />
                   <span className="poster-vietnam-card-foot"><strong>{poster.title}</strong><small>{poster.category}</small></span>
                 </motion.button>
               ))}
             </Masonry>
           </ResponsiveMasonry>
+          <motion.button className="poster-vietnam-feature" type="button" onClick={() => setVietnamZoom(vietnamPosters[4])} initial={reducedMotion ? false : { opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} aria-label={`Phóng to poster ${vietnamPosters[4].title}`}>
+            <img src={vietnamPosters[4].thumbnail} alt={vietnamPosters[4].alt} loading="lazy" />
+            <span className="poster-vietnam-feature-copy"><small>TÁC PHẨM 05 / 05</small><strong>Hoa Nhiên</strong><span>Áo Nhật Bình · Triều Nguyễn</span><em>XEM TÁC PHẨM ↗</em></span>
+          </motion.button>
         </div>
         <div className="poster-vietnam-footer"><span>NHỮNG CÂU CHUYỆN TỪ NƠI MÌNH SỐNG</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU TRANG ↑</button></div>
       </section>

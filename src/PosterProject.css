@@ -117,6 +117,7 @@
 .poster-vietnam-card-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 2px 8px; min-height: 48px; padding: 9px 5px 4px; }
 .poster-vietnam-card-foot strong { font-family: Georgia, serif; font-size: clamp(13px, 1.1vw, 18px); font-weight: 700; }
 .poster-vietnam-card-foot small { color: var(--vietnam-accent); font-size: 8px; font-weight: 900; letter-spacing: 0.04em; text-align: right; }
+.poster-vietnam-feature { display: none; }
 .poster-vietnam-footer { display: flex; justify-content: space-between; gap: 20px; padding: 13px 6vw; background: #84291f; color: #f6dfb7; font-size: 11px; font-weight: 900; letter-spacing: 0.1em; }
 .poster-vietnam-footer button { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; cursor: pointer; }
 
@@ -529,6 +530,17 @@
   .poster-art-button img { max-height: calc(100dvh - 290px); }
   .poster-bottom-rail { gap: 10px; }
   .poster-rail-actions button { width: 44px; height: 44px; }
+}
+
+@media (max-width: 699px) {
+  .poster-vietnam-masonry .is-finale { display: none; }
+  .poster-vietnam-feature { display: flex; align-items: center; gap: 15px; width: 100%; min-height: 170px; margin-top: 12px; padding: 8px; border: 1px solid #a45136; background: #fff8eb url('/assets/poster/vietnam/cloud-motif.svg') right -65px bottom -40px / 230px auto no-repeat; color: #63251d; text-align: left; cursor: zoom-in; }
+  .poster-vietnam-feature > img { display: block; width: 35%; max-height: 188px; aspect-ratio: 1055 / 1491; object-fit: contain; }
+  .poster-vietnam-feature-copy { display: grid; align-content: center; gap: 10px; min-width: 0; }
+  .poster-vietnam-feature-copy small { color: #a45136; font-size: 9px; font-weight: 800; letter-spacing: 0.1em; }
+  .poster-vietnam-feature-copy strong { font-family: Georgia, serif; font-size: clamp(23px, 6vw, 32px); line-height: 1; }
+  .poster-vietnam-feature-copy span { font-size: 11px; font-weight: 700; line-height: 1.35; }
+  .poster-vietnam-feature-copy em { padding-top: 8px; border-top: 1px solid #c99b7e; color: #84291f; font-size: 9px; font-style: normal; font-weight: 900; letter-spacing: 0.07em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
