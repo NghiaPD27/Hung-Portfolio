@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCreative, Keyboard } from 'swiper/modules'
+import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
+import 'swiper/css/effect-fade'
 import './PosterProject.css'
 
 const base = '/assets/poster/dreamcore'
@@ -60,23 +61,36 @@ const vietnamPosters = [
   { number: '05', image: '/assets/poster/vietnam/5.webp', thumbnail: '/assets/poster/vietnam/5-thumb.webp', alt: 'Poster Hoa Nhiên với áo Nhật Bình thời Nguyễn trên nền xanh và họa tiết mây vàng', title: 'Hoa Nhiên', category: 'ÁO NHẬT BÌNH / TRIỀU NGUYỄN', color: '#176b83' },
 ]
 
+const japanPosters = [
+  { number: '01', image: '/assets/poster/japan/1.webp', title: 'Yōmeimon', subtitle: 'NIKKŌ / DI SẢN', japanese: '陽明門', alt: 'Poster Yōmeimon với cổng đền Nikkō Tōshō-gū dưới bầu trời xanh' },
+  { number: '02', image: '/assets/poster/japan/2.webp', title: 'Wa no Bi', subtitle: 'TRANG PHỤC / THẨM MỸ', japanese: '和の美', alt: 'Poster Wa no Bi với trang phục Nhật trên nền đỏ son' },
+  { number: '03', image: '/assets/poster/japan/3.webp', title: 'Subway Girl', subtitle: 'TOKYO / NHỊP SỐNG', japanese: '東京駅', alt: 'Poster Subway Girl với ô đỏ và cô gái ở ga tàu Tokyo' },
+  { number: '04', image: '/assets/poster/japan/4.webp', title: 'Sushi', subtitle: 'ẨM THỰC / ĐƯƠNG ĐẠI', japanese: 'すし', alt: 'Poster sushi rực rỡ với cuộn tôm và đôi đũa trên nền vàng cam' },
+  { number: '05', image: '/assets/poster/japan/5.webp', title: 'Daishi Nakamise', subtitle: 'KAWASAKI / PHỐ XƯA', japanese: '大師仲見世', alt: 'Poster phố Daishi Nakamise với cửa hàng và cổng đỏ ở Kawasaki' },
+]
+
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const vietnamSwiperRef = useRef(null)
+  const japanSwiperRef = useRef(null)
   const dreamcoreSectionRef = useRef(null)
   const dreamcoreInView = useInView(dreamcoreSectionRef, { amount: 0.5 })
   const vietnamSectionRef = useRef(null)
   const vietnamIntroRef = useRef(null)
   const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
+  const japanSectionRef = useRef(null)
+  const japanInView = useInView(japanSectionRef, { amount: 0.3 })
   const posterProjectRef = useRef(null)
   const [active, setActive] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
   const [vietnamZoom, setVietnamZoom] = useState(null)
+  const [japanZoom, setJapanZoom] = useState(null)
   const [vietnamActive, setVietnamActive] = useState(0)
   const [vietnamCanPrev, setVietnamCanPrev] = useState(false)
   const [vietnamCanNext, setVietnamCanNext] = useState(true)
   const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
+  const [japanActive, setJapanActive] = useState(0)
 
   useEffect(() => {
     onMenuToneChange?.(vietnamInView && !vietnamPaperAtTop ? 'light' : 'dark')
@@ -117,16 +131,17 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       if (event.key !== 'Escape') return
       if (zoomOpen) setZoomOpen(false)
       else if (vietnamZoom) setVietnamZoom(null)
+      else if (japanZoom) setJapanZoom(null)
       else onBack()
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [zoomOpen, vietnamZoom, onBack])
+  }, [zoomOpen, vietnamZoom, japanZoom, onBack])
 
   return (
     <main
       ref={posterProjectRef}
-      className={`poster-project${zoomOpen || vietnamZoom ? ' has-lightbox' : ''}`}
+      className={`poster-project${zoomOpen || vietnamZoom || japanZoom ? ' has-lightbox' : ''}`}
       aria-label="Bộ sưu tập poster"
     >
       <section className="poster-index" id="poster-index" aria-labelledby="poster-index-title">
@@ -134,13 +149,14 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
         <motion.div className="poster-index-copy" initial={reducedMotion ? false : { opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
           <span className="poster-index-overline"><i /> VISUAL STORIES / SELECTED POSTERS</span>
           <h1 id="poster-index-title">POSTER<span>.</span></h1>
-          <p>Mỗi tấm poster là một thế giới riêng — từ giấc mơ siêu thực đến nhịp sống Việt Nam đương đại.</p>
-          <div className="poster-index-meta"><span>02 CHƯƠNG</span><span>{String(posters.length + vietnamPosters.length).padStart(2, '0')} TÁC PHẨM</span><span>2026</span></div>
+          <p>Mỗi tấm poster là một thế giới riêng — từ giấc mơ siêu thực, nhịp sống Việt Nam đến những lát cắt Nhật Bản.</p>
+          <div className="poster-index-meta"><span>03 CHƯƠNG</span><span>{String(posters.length + vietnamPosters.length + japanPosters.length).padStart(2, '0')} TÁC PHẨM</span><span>2026</span></div>
           <button className="poster-index-enter" type="button" onClick={() => scrollToSection('poster-dreamcore')}>KHÁM PHÁ BỘ SƯU TẬP <span aria-hidden="true">↓</span></button>
         </motion.div>
         <div className="poster-index-preview" aria-hidden="true">
           <motion.figure className="poster-index-preview-card is-dream" initial={reducedMotion ? false : { opacity: 0, rotate: -15, y: 110 }} animate={{ opacity: 1, rotate: -8, y: 0 }} transition={{ duration: 0.95, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}><img src={posters[0].thumbnail} alt="" /><figcaption>01 / DREAMCORE</figcaption></motion.figure>
           <motion.figure className="poster-index-preview-card is-vietnam" initial={reducedMotion ? false : { opacity: 0, rotate: 17, y: 130 }} animate={{ opacity: 1, rotate: 7, y: 0 }} transition={{ duration: 0.95, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}><img src={vietnamPosters[2].thumbnail} alt="" /><figcaption>02 / VIỆT NAM</figcaption></motion.figure>
+          <motion.figure className="poster-index-preview-card is-japan" initial={reducedMotion ? false : { opacity: 0, rotate: 9, x: 90 }} animate={{ opacity: 1, rotate: -3, x: 0 }} transition={{ duration: 0.95, delay: 0.46, ease: [0.16, 1, 0.3, 1] }}><img src={japanPosters[2].image} alt="" /><figcaption>03 / NHẬT BẢN</figcaption></motion.figure>
           <motion.span className="poster-index-stamp" initial={reducedMotion ? false : { scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: -16 }} transition={{ type: 'spring', stiffness: 180, damping: 15, delay: 0.56 }}>HÌNH ẢNH<br />KỂ CHUYỆN ↗</motion.span>
         </div>
         <span className="poster-index-edge">SCROLL TO EXPLORE ↘</span>
@@ -305,11 +321,57 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
               </Swiper>
             </div>
             <div className="poster-vietnam-exhibition-foot">
-              <span>NĂM CÂU CHUYỆN · MỘT VIỆT NAM</span>
+              <button className="poster-vietnam-next" type="button" onClick={() => scrollToSection('poster-japan')}>TIẾP THEO / NHẬT BẢN ↓</button>
               <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" disabled={!vietnamCanPrev} onClick={() => vietnamSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" disabled={!vietnamCanNext} onClick={() => vietnamSwiperRef.current?.slideNext()}>→</button></div>
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="poster-japan-section" id="poster-japan" ref={japanSectionRef} aria-labelledby="poster-japan-title">
+        <div className="poster-japan-sun" aria-hidden="true" />
+        <div className="poster-japan-topline"><span>CHƯƠNG 03 / BỘ SƯU TẬP POSTER</span><span>日本 · JAPAN</span></div>
+        <div className="poster-japan-layout">
+          <div className="poster-japan-story">
+            <span className="poster-japan-eyebrow">MỞ CÁNH CỬA / BƯỚC VÀO NHẬT BẢN</span>
+            <h2 id="poster-japan-title"><span lang="ja">日本</span><strong>JAPAN<span>.</span></strong></h2>
+            <p>Từ sắc son đền cổ đến bảng hiệu ga tàu và nhịp phố hôm nay — năm góc nhìn cùng mở ra một Nhật Bản nhiều lớp.</p>
+            <div className="poster-japan-stations" role="group" aria-label="Chọn poster Nhật Bản">
+              {japanPosters.map((poster, index) => (
+                <button className={`poster-japan-station${japanActive === index ? ' is-active' : ''}`} type="button" aria-pressed={japanActive === index} key={poster.number} onClick={() => japanSwiperRef.current?.slideTo(index)}>
+                  {japanActive === index && <motion.span className="poster-japan-station-marker" layoutId="japan-station-marker" transition={{ type: 'spring', stiffness: 350, damping: 32 }} aria-hidden="true" />}
+                  <span>{poster.number}</span><strong>{poster.title}</strong><small lang="ja">{poster.japanese}</small>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="poster-japan-gallery">
+            <div className="poster-japan-gallery-head"><span>一枚ずつ / TỪNG TẤM MỘT</span><span>{japanPosters[japanActive].subtitle}</span></div>
+            <div className="poster-japan-frame" id="poster-japan-stage">
+              <Swiper className="poster-japan-swiper" modules={[EffectFade, Keyboard]} effect="fade" fadeEffect={{ crossFade: true }} speed={reducedMotion ? 0 : 600} keyboard={{ enabled: true, onlyInViewport: true }} onSwiper={(swiper) => { japanSwiperRef.current = swiper }} onSlideChange={(swiper) => setJapanActive(swiper.activeIndex)}>
+                {japanPosters.map((poster) => (
+                  <SwiperSlide key={poster.number}>
+                    <button className="poster-japan-art" type="button" onClick={() => setJapanZoom(poster)} aria-label={`Phóng to poster ${poster.title}`}>
+                      <img src={poster.image} alt={poster.alt} loading="eager" draggable="false" />
+                      <span>XEM TÁC PHẨM ↗</span>
+                    </button>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <AnimatePresence>
+                {japanInView && !reducedMotion && <motion.div className="poster-japan-shoji" key={japanActive} aria-hidden="true">
+                  <motion.span className="is-left" initial={{ x: 0 }} animate={{ x: '-104%' }} transition={{ duration: 1, delay: 0.06, ease: [0.76, 0, 0.24, 1] }} />
+                  <motion.span className="is-right" initial={{ x: 0 }} animate={{ x: '104%' }} transition={{ duration: 1, delay: 0.13, ease: [0.76, 0, 0.24, 1] }} />
+                </motion.div>}
+              </AnimatePresence>
+            </div>
+            <div className="poster-japan-gallery-foot">
+              <div><strong>{japanPosters[japanActive].number}</strong><span> / 05</span><i /> <span>{japanPosters[japanActive].title}</span></div>
+              <div className="poster-japan-actions"><button type="button" aria-label="Poster Nhật Bản trước" disabled={japanActive === 0} onClick={() => japanSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Nhật Bản tiếp theo" disabled={japanActive === japanPosters.length - 1} onClick={() => japanSwiperRef.current?.slideNext()}>→</button></div>
+            </div>
+          </div>
+        </div>
+        <div className="poster-japan-footer"><span>FIVE VIEWS, ONE JAPAN · 2026</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU BỘ SƯU TẬP ↑</button></div>
       </section>
 
       <AnimatePresence>
@@ -343,6 +405,14 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
           <motion.div className="poster-lightbox" role="dialog" aria-modal="true" aria-label={`Poster ${vietnamZoom.title} phóng to`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.28 }} onClick={() => setVietnamZoom(null)}>
             <motion.img src={vietnamZoom.image} alt={vietnamZoom.alt} initial={reducedMotion ? false : { scale: 0.87, y: 35, rotate: 2 }} animate={{ scale: 1, y: 0, rotate: 0 }} exit={{ scale: 0.93, y: 20 }} transition={{ duration: reducedMotion ? 0 : 0.52, ease: [0.16, 1, 0.3, 1] }} onClick={(event) => event.stopPropagation()} />
             <button type="button" onClick={() => setVietnamZoom(null)} aria-label="Đóng poster phóng to">ĐÓNG ×</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {japanZoom && (
+          <motion.div className="poster-lightbox" role="dialog" aria-modal="true" aria-label={`Poster ${japanZoom.title} phóng to`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.28 }} onClick={() => setJapanZoom(null)}>
+            <motion.img src={japanZoom.image} alt={japanZoom.alt} initial={reducedMotion ? false : { scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} transition={{ duration: reducedMotion ? 0 : 0.4 }} onClick={(event) => event.stopPropagation()} />
+            <button type="button" onClick={() => setJapanZoom(null)} aria-label="Đóng poster phóng to">ĐÓNG ×</button>
           </motion.div>
         )}
       </AnimatePresence>
