@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCreative, Keyboard } from 'swiper/modules'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
@@ -64,17 +63,41 @@ const vietnamPosters = [
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
+  const vietnamSwiperRef = useRef(null)
   const dreamcoreSectionRef = useRef(null)
   const dreamcoreInView = useInView(dreamcoreSectionRef, { amount: 0.5 })
   const vietnamSectionRef = useRef(null)
+  const vietnamIntroRef = useRef(null)
   const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
+  const posterProjectRef = useRef(null)
   const [active, setActive] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
   const [vietnamZoom, setVietnamZoom] = useState(null)
+  const [vietnamActive, setVietnamActive] = useState(0)
+  const [vietnamCanPrev, setVietnamCanPrev] = useState(false)
+  const [vietnamCanNext, setVietnamCanNext] = useState(true)
+  const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
 
   useEffect(() => {
-    onMenuToneChange?.(vietnamInView ? 'light' : 'dark')
-  }, [onMenuToneChange, vietnamInView])
+    onMenuToneChange?.(vietnamInView && !vietnamPaperAtTop ? 'light' : 'dark')
+  }, [onMenuToneChange, vietnamInView, vietnamPaperAtTop])
+
+  useEffect(() => {
+    const container = posterProjectRef.current
+    const intro = vietnamIntroRef.current
+    if (!container || !intro) return undefined
+    const updateMenuSurface = () => {
+      const onPaper = intro.getBoundingClientRect().bottom <= 70
+      setVietnamPaperAtTop((current) => current === onPaper ? current : onPaper)
+    }
+    container.addEventListener('scroll', updateMenuSurface, { passive: true })
+    window.addEventListener('resize', updateMenuSurface)
+    updateMenuSurface()
+    return () => {
+      container.removeEventListener('scroll', updateMenuSurface)
+      window.removeEventListener('resize', updateMenuSurface)
+    }
+  }, [])
 
   useEffect(() => {
     onDreamcoreVisibilityChange?.(dreamcoreInView)
@@ -102,6 +125,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
 
   return (
     <main
+      ref={posterProjectRef}
       className={`poster-project${zoomOpen || vietnamZoom ? ' has-lightbox' : ''}`}
       aria-label="Bộ sưu tập poster"
     >
@@ -242,31 +266,50 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       </section>
 
       <section className="poster-vietnam-section" id="poster-vietnam" ref={vietnamSectionRef} aria-labelledby="poster-vietnam-title">
-        <div className="poster-vietnam-topline"><span>TẬP SAN THỊ GIÁC / 02</span><span>ĐẤT NƯỚC · CON NGƯỜI</span></div>
-        <motion.header className="poster-vietnam-header" initial={reducedMotion ? false : { opacity: 0, y: 48 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
-          <div><span className="poster-vietnam-kicker">NHỮNG LÁT CẮT ĐƯƠNG ĐẠI</span><h2 id="poster-vietnam-title">VIỆT<span> NAM</span></h2></div>
-          <p>Nét phố, nếp sống, di sản — Việt Nam trong năm khung hình.</p>
-          <div className="poster-vietnam-seal" aria-hidden="true"><strong>{String(vietnamPosters.length).padStart(2, '0')}</strong><span>KHUNG<br />HÌNH</span></div>
-        </motion.header>
-        <div className="poster-vietnam-gallery">
-          <div className="poster-vietnam-guide"><span>NĂM TÁC PHẨM / MỘT HÀNH TRÌNH</span><span>CHẠM VÀO TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
-          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 700: 3, 1200: 5 }} gutterBreakPoints={{ 0: '9px', 700: '18px' }}>
-            <Masonry className="poster-vietnam-masonry" sequential>
-              {vietnamPosters.map((poster, index) => (
-                <motion.button className={`poster-vietnam-card${index === vietnamPosters.length - 1 ? ' is-finale' : ''}`} type="button" key={poster.number} style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} initial={reducedMotion ? false : { opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.65, delay: reducedMotion ? 0 : index * 0.1, ease: [0.16, 1, 0.3, 1] }} whileHover={reducedMotion ? undefined : { y: -8 }} whileTap={{ scale: 0.98 }} aria-label={`Phóng to poster ${poster.title}`}>
-                  <span className="poster-vietnam-card-top"><span>TÁC PHẨM {poster.number} / {String(vietnamPosters.length).padStart(2, '0')}</span><span>VIỆT NAM</span></span>
-                  <img src={poster.image} alt={poster.alt} loading="lazy" draggable="false" />
-                  <span className="poster-vietnam-card-foot"><strong>{poster.title}</strong><small>{poster.category}</small></span>
-                </motion.button>
-              ))}
-            </Masonry>
-          </ResponsiveMasonry>
-          <motion.button className="poster-vietnam-feature" type="button" onClick={() => setVietnamZoom(vietnamPosters[4])} initial={reducedMotion ? false : { opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} aria-label={`Phóng to poster ${vietnamPosters[4].title}`}>
-            <img src={vietnamPosters[4].thumbnail} alt={vietnamPosters[4].alt} loading="lazy" />
-            <span className="poster-vietnam-feature-copy"><small>TÁC PHẨM 05 / 05</small><strong>Hoa Nhiên</strong><span>Áo Nhật Bình · Triều Nguyễn</span><em>XEM TÁC PHẨM ↗</em></span>
-          </motion.button>
+        <div className="poster-vietnam-masthead"><span>CHƯƠNG 02 / BỘ SƯU TẬP POSTER</span><span>VIỆT NAM · 2026</span></div>
+        <div className="poster-vietnam-layout">
+          <motion.header ref={vietnamIntroRef} className="poster-vietnam-intro" initial={reducedMotion ? false : { opacity: 0, x: -38 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+            <div className="poster-vietnam-intro-copy">
+              <span className="poster-vietnam-kicker">NĂM LÁT CẮT, MỘT DÁNG HÌNH ĐẤT NƯỚC</span>
+              <h2 id="poster-vietnam-title"><span>VIỆT</span><span>NAM</span></h2>
+              <p>Từ nhịp phố đến nét xưa — những sắc màu thân thuộc kể câu chuyện Việt Nam hôm nay.</p>
+            </div>
+            <div className="poster-vietnam-intro-foot"><span>ĐẤT NƯỚC / CON NGƯỜI</span><strong>✦</strong><span>01 — 05</span></div>
+          </motion.header>
+          <div className="poster-vietnam-exhibition">
+            <div className="poster-vietnam-exhibition-head"><span>HÌNH ẢNH KỂ CHUYỆN</span><span>CHỌN MỘT TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
+            <div className="poster-vietnam-display" aria-label="Năm poster Việt Nam">
+              <Swiper
+                className="poster-vietnam-swiper"
+                modules={[Keyboard]}
+                keyboard={{ enabled: true, onlyInViewport: true }}
+                slidesPerView={1.16}
+                spaceBetween={12}
+                breakpoints={{ 700: { slidesPerView: 2.2, spaceBetween: 16 }, 1100: { slidesPerView: 3.2, spaceBetween: 18 }, 1600: { slidesPerView: 4.1, spaceBetween: 20 } }}
+                onSwiper={(swiper) => { vietnamSwiperRef.current = swiper; setVietnamCanNext(!swiper.isEnd) }}
+                onSlideChange={(swiper) => { setVietnamActive(swiper.activeIndex); setVietnamCanPrev(!swiper.isBeginning); setVietnamCanNext(!swiper.isEnd) }}
+              >
+                {vietnamPosters.map((poster, index) => (
+                  <SwiperSlide key={poster.number}>
+                    <button className="poster-vietnam-print" type="button" style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} aria-label={`Phóng to poster ${poster.title}`}>
+                      <span className="poster-vietnam-print-index">{poster.number} / 05</span>
+                      <span className="poster-vietnam-print-art">
+                        <img src={poster.thumbnail} alt={poster.alt} loading="lazy" draggable="false" />
+                        {vietnamInView && vietnamActive === index && !reducedMotion && <motion.span className="poster-vietnam-ink-pass" initial={{ x: '-105%' }} animate={{ x: '105%' }} transition={{ duration: 0.76, ease: [0.76, 0, 0.24, 1] }} aria-hidden="true" />}
+                      </span>
+                      <span className="poster-vietnam-print-caption"><strong>{poster.title}</strong><small>{poster.category}</small></span>
+                      {vietnamInView && vietnamActive === index && <motion.span className="poster-vietnam-seal" initial={reducedMotion ? false : { opacity: 0, scale: 1.7, rotate: -24 }} animate={{ opacity: 1, scale: 1, rotate: -8 }} transition={{ type: 'spring', stiffness: 210, damping: 17, delay: reducedMotion ? 0 : 0.36 }} aria-hidden="true">✦</motion.span>}
+                    </button>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+            <div className="poster-vietnam-exhibition-foot">
+              <span>NĂM CÂU CHUYỆN · MỘT VIỆT NAM</span>
+              <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" disabled={!vietnamCanPrev} onClick={() => vietnamSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" disabled={!vietnamCanNext} onClick={() => vietnamSwiperRef.current?.slideNext()}>→</button></div>
+            </div>
+          </div>
         </div>
-        <div className="poster-vietnam-footer"><span>NHỮNG CÂU CHUYỆN TỪ NƠI MÌNH SỐNG</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU TRANG ↑</button></div>
       </section>
 
       <AnimatePresence>
