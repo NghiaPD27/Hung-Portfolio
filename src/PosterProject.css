@@ -131,7 +131,7 @@
 .poster-vietnam-controls button { display: grid; place-items: center; width: 35px; height: 35px; padding: 0; border: 1px solid #a45e45; border-radius: 50%; background: transparent; color: #9e412e; font-size: 20px; cursor: pointer; }
 .poster-vietnam-controls button:disabled { opacity: 0.35; cursor: default; }
 
-.poster-japan-section { position: relative; display: flex; flex-direction: column; min-height: 100dvh; padding-top: 76px; overflow: hidden; background: #f0eadf; color: #202829; isolation: isolate; }
+.poster-japan-section { position: relative; display: flex; flex-direction: column; min-height: 100dvh; padding-top: 70px; overflow: hidden; background: #f0eadf; color: #202829; isolation: isolate; }
 .poster-japan-intro { position: absolute; z-index: 8; inset: 0; display: grid; place-items: center; overflow: hidden; background: #f5efe4; }
 .poster-japan-intro-sun { position: absolute; z-index: 0; width: min(68vmin, 660px); aspect-ratio: 1; border: 1px solid #b9413657; border-radius: 50%; background: radial-gradient(circle, #d24b3b1a 0 31%, transparent 32%); box-shadow: 0 0 0 45px #b941360b, 0 0 0 90px #b9413608; }
 .poster-japan-intro-umbrella { position: relative; z-index: 2; width: clamp(300px, 62vmin, 620px); max-width: none; height: auto; filter: drop-shadow(0 24px 28px #4f201b35); transform-origin: center; pointer-events: none; will-change: transform; }
@@ -142,8 +142,8 @@
 .poster-japan-intro-skip { position: absolute; z-index: 5; top: max(86px, 9%); right: 6vw; padding: 9px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: #83332d; font: 900 10px 'Montserrat', sans-serif; letter-spacing: 0.12em; cursor: pointer; }
 .poster-japan-intro-skip:focus-visible { outline: 2px solid #83332d; outline-offset: 5px; }
 .poster-japan-sun { position: absolute; z-index: -1; top: 11%; right: -9%; width: min(48vw, 650px); aspect-ratio: 1; border-radius: 50%; background: #c34c3b22; pointer-events: none; }
-.poster-japan-topline { display: flex; justify-content: space-between; align-items: center; height: 38px; margin: 0 6vw; border-top: 1px solid #354245; color: #8c332b; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; }
-.poster-japan-layout { display: grid; grid-template-columns: minmax(280px, 0.87fr) minmax(0, 1.13fr); gap: clamp(28px, 5vw, 88px); flex: 1; min-height: 0; padding: 20px 6vw 22px; }
+.poster-japan-topline { display: flex; justify-content: space-between; align-items: center; height: 34px; margin: 0 6vw; border-top: 1px solid #354245; color: #8c332b; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; }
+.poster-japan-layout { display: grid; grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr); gap: clamp(24px, 4vw, 72px); flex: 1; min-height: 0; padding: 12px 6vw 14px; }
 .poster-japan-story { display: flex; flex-direction: column; min-width: 0; }
 .poster-japan-eyebrow { display: block; width: max-content; max-width: 100%; padding: 6px 10px; border: 1px solid #a43c31; color: #a43c31; font-size: 10px; font-weight: 900; letter-spacing: 0.1em; }
 .poster-japan-story h2 { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 12px 0 5px; line-height: 0.92; }
@@ -161,7 +161,7 @@
 .poster-japan-gallery { display: flex; flex-direction: column; min-width: 0; }
 .poster-japan-gallery-head { display: flex; justify-content: space-between; gap: 10px; padding: 0 0 10px; color: #8c332b; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; }
 .poster-japan-gallery-head span:last-child { text-align: right; }
-.poster-japan-frame { position: relative; flex: 0 0 clamp(440px, 62dvh, 650px); min-height: 0; padding: 12px; overflow: hidden; border: 1px solid #222f30; background: #dfd9cb; box-shadow: 14px 14px 0 #23383916; }
+.poster-japan-frame { position: relative; flex: 0 0 clamp(460px, 67dvh, 730px); min-height: 0; padding: 12px; overflow: hidden; border: 1px solid #222f30; background: #dfd9cb; box-shadow: 14px 14px 0 #23383916; }
 .poster-japan-frame::before { position: absolute; inset: 5px; border: 1px solid #62716c6b; content: ''; pointer-events: none; }
 .poster-japan-swiper, .poster-japan-swiper .swiper-wrapper, .poster-japan-swiper .swiper-slide { width: 100%; height: 100%; }
 .poster-japan-art { position: relative; display: grid; place-items: center; width: 100%; height: 100%; padding: 0; border: 0; background: #ebe4d6; cursor: zoom-in; }
@@ -172,7 +172,7 @@
 .poster-japan-shoji > span { display: block; width: 50%; height: 100%; background-color: #efe8d7; background-image: linear-gradient(90deg, transparent calc(100% - 2px), #987b68 0), repeating-linear-gradient(0deg, transparent 0 77px, #987b68 78px 80px), repeating-linear-gradient(90deg, transparent 0 77px, #987b68 78px 80px); background-size: 100% 100%, 100% 100%, 100% 100%; box-shadow: 0 0 22px #1b171437; }
 .poster-japan-shoji > .is-left { border-right: 6px solid #a6382d; }
 .poster-japan-shoji > .is-right { border-left: 6px solid #a6382d; }
-.poster-japan-gallery-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; min-height: 53px; padding-top: 11px; color: #334344; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
+.poster-japan-gallery-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; min-height: 48px; padding-top: 8px; color: #334344; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
 .poster-japan-gallery-foot > div:first-child { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .poster-japan-gallery-foot strong { color: #ac382d; font-size: 20px; }
 .poster-japan-gallery-foot i { width: clamp(35px, 5vw, 90px); height: 1px; margin: 0 7px; background: #a7a99b; }
@@ -587,7 +587,7 @@
   .poster-vietnam-intro h2 { font-size: clamp(64px, 8.7vw, 100px); }
   .poster-vietnam-intro p { max-width: 340px; }
   .poster-vietnam-exhibition { padding-inline: 6vw; }
-  .poster-japan-layout { grid-template-columns: minmax(250px, 0.9fr) minmax(0, 1.1fr); gap: 4vw; }
+  .poster-japan-layout { grid-template-columns: minmax(250px, 0.78fr) minmax(0, 1.22fr); gap: 3vw; }
   .poster-japan-story h2 > span { font-size: clamp(67px, 8vw, 95px); }
   .poster-japan-story h2 strong { font-size: clamp(39px, 4.5vw, 55px); }
 }
@@ -631,7 +631,7 @@
   .poster-japan-stations { display: none; }
   .poster-japan-gallery { display: block; margin-top: 15px; }
   .poster-japan-gallery-head { padding-bottom: 7px; font-size: 8px; letter-spacing: 0.03em; }
-  .poster-japan-frame { height: clamp(300px, 46dvh, 410px); padding: 8px; box-shadow: 8px 8px 0 #23383916; }
+  .poster-japan-frame { height: clamp(320px, 50dvh, 450px); padding: 8px; box-shadow: 8px 8px 0 #23383916; }
   .poster-japan-frame::before { inset: 3px; }
   .poster-japan-shoji { inset: 8px; }
   .poster-japan-gallery-foot { min-height: 51px; padding-top: 9px; font-size: 9px; }
@@ -655,9 +655,9 @@
   .poster-vietnam-display { margin-top: 7px; }
   .poster-vietnam-print-art { height: clamp(155px, 26dvh, 205px); }
   .poster-vietnam-exhibition-foot { margin-top: 8px; padding-top: 5px; }
-  .poster-japan-layout { padding-block: 8px 10px; }
+  .poster-japan-layout { padding-block: 6px 8px; }
   .poster-japan-gallery { margin-top: 9px; }
-  .poster-japan-frame { height: clamp(220px, 40dvh, 300px); }
+  .poster-japan-frame { height: clamp(235px, 44dvh, 330px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

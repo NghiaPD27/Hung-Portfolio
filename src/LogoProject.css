@@ -1,8 +1,11 @@
-.logo-project { --logo-blue: #284ce4; background: #f5f3ed; color: #24251f; min-height: 100svh; padding: 104px clamp(20px, 4.5vw, 80px) 0; overflow: clip; color-scheme: light; }
+.logo-project { --logo-blue: #284ce4; position: relative; isolation: isolate; background: #e8e9ec; color: #24251f; min-height: 100svh; padding: 104px clamp(20px, 4.5vw, 80px) 0; overflow: clip; color-scheme: light; }
+.logo-atmosphere { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #e8e9ec; }
+.logo-atmosphere > * { display: block; width: 100%; height: 100%; }
+.logo-intro, .logo-gallery, .logo-footer { position: relative; z-index: 1; }
 .logo-project button, .logo-project a, .logo-dialog button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; }
 .logo-project button, .logo-dialog button { font: inherit; cursor: pointer; }
 .logo-project button:focus-visible, .logo-project a:focus-visible, .logo-dialog button:focus-visible { outline: 3px solid #284ce4; outline-offset: 5px; }
-.logo-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; background: #f5f3ed; height: 104px; display: flex; align-items: center; gap: 28px; border-bottom: 1px solid #24251f30; padding: 0 180px 0 clamp(20px, 4.5vw, 80px); }
+.logo-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; background: rgba(246, 246, 245, 0.74); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); height: 104px; display: flex; align-items: center; gap: 28px; border-bottom: 1px solid #24251f30; padding: 0 180px 0 clamp(20px, 4.5vw, 80px); }
 .logo-back { display: flex; align-items: center; gap: 14px; background: none; border: 0; color: inherit; min-height: 44px; padding: 0 10px 0 0; font-size: 32px !important; }
 .logo-back span, .logo-topbar-label { font-size: 10px; letter-spacing: 1.8px; font-weight: 700; }
 .logo-reading-progress { position: absolute; height: 3px; bottom: -1px; left: 0; right: 0; background: #284ce4; transform-origin: left; }

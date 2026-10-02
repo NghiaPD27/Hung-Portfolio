@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import * as Dialog from '@radix-ui/react-dialog'
+import { MeshGradient } from '@paper-design/shaders-react'
 import { AnimatePresence, LayoutGroup, motion, useAnimate, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { logoCatalog, logoCategories } from './logoCatalog'
 import './LogoProject.css'
@@ -119,6 +120,7 @@ function LogoCard({ logo, index, onSelect, reducedMotion }) {
 
 export default function LogoProject({ onBack, onDetailOpenChange }) {
   const reducedMotion = useReducedMotion()
+  const [compactShader, setCompactShader] = useState(() => window.matchMedia('(max-width: 700px)').matches)
   const introRef = useRef(null)
   const { scrollYProgress } = useScroll({ trackContentSize: true })
   const { scrollYProgress: introProgress } = useScroll({ target: introRef, offset: ['start start', 'end start'] })
@@ -136,8 +138,27 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
   }
   const move = direction => setActiveIndex(index => (index + direction + filtered.length) % filtered.length)
 
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 700px)')
+    const update = () => setCompactShader(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
   return (
     <main className="logo-project">
+      <div className="logo-atmosphere" aria-hidden="true">
+        <MeshGradient
+          width="100%"
+          height="100%"
+          colors={['#e1e6ff', '#d8f2e9', '#ffe5cb', '#eee0fa', '#fff0cf']}
+          distortion={0.42}
+          swirl={0.16}
+          grainOverlay={0.06}
+          speed={reducedMotion || compactShader ? 0 : 0.08}
+          maxPixelCount={compactShader ? 240000 : 600000}
+        />
+      </div>
       <div className="logo-topbar">
         <button className="logo-back" type="button" onClick={onBack} aria-label="Quay lại danh mục sản phẩm">← <span>WORKS</span></button>
         <span className="logo-topbar-label">HÙNG TRƯƠNG / VISUAL DESIGN</span>
