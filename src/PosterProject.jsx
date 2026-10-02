@@ -75,6 +75,22 @@ const japanPosters = [
 ]
 
 const JAPAN_INTRO_MS = 1400
+const VIETNAM_INTRO_MS = 1400
+const vietnamIntroGrains = Array.from({ length: 28 }, (_, index) => {
+  const foreground = index % 3 === 0
+  return {
+    id: index,
+    image: `/assets/poster/vietnam/intro/grain-${(index % 14) + 1}.png`,
+    foreground,
+    size: foreground ? 44 + ((index * 11) % 26) : 22 + ((index * 7) % 18),
+    left: -18 - ((index * 13) % 52),
+    top: -28 + ((index * 23) % 92),
+    drop: 65 + ((index * 9) % 47),
+    rotation: (index * 43) % 360,
+    delay: (index % 8) * 0.025,
+    duration: 1.04 + ((index * 5) % 7) * 0.04,
+  }
+})
 const japanIntroPetals = Array.from({ length: 24 }, (_, index) => {
   const foreground = index % 3 === 0
   return {
@@ -97,6 +113,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const vietnamSwiperRef = useRef(null)
   const japanSwiperRef = useRef(null)
   const japanIntroAudioRef = useRef(null)
+  const introPreloadsRef = useRef([])
   const scrollTweenRef = useRef(null)
   const wheelCooldownRef = useRef(0)
   const dreamcoreSectionRef = useRef(null)
@@ -104,6 +121,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const vietnamSectionRef = useRef(null)
   const vietnamIntroRef = useRef(null)
   const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
+  const vietnamIntroInView = useInView(vietnamSectionRef, { amount: 0.55 })
   const japanSectionRef = useRef(null)
   const japanInView = useInView(japanSectionRef, { amount: 0.3 })
   const japanIntroInView = useInView(japanSectionRef, { amount: 0.55 })
@@ -117,15 +135,25 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const [vietnamCanNext, setVietnamCanNext] = useState(true)
   const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
   const [japanActive, setJapanActive] = useState(0)
+  const [vietnamIntroComplete, setVietnamIntroComplete] = useState(false)
   const [japanIntroComplete, setJapanIntroComplete] = useState(false)
 
   useEffect(() => {
     if (reducedMotion) return
-    for (const source of ['/assets/poster/japan/intro/umbrella.webp', ...new Set(japanIntroPetals.map((petal) => petal.image))]) {
+    introPreloadsRef.current = ['/assets/poster/vietnam/intro/umbrella.png', ...new Set(vietnamIntroGrains.map((grain) => grain.image)), '/assets/poster/japan/intro/umbrella.webp', ...new Set(japanIntroPetals.map((petal) => petal.image))].map((source) => {
       const image = new Image()
+      image.fetchPriority = source.includes('/umbrella.') ? 'high' : 'low'
       image.src = source
-    }
+      return image
+    })
+    return () => { introPreloadsRef.current = [] }
   }, [reducedMotion])
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
+    const timer = window.setTimeout(() => setVietnamIntroComplete(vietnamIntroInView), vietnamIntroInView ? VIETNAM_INTRO_MS : 0)
+    return () => window.clearTimeout(timer)
+  }, [vietnamIntroInView, reducedMotion])
 
   useEffect(() => {
     if (reducedMotion) return undefined
@@ -385,6 +413,48 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       </section>
 
       <section className="poster-vietnam-section" id="poster-vietnam" ref={vietnamSectionRef} aria-labelledby="poster-vietnam-title">
+        <AnimatePresence>
+          {!reducedMotion && vietnamIntroInView && !vietnamIntroComplete && (
+            <motion.div className="poster-vietnam-umbrella-intro" key="vietnam-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} aria-label="Đang mở đầu chương Việt Nam">
+              <div className="poster-vietnam-umbrella-halo" aria-hidden="true" />
+              {vietnamIntroGrains.map((grain) => (
+                <motion.img
+                  key={grain.id}
+                  className={`poster-vietnam-intro-grain ${grain.foreground ? 'is-front' : 'is-back'}`}
+                  src={grain.image}
+                  alt=""
+                  draggable="false"
+                  style={{ left: `${grain.left}%`, top: `${grain.top}%`, width: grain.size }}
+                  initial={{ x: '0vw', y: '-12vh', rotate: grain.rotation, opacity: 0 }}
+                  animate={{ x: '165vw', y: `${grain.drop}vh`, rotate: grain.rotation + 420, opacity: [0, grain.foreground ? 0.94 : 0.58, grain.foreground ? 0.94 : 0.58, 0] }}
+                  transition={{
+                    x: { duration: grain.duration, delay: grain.delay, ease: 'linear' },
+                    y: { duration: grain.duration, delay: grain.delay, ease: [0.38, 0, 0.28, 1] },
+                    rotate: { duration: grain.duration, delay: grain.delay, ease: 'linear' },
+                    opacity: { duration: grain.duration, delay: grain.delay, times: [0, 0.14, 0.78, 1] },
+                  }}
+                />
+              ))}
+              <motion.img
+                className="poster-vietnam-intro-umbrella"
+                src="/assets/poster/vietnam/intro/umbrella.png"
+                alt=""
+                draggable="false"
+                fetchPriority="high"
+                initial={{ rotate: 24, scale: 0.58, opacity: 0 }}
+                animate={{ rotate: -480, scale: 3.5, opacity: 1 }}
+                exit={{ rotate: -516, scale: 3.9, transition: { duration: 0.1, ease: 'linear' } }}
+                transition={{
+                  rotate: { duration: 1.4, ease: 'linear' },
+                  scale: { duration: 1.4, ease: [0.72, 0, 0.78, 0.58] },
+                  opacity: { duration: 0.15, ease: 'easeOut' },
+                }}
+              />
+              <motion.span className="poster-vietnam-umbrella-label" initial={{ x: '-50%', opacity: 0, y: 14 }} animate={{ x: '-50%', opacity: [0, 1, 1, 0], y: [14, 0, 0, -12] }} transition={{ duration: 1.3, times: [0, 0.18, 0.72, 1] }}>HẠT GẠO QUÊ HƯƠNG · BƯỚC VÀO VIỆT NAM</motion.span>
+              <button className="poster-vietnam-umbrella-skip" type="button" onClick={() => setVietnamIntroComplete(true)}>BỎ QUA ↗</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="poster-vietnam-masthead"><span>CHƯƠNG 02 / BỘ SƯU TẬP POSTER</span><span>VIỆT NAM · 2026</span></div>
         <div className="poster-vietnam-layout">
           <motion.header ref={vietnamIntroRef} className="poster-vietnam-intro" initial={reducedMotion ? false : { opacity: 0, x: -38 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>

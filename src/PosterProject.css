@@ -95,6 +95,16 @@
 .poster-next-chapter span { margin-left: 8px; font-size: 17px; }
 
 .poster-vietnam-section { position: relative; min-height: 100dvh; padding-top: 76px; overflow: hidden; background: #146ba3; color: #fff4db; isolation: isolate; }
+.poster-vietnam-umbrella-intro { position: absolute; z-index: 8; inset: 0; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 48%, #cf5540 0, #ad342a 45%, #842c2b 100%); }
+.poster-vietnam-umbrella-halo { position: absolute; z-index: 0; width: min(68vmin, 660px); aspect-ratio: 1; border: 1px solid #ffe59b76; border-radius: 50%; background: radial-gradient(circle, #ffd97020 0 30%, transparent 31%); box-shadow: 0 0 0 42px #ffd97010, 0 0 0 88px #ffd9700a; pointer-events: none; }
+.poster-vietnam-umbrella-halo::after { position: absolute; inset: 0; display: grid; place-items: center; color: #ffe18c88; font-size: clamp(90px, 16vmin, 150px); content: '★'; }
+.poster-vietnam-intro-umbrella { position: relative; z-index: 2; width: clamp(300px, 62vmin, 620px); max-width: none; height: auto; filter: drop-shadow(0 24px 28px #541b173c); transform-origin: center; pointer-events: none; will-change: transform; }
+.poster-vietnam-intro-grain { position: absolute; height: auto; aspect-ratio: 1; object-fit: contain; pointer-events: none; will-change: transform; }
+.poster-vietnam-intro-grain.is-back { z-index: 1; filter: blur(1.3px); }
+.poster-vietnam-intro-grain.is-front { z-index: 3; filter: drop-shadow(0 3px 3px #51251a53); }
+.poster-vietnam-umbrella-label { position: absolute; z-index: 4; bottom: 9%; left: 50%; width: max-content; max-width: 82%; color: #fff0c6; font-size: clamp(10px, 1vw, 14px); font-weight: 900; letter-spacing: 0.19em; text-align: center; pointer-events: none; }
+.poster-vietnam-umbrella-skip { position: absolute; z-index: 5; top: max(86px, 9%); right: 6vw; padding: 9px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: #fff0c6; font: 900 10px 'Montserrat', sans-serif; letter-spacing: 0.12em; cursor: pointer; }
+.poster-vietnam-umbrella-skip:focus-visible { outline: 2px solid #fff0c6; outline-offset: 5px; }
 .poster-vietnam-masthead { display: flex; justify-content: space-between; align-items: center; height: 38px; margin: 0 4.5vw; border-top: 1px solid #ffffff85; color: #fff4db; font-size: 10px; font-weight: 800; letter-spacing: 0.13em; }
 .poster-vietnam-layout { min-height: calc(100dvh - 114px); }
 .poster-vietnam-intro { position: relative; min-width: 0; padding: 22px 4.5vw 16px; overflow: hidden; background: linear-gradient(155deg, #247db1 0%, #12679e 55%, #0b5386 100%); isolation: isolate; }
@@ -594,6 +604,9 @@
 
 @media (max-width: 700px) {
   .poster-vietnam-section { padding-top: 70px; }
+  .poster-vietnam-intro-umbrella { width: min(86vw, 390px); }
+  .poster-vietnam-umbrella-label { bottom: 12%; font-size: 9px; letter-spacing: 0.09em; }
+  .poster-vietnam-umbrella-skip { top: 80px; right: 5vw; font-size: 9px; }
   .poster-vietnam-masthead { height: 30px; margin: 0 6vw; font-size: 8px; letter-spacing: 0.06em; }
   .poster-vietnam-intro { padding: 16px 6vw 12px; }
   .poster-vietnam-intro::before { top: -94px; right: -96px; width: 260px; }
