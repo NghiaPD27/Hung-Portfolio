@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
+import { gsap } from 'gsap'
+import { Observer } from 'gsap/Observer'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
 import '@fontsource/dela-gothic-one/latin-400.css'
@@ -7,6 +10,8 @@ import 'swiper/css'
 import 'swiper/css/effect-creative'
 import 'swiper/css/effect-fade'
 import './PosterProject.css'
+
+gsap.registerPlugin(Observer, ScrollToPlugin)
 
 const base = '/assets/poster/dreamcore'
 
@@ -69,11 +74,31 @@ const japanPosters = [
   { number: '05', image: '/assets/poster/japan/5.webp', title: 'Daishi Nakamise', subtitle: 'KAWASAKI / PHỐ XƯA', japanese: '大師仲見世', alt: 'Poster phố Daishi Nakamise với cửa hàng và cổng đỏ ở Kawasaki' },
 ]
 
+const JAPAN_INTRO_MS = 1400
+const japanIntroPetals = Array.from({ length: 24 }, (_, index) => {
+  const foreground = index % 3 === 0
+  return {
+    id: index,
+    image: `/assets/poster/japan/intro/petal-${(index % 16) + 1}.webp`,
+    foreground,
+    size: foreground ? 38 + ((index * 13) % 34) : 18 + ((index * 11) % 23),
+    left: 105 + ((index * 17) % 48),
+    top: -30 + ((index * 29) % 94),
+    drop: 70 + ((index * 7) % 46),
+    rotation: (index * 37) % 360,
+    delay: (index % 8) * 0.02,
+    duration: 1.05 + ((index * 3) % 7) * 0.04,
+  }
+})
+
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
   const vietnamSwiperRef = useRef(null)
   const japanSwiperRef = useRef(null)
+  const japanIntroAudioRef = useRef(null)
+  const scrollTweenRef = useRef(null)
+  const wheelCooldownRef = useRef(0)
   const dreamcoreSectionRef = useRef(null)
   const dreamcoreInView = useInView(dreamcoreSectionRef, { amount: 0.5 })
   const vietnamSectionRef = useRef(null)
@@ -81,6 +106,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
   const japanSectionRef = useRef(null)
   const japanInView = useInView(japanSectionRef, { amount: 0.3 })
+  const japanIntroInView = useInView(japanSectionRef, { amount: 0.55 })
   const posterProjectRef = useRef(null)
   const [active, setActive] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -91,6 +117,36 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const [vietnamCanNext, setVietnamCanNext] = useState(true)
   const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
   const [japanActive, setJapanActive] = useState(0)
+  const [japanIntroComplete, setJapanIntroComplete] = useState(false)
+
+  useEffect(() => {
+    if (reducedMotion) return
+    for (const source of ['/assets/poster/japan/intro/umbrella.webp', ...new Set(japanIntroPetals.map((petal) => petal.image))]) {
+      const image = new Image()
+      image.src = source
+    }
+  }, [reducedMotion])
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
+    const timer = window.setTimeout(() => setJapanIntroComplete(japanIntroInView), japanIntroInView ? JAPAN_INTRO_MS : 0)
+    return () => window.clearTimeout(timer)
+  }, [japanIntroInView, reducedMotion])
+
+  useEffect(() => {
+    const audio = japanIntroAudioRef.current
+    if (!audio || reducedMotion || !japanIntroInView || japanIntroComplete) return undefined
+    audio.pause()
+    audio.currentTime = 0
+    audio.volume = 0.7
+    audio.play().catch(() => {})
+    const fade = gsap.to(audio, { volume: 0, duration: JAPAN_INTRO_MS / 1000, ease: 'none' })
+    return () => {
+      fade.kill()
+      audio.pause()
+      audio.currentTime = 0
+    }
+  }, [japanIntroInView, japanIntroComplete, reducedMotion])
 
   useEffect(() => {
     onMenuToneChange?.(vietnamInView && !vietnamPaperAtTop ? 'light' : 'dark')
@@ -122,9 +178,56 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     swiperRef.current?.slideTo(index)
   }, [])
 
-  const scrollToSection = useCallback((id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
+  const scrollToSection = useCallback((id, fromWheel = false) => {
+    const container = posterProjectRef.current
+    const section = document.getElementById(id)
+    if (!container || !section) return
+    if (fromWheel && (scrollTweenRef.current?.isActive() || performance.now() < wheelCooldownRef.current)) return
+    scrollTweenRef.current?.kill()
+    if (reducedMotion) {
+      container.scrollTop = section.offsetTop
+      wheelCooldownRef.current = performance.now() + 300
+      return
+    }
+    scrollTweenRef.current = gsap.to(container, {
+      scrollTo: { y: section.offsetTop, autoKill: false },
+      duration: 0.68,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        scrollTweenRef.current = null
+        wheelCooldownRef.current = performance.now() + 300
+      },
+    })
   }, [reducedMotion])
+
+  useEffect(() => {
+    const container = posterProjectRef.current
+    if (!container) return undefined
+    const media = gsap.matchMedia()
+    media.add('(pointer: fine)', () => {
+      const sections = [...container.querySelectorAll('section[id^="poster-"]')]
+      const step = (direction) => {
+        const current = sections.reduce((closest, section, index) =>
+          Math.abs(section.offsetTop - container.scrollTop) < Math.abs(sections[closest].offsetTop - container.scrollTop) ? index : closest, 0)
+        const next = Math.min(sections.length - 1, Math.max(0, current + direction))
+        if (next !== current) scrollToSection(sections[next].id, true)
+      }
+      const observer = Observer.create({
+        target: container,
+        type: 'wheel',
+        preventDefault: true,
+        tolerance: 12,
+        ignore: '.poster-lightbox',
+        onDown: () => step(1),
+        onUp: () => step(-1),
+      })
+      return () => observer.kill()
+    })
+    return () => {
+      media.revert()
+      scrollTweenRef.current?.kill()
+    }
+  }, [scrollToSection])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -329,6 +432,48 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       </section>
 
       <section className="poster-japan-section" id="poster-japan" ref={japanSectionRef} aria-labelledby="poster-japan-title">
+        <audio ref={japanIntroAudioRef} src="/assets/poster/japan/intro/janpan.mp3" preload="auto" aria-hidden="true" />
+        <AnimatePresence>
+          {!reducedMotion && japanIntroInView && !japanIntroComplete && (
+            <motion.div className="poster-japan-intro" key="japan-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} aria-label="Đang mở đầu chương Nhật Bản">
+              <div className="poster-japan-intro-sun" aria-hidden="true" />
+              {japanIntroPetals.map((petal) => (
+                <motion.img
+                  key={petal.id}
+                  className={`poster-japan-intro-petal ${petal.foreground ? 'is-front' : 'is-back'}`}
+                  src={petal.image}
+                  alt=""
+                  draggable="false"
+                  style={{ left: `${petal.left}%`, top: `${petal.top}%`, width: petal.size }}
+                  initial={{ x: '0vw', y: '-16vh', rotate: petal.rotation, opacity: 0 }}
+                  animate={{ x: '-165vw', y: `${petal.drop}vh`, rotate: petal.rotation - 540, opacity: [0, petal.foreground ? 0.9 : 0.52, petal.foreground ? 0.9 : 0.52, 0] }}
+                  transition={{
+                    x: { duration: petal.duration, delay: petal.delay, ease: 'linear' },
+                    y: { duration: petal.duration, delay: petal.delay, ease: [0.38, 0, 0.28, 1] },
+                    rotate: { duration: petal.duration, delay: petal.delay, ease: 'linear' },
+                    opacity: { duration: petal.duration, delay: petal.delay, times: [0, 0.16, 0.76, 1] },
+                  }}
+                />
+              ))}
+              <motion.img
+                className="poster-japan-intro-umbrella"
+                src="/assets/poster/japan/intro/umbrella.webp"
+                alt=""
+                draggable="false"
+                initial={{ rotate: -24, scale: 0.58, opacity: 0 }}
+                animate={{ rotate: 480, scale: 3.5, opacity: 1 }}
+                exit={{ rotate: 516, scale: 3.9, transition: { duration: 0.1, ease: 'linear' } }}
+                transition={{
+                  rotate: { duration: 1.4, ease: 'linear' },
+                  scale: { duration: 1.4, ease: [0.72, 0, 0.78, 0.58] },
+                  opacity: { duration: 0.15, ease: 'easeOut' },
+                }}
+              />
+              <motion.span className="poster-japan-intro-label" initial={{ x: '-50%', opacity: 0, y: 14 }} animate={{ x: '-50%', opacity: [0, 1, 1, 0], y: [14, 0, 0, -12] }} transition={{ duration: 1.3, times: [0, 0.18, 0.72, 1] }}>日本へ · BƯỚC VÀO NHẬT BẢN</motion.span>
+              <button className="poster-japan-intro-skip" type="button" onClick={() => setJapanIntroComplete(true)}>BỎ QUA ↗</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="poster-japan-sun" aria-hidden="true" />
         <div className="poster-japan-topline"><span>CHƯƠNG 03 / BỘ SƯU TẬP POSTER</span><span>日本 · JAPAN</span></div>
         <div className="poster-japan-layout">
