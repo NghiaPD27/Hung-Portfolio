@@ -76,7 +76,7 @@ const japanPosters = [
 
 const JAPAN_INTRO_MS = 1400
 const VIETNAM_INTRO_MS = 1400
-const vietnamIntroGrains = Array.from({ length: 28 }, (_, index) => {
+const vietnamIntroGrains = Array.from({ length: 20 }, (_, index) => {
   const foreground = index % 3 === 0
   return {
     id: index,
@@ -91,7 +91,7 @@ const vietnamIntroGrains = Array.from({ length: 28 }, (_, index) => {
     duration: 1.04 + ((index * 5) % 7) * 0.04,
   }
 })
-const japanIntroPetals = Array.from({ length: 24 }, (_, index) => {
+const japanIntroPetals = Array.from({ length: 20 }, (_, index) => {
   const foreground = index % 3 === 0
   return {
     id: index,
@@ -113,6 +113,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const vietnamSwiperRef = useRef(null)
   const japanSwiperRef = useRef(null)
   const japanIntroAudioRef = useRef(null)
+  const vietnamIntroAudioRef = useRef(null)
   const introPreloadsRef = useRef([])
   const scrollTweenRef = useRef(null)
   const wheelCooldownRef = useRef(0)
@@ -121,10 +122,8 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const vietnamSectionRef = useRef(null)
   const vietnamIntroRef = useRef(null)
   const vietnamInView = useInView(vietnamSectionRef, { amount: 0.35 })
-  const vietnamIntroInView = useInView(vietnamSectionRef, { amount: 0.55 })
   const japanSectionRef = useRef(null)
   const japanInView = useInView(japanSectionRef, { amount: 0.3 })
-  const japanIntroInView = useInView(japanSectionRef, { amount: 0.55 })
   const posterProjectRef = useRef(null)
   const [active, setActive] = useState(0)
   const [zoomOpen, setZoomOpen] = useState(false)
@@ -137,6 +136,9 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const [japanActive, setJapanActive] = useState(0)
   const [vietnamIntroComplete, setVietnamIntroComplete] = useState(false)
   const [japanIntroComplete, setJapanIntroComplete] = useState(false)
+  const [introReadySection, setIntroReadySection] = useState(null)
+  const vietnamIntroReady = introReadySection === 'poster-vietnam'
+  const japanIntroReady = introReadySection === 'poster-japan'
 
   useEffect(() => {
     if (reducedMotion) return
@@ -150,20 +152,35 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   }, [reducedMotion])
 
   useEffect(() => {
-    if (reducedMotion) return undefined
-    const timer = window.setTimeout(() => setVietnamIntroComplete(vietnamIntroInView), vietnamIntroInView ? VIETNAM_INTRO_MS : 0)
+    if (reducedMotion || !vietnamIntroReady || vietnamIntroComplete) return undefined
+    const timer = window.setTimeout(() => setVietnamIntroComplete(true), VIETNAM_INTRO_MS)
     return () => window.clearTimeout(timer)
-  }, [vietnamIntroInView, reducedMotion])
+  }, [vietnamIntroReady, vietnamIntroComplete, reducedMotion])
 
   useEffect(() => {
-    if (reducedMotion) return undefined
-    const timer = window.setTimeout(() => setJapanIntroComplete(japanIntroInView), japanIntroInView ? JAPAN_INTRO_MS : 0)
+    if (reducedMotion || !japanIntroReady || japanIntroComplete) return undefined
+    const timer = window.setTimeout(() => setJapanIntroComplete(true), JAPAN_INTRO_MS)
     return () => window.clearTimeout(timer)
-  }, [japanIntroInView, reducedMotion])
+  }, [japanIntroReady, japanIntroComplete, reducedMotion])
+
+  useEffect(() => {
+    const audio = vietnamIntroAudioRef.current
+    if (!audio || reducedMotion || !vietnamIntroReady || vietnamIntroComplete) return undefined
+    audio.pause()
+    audio.currentTime = 0
+    audio.volume = 0.55
+    audio.play().catch(() => {})
+    const fade = gsap.to(audio, { volume: 0, duration: VIETNAM_INTRO_MS / 1000, ease: 'none' })
+    return () => {
+      fade.kill()
+      audio.pause()
+      audio.currentTime = 0
+    }
+  }, [vietnamIntroReady, vietnamIntroComplete, reducedMotion])
 
   useEffect(() => {
     const audio = japanIntroAudioRef.current
-    if (!audio || reducedMotion || !japanIntroInView || japanIntroComplete) return undefined
+    if (!audio || reducedMotion || !japanIntroReady || japanIntroComplete) return undefined
     audio.pause()
     audio.currentTime = 0
     audio.volume = 0.7
@@ -174,7 +191,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       audio.pause()
       audio.currentTime = 0
     }
-  }, [japanIntroInView, japanIntroComplete, reducedMotion])
+  }, [japanIntroReady, japanIntroComplete, reducedMotion])
 
   useEffect(() => {
     onMenuToneChange?.(vietnamInView && !vietnamPaperAtTop ? 'light' : 'dark')
@@ -212,8 +229,10 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     if (!container || !section) return
     if (fromWheel && (scrollTweenRef.current?.isActive() || performance.now() < wheelCooldownRef.current)) return
     scrollTweenRef.current?.kill()
+    setIntroReadySection(null)
     if (reducedMotion) {
       container.scrollTop = section.offsetTop
+      setIntroReadySection(id)
       wheelCooldownRef.current = performance.now() + 300
       return
     }
@@ -223,10 +242,34 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       ease: 'power2.inOut',
       onComplete: () => {
         scrollTweenRef.current = null
+        setIntroReadySection(id)
         wheelCooldownRef.current = performance.now() + 300
       },
     })
   }, [reducedMotion])
+
+  useEffect(() => {
+    const container = posterProjectRef.current
+    if (!container) return undefined
+    let settleTimer
+    const markSettledSection = () => {
+      window.clearTimeout(settleTimer)
+      settleTimer = window.setTimeout(() => {
+        if (scrollTweenRef.current?.isActive()) return
+        const sections = [...container.querySelectorAll('.poster-index, .poster-dreamcore-section, .poster-vietnam-section, .poster-japan-section')]
+        const settled = sections.find((section) => Math.abs(section.offsetTop - container.scrollTop) < 8)
+        setIntroReadySection(settled?.id ?? null)
+      }, 100)
+    }
+    container.addEventListener('scroll', markSettledSection, { passive: true })
+    container.addEventListener('scrollend', markSettledSection)
+    markSettledSection()
+    return () => {
+      window.clearTimeout(settleTimer)
+      container.removeEventListener('scroll', markSettledSection)
+      container.removeEventListener('scrollend', markSettledSection)
+    }
+  }, [])
 
   useEffect(() => {
     const container = posterProjectRef.current
@@ -413,8 +456,9 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       </section>
 
       <section className="poster-vietnam-section" id="poster-vietnam" ref={vietnamSectionRef} aria-labelledby="poster-vietnam-title">
+        <audio ref={vietnamIntroAudioRef} src="/assets/poster/vietnam/intro/dan-bau.mp3" preload="auto" aria-hidden="true" />
         <AnimatePresence>
-          {!reducedMotion && vietnamIntroInView && !vietnamIntroComplete && (
+          {!reducedMotion && vietnamIntroReady && !vietnamIntroComplete && (
             <motion.div className="poster-vietnam-umbrella-intro" key="vietnam-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} aria-label="Đang mở đầu chương Việt Nam">
               <div className="poster-vietnam-umbrella-halo" aria-hidden="true" />
               {vietnamIntroGrains.map((grain) => (
@@ -504,7 +548,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
       <section className="poster-japan-section" id="poster-japan" ref={japanSectionRef} aria-labelledby="poster-japan-title">
         <audio ref={japanIntroAudioRef} src="/assets/poster/japan/intro/janpan.mp3" preload="auto" aria-hidden="true" />
         <AnimatePresence>
-          {!reducedMotion && japanIntroInView && !japanIntroComplete && (
+          {!reducedMotion && japanIntroReady && !japanIntroComplete && (
             <motion.div className="poster-japan-intro" key="japan-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} aria-label="Đang mở đầu chương Nhật Bản">
               <div className="poster-japan-intro-sun" aria-hidden="true" />
               {japanIntroPetals.map((petal) => (
