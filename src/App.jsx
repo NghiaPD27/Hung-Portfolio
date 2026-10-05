@@ -864,7 +864,7 @@ function App() {
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={currentMenuPage === 'home' ? 'light' : isAboutOpen || isLogoOpen ? 'dark' : routeMenuTone}
+      tone={currentMenuPage === 'home' || isLogoOpen ? 'light' : isAboutOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
       hidden={!!selectedProject || isAboutTransitioning || !!projectTransition || logoDetailOpen}

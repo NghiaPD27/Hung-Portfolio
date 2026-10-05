@@ -17,6 +17,7 @@ function LogoArtwork({ logo, eager = false }) {
 }
 
 const featuredLogos = [0, 4, 7, 10, 13].map(index => logoCatalog[index])
+const cardAccents = ['#d9ff32', '#ff643d', '#3764ff', '#ffcc33']
 
 function LogoOrbit({ running, reducedMotion }) {
   const [scope, animate] = useAnimate()
@@ -103,13 +104,13 @@ function LogoCard({ logo, index, onSelect, reducedMotion }) {
   return (
     <motion.div className="logo-card-entry" initial={reducedMotion ? false : { opacity: 0, y: 48, rotate: index % 2 ? 2 : -2 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true, amount: .12 }} transition={{ duration: .65, delay: index % 3 * .07, ease: [.22, 1, .36, 1] }}>
       <Dialog.Trigger asChild>
-        <motion.button type="button" className={`logo-card logo-card--${logo.shape}`} style={{ '--logo-panel': logo.background, '--logo-ink': logo.color }} whileHover={reducedMotion ? undefined : { y: -7 }} whileTap={reducedMotion ? undefined : { scale: .985 }}
+        <motion.button type="button" className={`logo-card logo-card--${logo.shape}`} style={{ '--logo-panel': logo.background, '--logo-ink': logo.color, '--logo-accent': cardAccents[index % cardAccents.length] }} whileHover={reducedMotion ? undefined : { y: -9, rotate: index % 2 ? 1 : -1 }} whileTap={reducedMotion ? undefined : { scale: .985 }}
           aria-label={`Xem logo ${logo.name}`} onClick={onSelect} onPointerMove={track} onPointerLeave={reset} onBlur={reset}>
-          <span className="logo-card-top"><span>({logo.number})</span><span>{logo.category}</span></span>
+          <span className="logo-card-top"><span>IDENTITY / {logo.number}</span><span>{logo.category}</span></span>
           <span className="logo-card-stage">
             <motion.span className="logo-card-guide logo-card-guide--x" style={{ left }} aria-hidden="true" /><motion.span className="logo-card-guide logo-card-guide--y" style={{ top }} aria-hidden="true" />
             <motion.span className="logo-card-art" style={reducedMotion ? undefined : { x: artX, y: artY }}><LogoArtwork logo={logo} eager={index < 3} /></motion.span>
-            <span className="logo-card-view" aria-hidden="true">VIEW MARK ↗</span>
+            <span className="logo-card-view" aria-hidden="true">XEM LOGO ↗</span>
           </span>
           <span className="logo-card-bottom"><span><strong>{logo.name}</strong><small>{logo.subtitle}</small></span><span className="logo-card-arrow" aria-hidden="true">↗</span></span>
         </motion.button>
@@ -151,11 +152,11 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
         <MeshGradient
           width="100%"
           height="100%"
-          colors={['#e1e6ff', '#d8f2e9', '#ffe5cb', '#eee0fa', '#fff0cf']}
-          distortion={0.42}
-          swirl={0.16}
-          grainOverlay={0.06}
-          speed={reducedMotion || compactShader ? 0 : 0.08}
+          colors={['#1728a8', '#3764ff', '#111629', '#d9ff32', '#ff643d']}
+          distortion={0.7}
+          swirl={0.32}
+          grainOverlay={0.12}
+          speed={reducedMotion || compactShader ? 0 : 0.12}
           maxPixelCount={compactShader ? 240000 : 600000}
         />
       </div>
@@ -166,22 +167,29 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
       </div>
       <header className="logo-intro" ref={introRef}>
         <motion.div className="logo-intro-main" initial={reducedMotion ? false : { y: 28 }} animate={{ y: 0 }} transition={{ duration: .65 }}>
-          <p className="logo-eyebrow"><span className="logo-dot" /> SELECTED IDENTITIES / {String(logoCatalog.length).padStart(2, '0')} MARKS</p>
+          <p className="logo-eyebrow"><span className="logo-dot" /> VISUAL IDENTITY ARCHIVE / {String(logoCatalog.length).padStart(2, '0')} MARKS</p>
           <h1 aria-label="LOGO INDEX.">
             <motion.span className="logo-title-line" style={reducedMotion ? undefined : { x: titleX }} aria-hidden="true"><span className="logo-title-word">{'LOGO'.split('').map((letter, index) => <motion.span key={index} initial={reducedMotion ? false : { y: '110%', rotate: 8 }} animate={{ y: 0, rotate: 0 }} transition={{ duration: .8, delay: .08 * index, ease: [.22, 1, .36, 1] }}>{letter}</motion.span>)}</span><motion.span className="logo-title-star" style={reducedMotion ? undefined : { rotate: starRotate }}>✳</motion.span></motion.span>
             <motion.span className="logo-title-line logo-title-outline" style={reducedMotion ? undefined : { x: outlineX }} aria-hidden="true">INDEX.</motion.span>
           </h1>
-          <p className="logo-intro-micro"><span>FORM / TYPE / IDENTITY</span><span>01 — {String(logoCatalog.length).padStart(2, '0')}</span></p>
+          <p className="logo-intro-micro"><span>FORM / TYPE / IDENTITY</span><span>EST. 2026 &nbsp; ↘</span></p>
         </motion.div>
         <LogoShowcase reducedMotion={reducedMotion} paused={active !== null} />
         <div className="logo-intro-note">
-          <motion.span className="logo-edition" initial={reducedMotion ? false : { rotate: 8, scale: .7, opacity: 0 }} animate={{ rotate: -5, scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 180, damping: 14, delay: .35 }}>BỘ SƯU TẬP<br />THIẾT KẾ LOGO</motion.span>
+          <motion.span className="logo-edition" initial={reducedMotion ? false : { rotate: 8, scale: .7, opacity: 0 }} animate={{ rotate: -5, scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 180, damping: 14, delay: .35 }}>SIGNAL<br />NOISE<br />IDENTITY</motion.span>
           <p>Mỗi dấu hiệu,<br />một bản sắc riêng.</p>
           <a href="#logo-gallery" className="logo-explore" onClick={event => { event.preventDefault(); document.getElementById('logo-gallery')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' }) }}>KHÁM PHÁ BỘ SƯU TẬP <span aria-hidden="true">↙</span></a>
         </div>
       </header>
 
+      <div className="logo-ticker" aria-hidden="true">
+        <motion.div className="logo-ticker-track" animate={reducedMotion ? undefined : { x: ['0%', '-50%'] }} transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}>
+          {Array.from({ length: 4 }, (_, index) => <span key={index}>IDEAS INTO ICONS <b>✳</b> FORM FOLLOWS FEELING <b>✳</b> {String(logoCatalog.length).padStart(2, '0')} DISTINCT MARKS <b>✳</b></span>)}
+        </motion.div>
+      </div>
+
       <section id="logo-gallery" className="logo-gallery" aria-label="Bộ sưu tập logo">
+        <div className="logo-gallery-heading"><span>THE COLLECTION / {String(logoCatalog.length).padStart(2, '0')}</span><h2>MAKE A <em>MARK.</em></h2><p>Không chỉ để nhận ra.<br />Để được nhớ đến.</p></div>
         <div className="logo-gallery-toolbar">
           <div className="logo-filters" role="group" aria-label="Lọc logo theo lĩnh vực">
             <LayoutGroup id="logo-filter-pill">{logoCategories.map(item => <motion.button type="button" key={item} aria-pressed={category === item} onClick={() => setCategory(item)} whileTap={reducedMotion ? undefined : { scale: .95 }}>{category === item && <motion.span className="logo-filter-active" layoutId={reducedMotion ? undefined : 'logo-filter-active'} transition={{ type: 'spring', stiffness: 360, damping: 32 }} />}<span className="logo-filter-label">{item}</span></motion.button>)}</LayoutGroup>
