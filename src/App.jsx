@@ -7,6 +7,7 @@ import PosterProject from './PosterProject'
 import './App.css'
 
 const LogoProject = lazy(() => import('./LogoProject'))
+const ThreeDProject = lazy(() => import('./ThreeDProject'))
 
 function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
   const cardRef = useRef(null)
@@ -159,6 +160,8 @@ function App() {
   const [isPosterOpen, setIsPosterOpen] = useState(() => window.location.hash.startsWith('#poster'))
   const [isLogoOpen, setIsLogoOpen] = useState(() => window.location.hash === '#logo')
   const [logoDetailOpen, setLogoDetailOpen] = useState(false)
+  const [is3DOpen, setIs3DOpen] = useState(() => window.location.hash === '#3d')
+  const [threeDDetailOpen, setThreeDDetailOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
@@ -529,12 +532,15 @@ function App() {
       const ekoIsOpen = window.location.hash.startsWith('#eko')
       const posterIsOpen = window.location.hash.startsWith('#poster')
       const logoIsOpen = window.location.hash === '#logo'
+      const threeDIsOpen = window.location.hash === '#3d'
       setIsArtClownOpen(projectIsOpen)
       setIsAboutOpen(aboutIsOpen)
       setIsEkoOpen(ekoIsOpen)
       setIsPosterOpen(posterIsOpen)
       setIsLogoOpen(logoIsOpen)
+      setIs3DOpen(threeDIsOpen)
       setLogoDetailOpen(false)
+      setThreeDDetailOpen(false)
       setProjectTransition(null)
       if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
         aboutAudioRef.current.pause()
@@ -572,10 +578,10 @@ function App() {
       }
       if (!projectIsOpen && !ekoIsOpen && returnToBrandingPicker.current) {
         returnToBrandingPicker.current = false
-        if (!aboutIsOpen && !posterIsOpen && !logoIsOpen) setSelectedProject({ id: 'branding' })
+        if (!aboutIsOpen && !posterIsOpen && !logoIsOpen && !threeDIsOpen) setSelectedProject({ id: 'branding' })
       }
       requestAnimationFrame(() => window.scrollTo({
-        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen || logoIsOpen
+        top: projectIsOpen || aboutIsOpen || ekoIsOpen || posterIsOpen || logoIsOpen || threeDIsOpen
           ? 0
           : (productScrollPosition.current || document.getElementById('product')?.offsetTop || 0),
         behavior: 'auto'
@@ -614,6 +620,14 @@ function App() {
       title: 'LOGO',
       vietnamese: 'THIẾT KẾ LOGO',
       description: 'Bộ sưu tập logo với những dấu hiệu và bản sắc riêng.',
+      year: '2026'
+    },
+    {
+      id: '3d',
+      tag: '3D Design',
+      title: '3D',
+      vietnamese: 'THIẾT KẾ MÔ HÌNH 3D',
+      description: 'Khám phá những sản phẩm và không gian ba chiều tương tác.',
       year: '2026'
     }
   ]
@@ -735,6 +749,7 @@ function App() {
     setIsEkoOpen(false)
     setIsPosterOpen(true)
     setIsLogoOpen(false)
+    setIs3DOpen(false)
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
   }
 
@@ -758,6 +773,7 @@ function App() {
     window.history.pushState({ logo: true }, '', '#logo')
     setIsLogoOpen(true)
     setLogoDetailOpen(false)
+    setIs3DOpen(false)
     setIsArtClownOpen(false)
     setIsAboutOpen(false)
     setIsEkoOpen(false)
@@ -776,6 +792,34 @@ function App() {
     requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current || document.getElementById('product')?.offsetTop || 0, behavior: 'auto' }))
   }
 
+  const open3DProject = () => {
+    if (projectTransition) return
+    productScrollPosition.current = window.scrollY
+    returnToBrandingPicker.current = false
+    setSelectedProject(null)
+    setMenuOpen(false)
+    window.history.pushState({ threeD: true }, '', '#3d')
+    setIs3DOpen(true)
+    setThreeDDetailOpen(false)
+    setIsLogoOpen(false)
+    setIsArtClownOpen(false)
+    setIsAboutOpen(false)
+    setIsEkoOpen(false)
+    setIsPosterOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
+  const close3DProject = () => {
+    setThreeDDetailOpen(false)
+    if (window.history.state?.threeD) {
+      window.history.back()
+      return
+    }
+    window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`)
+    setIs3DOpen(false)
+    requestAnimationFrame(() => window.scrollTo({ top: productScrollPosition.current || document.getElementById('product')?.offsetTop || 0, behavior: 'auto' }))
+  }
+
   const navigateFromGlobalMenu = (destination) => {
     if (routeNavigationLocked) return
     setMenuOpen(false)
@@ -791,6 +835,8 @@ function App() {
 
     setIsLogoOpen(false)
     setLogoDetailOpen(false)
+    setIs3DOpen(false)
+    setThreeDDetailOpen(false)
 
     stopAboutAudio()
     setEkoHeroAudioActive(false)
@@ -813,7 +859,7 @@ function App() {
     }
 
     if (destination === 'about') {
-      if (!isArtClownOpen && !isEkoOpen && !isPosterOpen && !isLogoOpen) {
+      if (!isArtClownOpen && !isEkoOpen && !isPosterOpen && !isLogoOpen && !is3DOpen) {
         openAboutPage()
         return
       }
@@ -860,14 +906,14 @@ function App() {
     return () => window.removeEventListener('keydown', handleEscape)
   })
 
-  const currentMenuPage = isLogoOpen ? 'logo' : isPosterOpen ? 'poster' : isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
+  const currentMenuPage = is3DOpen ? '3d' : isLogoOpen ? 'logo' : isPosterOpen ? 'poster' : isArtClownOpen ? 'art-clown' : isAboutOpen ? 'about' : isEkoOpen ? 'eko' : 'home'
   const sharedMenu = (
     <GlobalMenu
       open={menuOpen}
-      tone={currentMenuPage === 'home' || isLogoOpen ? 'light' : isAboutOpen ? 'dark' : routeMenuTone}
+      tone={currentMenuPage === 'home' || isLogoOpen || is3DOpen ? 'light' : isAboutOpen ? 'dark' : routeMenuTone}
       current={currentMenuPage}
       locked={routeNavigationLocked}
-      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition || logoDetailOpen}
+      hidden={!!selectedProject || isAboutTransitioning || !!projectTransition || logoDetailOpen || threeDDetailOpen}
       onOpen={() => { if (!routeNavigationLocked) setMenuOpen(true) }}
       onClose={() => setMenuOpen(false)}
       onNavigate={navigateFromGlobalMenu}
@@ -915,6 +961,10 @@ function App() {
 
   if (isLogoOpen) {
     return <>{sharedMenu}<Suspense fallback={<div style={{ minHeight: '100svh', background: '#f5f3ed', color: '#24251f', padding: '120px 24px' }}>Đang mở bộ sưu tập Logo…</div>}><LogoProject onBack={closeLogoProject} onDetailOpenChange={setLogoDetailOpen} /></Suspense></>
+  }
+
+  if (is3DOpen) {
+    return <>{sharedMenu}<Suspense fallback={<div style={{ minHeight: '100svh', background: '#111822', color: '#fff', padding: '120px 24px' }}>Đang mở bộ sưu tập 3D…</div>}><ThreeDProject onBack={close3DProject} onDetailOpenChange={setThreeDDetailOpen} /></Suspense></>
   }
 
   return (
@@ -1180,6 +1230,7 @@ function App() {
               onClick={() => {
                 if (project.id === 'poster') openPosterProject()
                 else if (project.id === 'logo') openLogoProject()
+                else if (project.id === '3d') open3DProject()
                 else setSelectedProject(project)
               }}
               initial={{ opacity: 0, y: 45 }}

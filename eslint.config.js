@@ -4,7 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['**/dist/**', '**/.deploy-repo/**'] },
+  { ignores: ['**/dist/**', '**/.deploy-repo/**', 'public/assets/3d/draco/**'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
