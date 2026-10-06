@@ -23,11 +23,11 @@ const projects = [
   },
   {
     id: 'bottle', number: '02', name: 'GLASS & BOTTLE', subtitle: 'Transparency in dialogue',
-    type: 'STILL LIFE / FORM', color: '#fd7965', ink: '#171e2b', model: `${asset}models/bottle.glb?glass=2`,
+    type: 'STILL LIFE / FORM', color: '#fd7965', ink: '#171e2b', model: `${asset}models/bottle.glb?glass=3`,
     poster: `${asset}renders/01_original.webp`,
     images: [`${asset}renders/01_original.webp`, `${asset}renders/02_orbit_left.webp`, `${asset}renders/03_orbit_right.webp`, `${asset}renders/04_high_angle.webp`, `${asset}renders/05_low_angle.webp`],
     description: 'Thủy tinh, sắc xanh lá và những lớp phản chiếu tạo nên một cuộc đối thoại về hình khối.',
-    initialOrbit: '35deg 75deg auto',
+    initialOrbit: '55deg 55deg auto',
   },
   {
     id: 'house', number: '03', name: 'MODERN HOUSE', subtitle: 'Architecture with a life inside',
@@ -113,7 +113,7 @@ function ModelExperience({ project, reducedMotion }) {
   const [loadError, setLoadError] = useState(false)
   const currentView = houseViews.find(item => item.id === view) || houseViews[0]
   return <div className="three-d-experience">
-    <div className="three-d-viewer-wrap">
+    <div className={`three-d-viewer-wrap three-d-viewer-wrap--${project.id}`}>
       <model-viewer
         key={project.id}
         src={project.model}
@@ -131,7 +131,8 @@ function ModelExperience({ project, reducedMotion }) {
         interpolation-decay="160"
         zoom-sensitivity={project.id === 'house' ? '.18' : '.42'}
         shadow-intensity=".55"
-        environment-image="neutral"
+        environment-image={project.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : 'neutral'}
+        skybox-image={project.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : undefined}
         exposure={project.id === 'house' ? '1.65' : '1.35'}
         loading="eager"
         reveal="auto"
@@ -176,10 +177,10 @@ export default function ThreeDProject({ onBack, onDetailOpenChange }) {
     <header className="three-d-hero">
       <div className="three-d-hero-copy"><p>SELECTED 3D WORKS &nbsp; / &nbsp; 2026</p><h1>FORM<br /><em>IN</em> MOTION<span>.</span></h1><div className="three-d-hero-bottom"><p>Ba thế giới, ba chất liệu.<br />Chạm để bước vào từng mô hình.</p><a href="#three-d-collection">KHÁM PHÁ TÁC PHẨM ↓</a></div></div>
       <div className="three-d-hero-stage" style={{ '--hero-accent': heroProject.color }}>
-        <motion.div className="three-d-hero-model" animate={reducedMotion ? undefined : { y: [0, -13, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
+        <motion.div className={`three-d-hero-model three-d-hero-model--${heroProject.id}`} animate={reducedMotion ? undefined : { y: [0, -13, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
           <AnimatePresence mode="wait">
             <motion.div key={heroProject.id} className="three-d-hero-view" initial={{ opacity: 0, scale: .85, rotate: -7 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={{ opacity: 0, scale: 1.08, rotate: 7 }} transition={{ duration: .38, ease: [.22, 1, .36, 1] }}>
-              <model-viewer src={heroProject.model} alt={`${heroProject.name} 3D lơ lửng`} auto-rotate rotation-per-second="10deg" camera-controls disable-zoom disable-pan interaction-prompt="none" environment-image="neutral" exposure="1.45" shadow-intensity="0" camera-orbit={heroProject.initialOrbit} loading="eager" />
+              <model-viewer src={heroProject.model} alt={`${heroProject.name} 3D lơ lửng`} auto-rotate rotation-per-second="10deg" camera-controls disable-zoom disable-pan interaction-prompt="none" environment-image={heroProject.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : 'neutral'} skybox-image={heroProject.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : undefined} exposure="1.45" shadow-intensity="0" camera-orbit={heroProject.initialOrbit} loading="eager" />
             </motion.div>
           </AnimatePresence>
           <span className="three-d-hero-model-label">{heroProject.number} / {heroProject.type}</span>

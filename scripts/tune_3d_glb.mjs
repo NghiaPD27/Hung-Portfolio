@@ -37,23 +37,33 @@ tune('can', data => {
 })
 
 tune('bottle', data => {
+  data.extensionsUsed ??= []
+  for (const extension of ['KHR_materials_transmission', 'KHR_materials_ior', 'KHR_materials_volume']) {
+    if (!data.extensionsUsed.includes(extension)) data.extensionsUsed.push(extension)
+  }
   for (const material of data.materials || []) {
     if (!['Material', 'Material.003'].includes(material.name)) continue
     const isBottle = material.name === 'Material'
-    // The transparent model-viewer canvas cannot refract the page's CSS backdrop.
-    // Alpha blending lets the actual page show through while retaining reflections.
-    material.alphaMode = 'BLEND'
-    material.doubleSided = !isBottle
+    // Web glTF glass must remain OPAQUE at the alpha layer; physical transmission
+    // and volume tint reproduce the source Blender shader's thick glass surface.
+    material.alphaMode = 'OPAQUE'
+    material.doubleSided = false
     material.pbrMetallicRoughness ??= {}
     material.pbrMetallicRoughness.baseColorFactor = isBottle
-      ? [0.16, 0.46, 0.15, 0.32]
-      : [0.91, 0.96, 1, 0.14]
-    material.pbrMetallicRoughness.roughnessFactor = isBottle ? 0.08 : 0.025
+      ? [0.24, 0.55, 0.19, 1]
+      : [0.86, 0.90, 0.94, 1]
+    material.pbrMetallicRoughness.roughnessFactor = isBottle ? 0.13 : 0.025
     material.pbrMetallicRoughness.metallicFactor = 0
     material.emissiveFactor = [0, 0, 0]
-    delete material.extensions?.KHR_materials_transmission
+    material.extensions = {
+      ...material.extensions,
+      KHR_materials_transmission: { transmissionFactor: isBottle ? 0.72 : 0.96 },
+      KHR_materials_ior: { ior: isBottle ? 1.4 : 1.5 },
+      KHR_materials_volume: isBottle
+        ? { thicknessFactor: 1.2, attenuationDistance: 10, attenuationColor: [0.22, 0.56, 0.16] }
+        : { thicknessFactor: 0.45, attenuationDistance: 20, attenuationColor: [0.94, 0.97, 1] },
+    }
   }
-  data.extensionsUsed = data.extensionsUsed.filter(extension => extension !== 'KHR_materials_transmission')
 })
 
 tune('house', data => {
