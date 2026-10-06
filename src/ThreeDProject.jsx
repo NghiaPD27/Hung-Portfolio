@@ -23,7 +23,7 @@ const projects = [
   },
   {
     id: 'bottle', number: '02', name: 'GLASS & BOTTLE', subtitle: 'Transparency in dialogue',
-    type: 'STILL LIFE / FORM', color: '#fd7965', ink: '#171e2b', model: `${asset}models/bottle.glb`,
+    type: 'STILL LIFE / FORM', color: '#fd7965', ink: '#171e2b', model: `${asset}models/bottle.glb?glass=2`,
     poster: `${asset}renders/01_original.webp`,
     images: [`${asset}renders/01_original.webp`, `${asset}renders/02_orbit_left.webp`, `${asset}renders/03_orbit_right.webp`, `${asset}renders/04_high_angle.webp`, `${asset}renders/05_low_angle.webp`],
     description: 'Thủy tinh, sắc xanh lá và những lớp phản chiếu tạo nên một cuộc đối thoại về hình khối.',

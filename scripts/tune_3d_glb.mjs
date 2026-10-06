@@ -38,12 +38,22 @@ tune('can', data => {
 
 tune('bottle', data => {
   for (const material of data.materials || []) {
-    if (material.name === 'Material') material.pbrMetallicRoughness.roughnessFactor = 0.085
-    if (material.name === 'Material.003') {
-      material.pbrMetallicRoughness.roughnessFactor = 0.025
-      material.emissiveFactor = [0, 0, 0]
-    }
+    if (!['Material', 'Material.003'].includes(material.name)) continue
+    const isBottle = material.name === 'Material'
+    // The transparent model-viewer canvas cannot refract the page's CSS backdrop.
+    // Alpha blending lets the actual page show through while retaining reflections.
+    material.alphaMode = 'BLEND'
+    material.doubleSided = !isBottle
+    material.pbrMetallicRoughness ??= {}
+    material.pbrMetallicRoughness.baseColorFactor = isBottle
+      ? [0.16, 0.46, 0.15, 0.32]
+      : [0.91, 0.96, 1, 0.14]
+    material.pbrMetallicRoughness.roughnessFactor = isBottle ? 0.08 : 0.025
+    material.pbrMetallicRoughness.metallicFactor = 0
+    material.emissiveFactor = [0, 0, 0]
+    delete material.extensions?.KHR_materials_transmission
   }
+  data.extensionsUsed = data.extensionsUsed.filter(extension => extension !== 'KHR_materials_transmission')
 })
 
 tune('house', data => {
