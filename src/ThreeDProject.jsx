@@ -132,7 +132,6 @@ function ModelExperience({ project, reducedMotion }) {
         zoom-sensitivity={project.id === 'house' ? '.18' : '.42'}
         shadow-intensity=".55"
         environment-image={project.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : 'neutral'}
-        skybox-image={project.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : undefined}
         exposure={project.id === 'house' ? '1.65' : '1.35'}
         loading="eager"
         reveal="auto"
@@ -180,7 +179,7 @@ export default function ThreeDProject({ onBack, onDetailOpenChange }) {
         <motion.div className={`three-d-hero-model three-d-hero-model--${heroProject.id}`} animate={reducedMotion ? undefined : { y: [0, -13, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
           <AnimatePresence mode="wait">
             <motion.div key={heroProject.id} className="three-d-hero-view" initial={{ opacity: 0, scale: .85, rotate: -7 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={{ opacity: 0, scale: 1.08, rotate: 7 }} transition={{ duration: .38, ease: [.22, 1, .36, 1] }}>
-              <model-viewer src={heroProject.model} alt={`${heroProject.name} 3D lơ lửng`} auto-rotate rotation-per-second="10deg" camera-controls disable-zoom disable-pan interaction-prompt="none" environment-image={heroProject.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : 'neutral'} skybox-image={heroProject.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : undefined} exposure="1.45" shadow-intensity="0" camera-orbit={heroProject.initialOrbit} loading="eager" />
+              <model-viewer src={heroProject.model} alt={`${heroProject.name} 3D lơ lửng`} auto-rotate rotation-per-second="10deg" camera-controls disable-zoom disable-pan interaction-prompt="none" environment-image={heroProject.id === 'bottle' ? `${asset}white_studio_06_1k.hdr` : 'neutral'} exposure="1.45" shadow-intensity="0" camera-orbit={heroProject.initialOrbit} loading="eager" />
             </motion.div>
           </AnimatePresence>
           <span className="three-d-hero-model-label">{heroProject.number} / {heroProject.type}</span>
