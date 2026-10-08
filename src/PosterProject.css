@@ -125,12 +125,18 @@
 .poster-vietnam-exhibition-foot { margin-top: 13px; padding-top: 10px; border-top: 1px solid #a45e45; }
 .poster-vietnam-next { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; cursor: pointer; }
 .poster-vietnam-next:hover { text-decoration: underline; text-underline-offset: 4px; }
-.poster-vietnam-display { margin-top: 14px; }
-.poster-vietnam-swiper { width: 100%; overflow: visible; }
-.poster-vietnam-swiper .swiper-slide { height: auto; }
+.poster-vietnam-display { position: relative; margin-top: 14px; padding: 12px 0; overflow: hidden; border: 1px solid #345966; background: radial-gradient(circle at 50% 45%, #346879 0%, #173d4d 58%, #102f3f 100%); }
+.poster-vietnam-display::before, .poster-vietnam-display::after { position: absolute; z-index: 2; top: 0; bottom: 0; width: 12%; content: ''; pointer-events: none; }
+.poster-vietnam-display::before { left: 0; background: linear-gradient(90deg, #102f3f, transparent); }
+.poster-vietnam-display::after { right: 0; background: linear-gradient(270deg, #102f3f, transparent); }
+.poster-vietnam-swiper { width: 100%; overflow: visible; perspective: 1000px; }
+.poster-vietnam-swiper .swiper-wrapper { align-items: center; }
+.poster-vietnam-swiper .swiper-slide { width: clamp(225px, 26vw, 325px); height: auto; transition: filter 0.9s ease; }
+.poster-vietnam-swiper .swiper-slide:not(.swiper-slide-active) { filter: saturate(0.8); }
+.poster-vietnam-swiper .swiper-slide:not(.swiper-slide-active) .poster-vietnam-print { cursor: pointer; }
 .poster-vietnam-print { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; min-width: 0; padding: 8px; border: 1px solid #b69d7a; border-top: 4px solid var(--vietnam-accent); background: #fffaf0; color: #182d38; text-align: left; cursor: zoom-in; box-shadow: 0 10px 22px #37231616; }
 .poster-vietnam-print-index { display: block; flex: none; padding: 2px 2px 7px; color: var(--vietnam-accent); font-size: 10px; font-weight: 900; letter-spacing: 0.08em; }
-.poster-vietnam-print-art { position: relative; display: block; flex: none; width: 100%; height: clamp(255px, 37dvh, 390px); overflow: hidden; background: #f2e9d9; }
+.poster-vietnam-print-art { position: relative; display: block; flex: none; width: 100%; height: clamp(225px, 33dvh, 335px); overflow: hidden; background: #f2e9d9; }
 .poster-vietnam-print-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .poster-vietnam-ink-pass { position: absolute; z-index: 1; inset: 0; border-right: 5px solid #d2472c; background: #f8ecd4; pointer-events: none; }
 .poster-vietnam-seal { position: absolute; z-index: 2; top: 7px; right: 10px; display: grid; place-items: center; width: 31px; height: 31px; border: 2px double #bc402b; border-radius: 50%; background: #fffaf0ed; color: #bc402b; font-size: 17px; line-height: 1; pointer-events: none; }
@@ -622,6 +628,7 @@
   .poster-vietnam-exhibition-head, .poster-vietnam-exhibition-foot { font-size: 8px; letter-spacing: 0.04em; }
   .poster-vietnam-exhibition-head span:last-child { display: none; }
   .poster-vietnam-display { margin-top: 12px; }
+  .poster-vietnam-swiper .swiper-slide { width: min(70vw, 310px); }
   .poster-vietnam-print-art { height: clamp(265px, 39dvh, 335px); }
   .poster-vietnam-print-caption strong { font-size: 15px; }
   .poster-vietnam-exhibition-foot { gap: 6px; margin-top: 12px; }
@@ -667,6 +674,7 @@
   .poster-vietnam-exhibition { padding-block: 8px; }
   .poster-vietnam-exhibition-head { padding-bottom: 6px; }
   .poster-vietnam-display { margin-top: 7px; }
+  .poster-vietnam-swiper .swiper-slide { width: min(65vw, 260px); }
   .poster-vietnam-print-art { height: clamp(155px, 26dvh, 205px); }
   .poster-vietnam-exhibition-foot { margin-top: 8px; padding-top: 5px; }
   .poster-japan-layout { padding-block: 6px 8px; }

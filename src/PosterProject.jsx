@@ -4,10 +4,11 @@ import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
+import { Autoplay, EffectCoverflow, EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
+import 'swiper/css/effect-coverflow'
 import 'swiper/css/effect-fade'
 import './PosterProject.css'
 
@@ -132,8 +133,6 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const [vietnamZoom, setVietnamZoom] = useState(null)
   const [japanZoom, setJapanZoom] = useState(null)
   const [vietnamActive, setVietnamActive] = useState(0)
-  const [vietnamCanPrev, setVietnamCanPrev] = useState(false)
-  const [vietnamCanNext, setVietnamCanNext] = useState(true)
   const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
   const [japanActive, setJapanActive] = useState(0)
   const [vietnamIntroComplete, setVietnamIntroComplete] = useState(false)
@@ -197,6 +196,13 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   useEffect(() => {
     onMenuToneChange?.(vietnamInView && !vietnamPaperAtTop ? 'light' : 'dark')
   }, [onMenuToneChange, vietnamInView, vietnamPaperAtTop])
+
+  useEffect(() => {
+    const autoplay = vietnamSwiperRef.current?.autoplay
+    if (!autoplay || reducedMotion) return
+    if (vietnamInView && vietnamIntroComplete && !vietnamZoom) autoplay.start()
+    else autoplay.stop()
+  }, [vietnamInView, vietnamIntroComplete, vietnamZoom, reducedMotion])
 
   useEffect(() => {
     const container = posterProjectRef.current
@@ -486,20 +492,26 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
           </motion.header>
           <div className="poster-vietnam-exhibition">
             <div className="poster-vietnam-exhibition-head"><span>HÌNH ẢNH KỂ CHUYỆN</span><span>CHỌN MỘT TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
-            <div className="poster-vietnam-display" aria-label="Năm poster Việt Nam">
+            <div className="poster-vietnam-display" aria-label="Năm poster Việt Nam chuyển động theo chiều sâu">
               <Swiper
                 className="poster-vietnam-swiper"
-                modules={[Keyboard]}
+                modules={[Autoplay, EffectCoverflow, Keyboard]}
+                effect={reducedMotion ? 'slide' : 'coverflow'}
+                coverflowEffect={{ rotate: 0, stretch: 12, depth: 155, scale: 0.78, modifier: 1, slideShadows: false }}
+                centeredSlides
+                loop
+                grabCursor
+                slideToClickedSlide
+                speed={reducedMotion ? 0 : 900}
+                autoplay={reducedMotion ? false : { delay: 3800, disableOnInteraction: false, pauseOnMouseEnter: true }}
                 keyboard={{ enabled: true, onlyInViewport: true }}
-                slidesPerView={1.16}
-                spaceBetween={12}
-                breakpoints={{ 700: { slidesPerView: 2.2, spaceBetween: 16 }, 1100: { slidesPerView: 3.2, spaceBetween: 18 }, 1600: { slidesPerView: 4.1, spaceBetween: 20 } }}
-                onSwiper={(swiper) => { vietnamSwiperRef.current = swiper; setVietnamCanNext(!swiper.isEnd) }}
-                onSlideChange={(swiper) => { setVietnamActive(swiper.activeIndex); setVietnamCanPrev(!swiper.isBeginning); setVietnamCanNext(!swiper.isEnd) }}
+                slidesPerView="auto"
+                onSwiper={(swiper) => { vietnamSwiperRef.current = swiper; swiper.autoplay?.stop() }}
+                onSlideChange={(swiper) => setVietnamActive(swiper.realIndex)}
               >
                 {vietnamPosters.map((poster, index) => (
                   <SwiperSlide key={poster.number}>
-                    <button className="poster-vietnam-print" type="button" style={{ '--vietnam-accent': poster.color }} onClick={() => setVietnamZoom(poster)} aria-label={`Phóng to poster ${poster.title}`}>
+                    <button className="poster-vietnam-print" type="button" style={{ '--vietnam-accent': poster.color }} onClick={() => { if (vietnamActive === index) setVietnamZoom(poster) }} aria-label={`Phóng to poster ${poster.title}`}>
                       <span className="poster-vietnam-print-index">{poster.number} / 05</span>
                       <span className="poster-vietnam-print-art">
                         <img src={poster.thumbnail} alt={poster.alt} loading="lazy" draggable="false" />
@@ -514,7 +526,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
             </div>
             <div className="poster-vietnam-exhibition-foot">
               <button className="poster-vietnam-next" type="button" onClick={() => scrollToSection('poster-japan')}>TIẾP THEO / NHẬT BẢN ↓</button>
-              <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" disabled={!vietnamCanPrev} onClick={() => vietnamSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" disabled={!vietnamCanNext} onClick={() => vietnamSwiperRef.current?.slideNext()}>→</button></div>
+              <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" onClick={() => vietnamSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" onClick={() => vietnamSwiperRef.current?.slideNext()}>→</button></div>
             </div>
           </div>
         </div>
