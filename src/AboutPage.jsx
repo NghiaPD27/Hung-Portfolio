@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import BackButton from './BackButton'
 import './AboutPage.css'
 
 const PARTICLES = [
@@ -447,17 +448,12 @@ function AboutPage({ onBack, soundOn, onToggleSound }) {
           </div>
         </motion.div>
 
-        <motion.button
+        <BackButton
           className="about-back"
-          type="button"
           onClick={onBack}
-          aria-label="Back to portfolio"
-          whileHover={reducedMotion ? undefined : { x: -7, scale: 1.1 }}
-          whileTap={reducedMotion ? undefined : { scale: 0.92 }}
-          transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-        >
-          <img src="/assets/about/back-arrow-a.svg" alt="" />
-        </motion.button>
+          ariaLabel="Back to portfolio"
+          reducedMotion={reducedMotion}
+        />
 
         <motion.button
           className={`about-sound-toggle ${soundOn ? 'is-playing' : ''}`}

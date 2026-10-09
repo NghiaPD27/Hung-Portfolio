@@ -1,0 +1,208 @@
+button.portfolio-back.portfolio-back {
+  --back-base: #286a9a;
+  --back-hover: #ffcf68;
+  --back-text: #fff;
+  --back-hover-text: #172331;
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+  min-width: 136px;
+  height: 54px;
+  min-height: 54px;
+  aspect-ratio: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 19px 0 15px;
+  overflow: hidden;
+  border: 1px solid #ffffff9c;
+  border-radius: 999px;
+  background: var(--back-base);
+  color: var(--back-text);
+  box-shadow: 0 9px 22px #071a2730, inset 0 1px #ffffff8c;
+  font: 900 12px 'Montserrat', sans-serif;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: color 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
+}
+
+button.portfolio-back.portfolio-back::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--back-hover);
+  content: '';
+  transform: translateX(-105%) skewX(-18deg);
+  transition: transform 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+button.portfolio-back.portfolio-back:hover,
+button.portfolio-back.portfolio-back:focus-visible {
+  border-color: var(--back-hover);
+  color: var(--back-hover-text);
+  box-shadow: 0 15px 28px #071a2740, inset 0 1px #ffffff99;
+}
+
+button.portfolio-back.portfolio-back:hover::before,
+button.portfolio-back.portfolio-back:focus-visible::before {
+  transform: translateX(0) skewX(0);
+}
+
+button.portfolio-back.portfolio-back:focus-visible {
+  outline: 3px solid var(--back-hover);
+  outline-offset: 3px;
+}
+
+.portfolio-back-arrow {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 36px;
+  height: 24px;
+  flex: none;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+button.portfolio-back.portfolio-back:hover .portfolio-back-arrow,
+button.portfolio-back.portfolio-back:focus-visible .portfolio-back-arrow {
+  transform: translateX(-5px);
+}
+
+.portfolio-back-text {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+button.portfolio-back .portfolio-back-text { font-size: 11px; font-weight: 900; letter-spacing: 0.14em; }
+
+button.portfolio-back.about-back {
+  position: absolute;
+  top: 59px;
+  left: 40px;
+  --back-base: #276da3;
+  --back-hover: #ffdc65;
+  --back-hover-text: #173451;
+}
+
+button.portfolio-back.art-clown-back {
+  position: fixed;
+  top: max(clamp(16px, 5.76vh, 59px), env(safe-area-inset-top));
+  left: max(clamp(16px, 6.11vw, 88px), env(safe-area-inset-left));
+  --back-base: #aa243d;
+  --back-hover: #ffd46c;
+  --back-hover-text: #2a1838;
+}
+
+button.portfolio-back.eko-back {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  left: max(24px, env(safe-area-inset-left));
+  --back-base: #1263b6;
+  --back-hover: #49ff00;
+  --back-hover-text: #10191e;
+}
+
+button.portfolio-back.logo-back {
+  --back-base: #d9ff32;
+  --back-hover: #ff643d;
+  --back-text: #111425;
+  --back-hover-text: #111425;
+}
+
+button.portfolio-back.poster-back {
+  position: fixed;
+  top: max(28px, env(safe-area-inset-top));
+  left: max(28px, env(safe-area-inset-left));
+}
+
+button.portfolio-back.poster-back.is-index {
+  --back-base: #253b50;
+  --back-hover: #ed6748;
+  --back-hover-text: #fff9e7;
+}
+
+button.portfolio-back.poster-back.is-dreamcore {
+  --back-base: #2465a1;
+  --back-hover: #ffe06f;
+  --back-hover-text: #15243f;
+}
+
+button.portfolio-back.poster-back.is-vietnam {
+  --back-base: #ab332b;
+  --back-hover: #ffcf62;
+  --back-hover-text: #622620;
+}
+
+button.portfolio-back.poster-back.is-japan {
+  --back-base: #a83a2e;
+  --back-hover: #efbb63;
+  --back-hover-text: #4c241c;
+}
+
+button.portfolio-back.three-d-back {
+  --back-base: #c7f45f;
+  --back-hover: #fd7965;
+  --back-text: #111822;
+  --back-hover-text: #111822;
+}
+
+button.portfolio-back.portfolio-back:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
+button.portfolio-back.portfolio-back:disabled::before { transform: translateX(-105%) skewX(-18deg); }
+
+@media (max-width: 768px) {
+  button.portfolio-back.portfolio-back {
+    min-width: 116px;
+    height: 46px;
+    min-height: 46px;
+    gap: 7px;
+    padding: 0 15px 0 11px;
+  }
+
+  .portfolio-back-arrow { width: 30px; height: 20px; }
+  button.portfolio-back .portfolio-back-text { font-size: 10px; }
+
+  .about-page.is-mobile-view button.portfolio-back.about-back {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top, 16px));
+    left: max(16px, env(safe-area-inset-left, 16px));
+    width: max-content;
+    min-width: 116px;
+    height: 46px;
+    min-height: 46px;
+    border-radius: 999px;
+    background: var(--back-base);
+  }
+
+  .eko-project:has(.swiper-slide-active .eko-hero) button.portfolio-back.eko-back {
+    top: max(10.427dvh, env(safe-area-inset-top));
+    left: 20px;
+    width: max-content;
+    min-width: 116px;
+    height: 46px;
+    min-height: 46px;
+    padding: 0 15px 0 11px;
+    border: 1px solid #ffffff9c;
+    border-radius: 999px;
+    background: var(--back-base);
+    box-shadow: 0 9px 22px #071a2730, inset 0 1px #ffffff8c;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.portfolio-back.portfolio-back,
+  button.portfolio-back.portfolio-back::before,
+  .portfolio-back-arrow { transition-duration: 0.01ms; }
+}

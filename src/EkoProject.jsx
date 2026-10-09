@@ -2,6 +2,7 @@ import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { cleanupSensors } from './ekoCleanupSensors.js'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
+import BackButton from './BackButton'
 import Tilt from 'react-parallax-tilt'
 import useFineHover from './useFineHover.js'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
@@ -505,19 +506,13 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
       aria-label="Dự án nhận diện EKO"
       onPointerDown={() => { if (activeSlide === 0) onHeroAudioStateChange?.(true) }}
     >
-      <motion.button
+      <BackButton
         className={`eko-back ${navigationLocked ? 'is-locked' : ''}`}
         onClick={() => { if (!navigationLocked) onBack() }}
-        type="button"
-        aria-label={navigationLocked ? 'Hãy lụm hết rác trước khi quay về' : 'Quay về trang portfolio'}
+        ariaLabel={navigationLocked ? 'Hãy lụm hết rác trước khi quay về' : 'Quay về trang portfolio'}
         disabled={navigationLocked}
-        whileHover={reducedMotion || navigationLocked ? undefined : { scale: 1.045, x: -3 }}
-        whileTap={reducedMotion || navigationLocked ? undefined : { scale: 0.96 }}
-        transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-      >
-        <span className="eko-back-icon" aria-hidden="true"><img src={`${ASSET}/arrow-left.svg`} alt="" /></span>
-        <span className="eko-back-label">BACK</span>
-      </motion.button>
+        reducedMotion={reducedMotion}
+      />
 
       <div className="eko-progress" aria-live="polite">
         <span>{String(activeSlide + 1).padStart(2, '0')}</span>

@@ -4,12 +4,13 @@ import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
+import { EffectCreative, Keyboard } from 'swiper/modules'
 import { MeshGradient } from '@paper-design/shaders-react'
+import JapanSpiralStream from './JapanSpiralStream'
+import BackButton from './BackButton'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
-import 'swiper/css/effect-fade'
 import './PosterProject.css'
 
 gsap.registerPlugin(Observer, ScrollToPlugin)
@@ -125,7 +126,7 @@ const japanIntroPetals = Array.from({ length: 20 }, (_, index) => {
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
-  const japanSwiperRef = useRef(null)
+  const japanStreamRef = useRef(null)
   const japanIntroAudioRef = useRef(null)
   const vietnamIntroAudioRef = useRef(null)
   const introPreloadsRef = useRef([])
@@ -417,16 +418,12 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
         ))}
       </Swiper>
 
-      <motion.button
-        className="poster-back"
-        type="button"
-        aria-label="Quay về trang sản phẩm"
+      <BackButton
+        className={`poster-back ${japanInView ? 'is-japan' : vietnamInView ? 'is-vietnam' : dreamcoreInView ? 'is-dreamcore' : 'is-index'}`}
         onClick={onBack}
-        whileHover={reducedMotion ? undefined : { x: -5 }}
-        whileTap={{ scale: 0.94 }}
-      >
-        <span aria-hidden="true">←</span> BACK
-      </motion.button>
+        ariaLabel="Quay về trang sản phẩm"
+        reducedMotion={reducedMotion}
+      />
       <div className="poster-topline" aria-hidden="true"><span>POSTER / DREAMCORE</span><span>CHAPTER 01 — 02</span></div>
 
       <div className="poster-bottom-rail">
@@ -616,7 +613,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
             <p>Từ sắc son đền cổ đến bảng hiệu ga tàu và nhịp phố hôm nay — năm góc nhìn cùng mở ra một Nhật Bản nhiều lớp.</p>
             <div className="poster-japan-stations" role="group" aria-label="Chọn poster Nhật Bản">
               {japanPosters.map((poster, index) => (
-                <button className={`poster-japan-station${japanActive === index ? ' is-active' : ''}`} type="button" aria-pressed={japanActive === index} key={poster.number} onClick={() => japanSwiperRef.current?.slideTo(index)}>
+                <button className={`poster-japan-station${japanActive === index ? ' is-active' : ''}`} type="button" aria-pressed={japanActive === index} key={poster.number} onClick={() => japanStreamRef.current?.goTo(index)}>
                   {japanActive === index && <motion.span className="poster-japan-station-marker" layoutId="japan-station-marker" transition={{ type: 'spring', stiffness: 350, damping: 32 }} aria-hidden="true" />}
                   <span>{poster.number}</span><strong>{poster.title}</strong><small lang="ja">{poster.japanese}</small>
                 </button>
@@ -624,28 +621,22 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
             </div>
           </div>
           <div className="poster-japan-gallery">
-            <div className="poster-japan-gallery-head"><span>一枚ずつ / TỪNG TẤM MỘT</span><span>{japanPosters[japanActive].subtitle}</span></div>
+            <div className="poster-japan-gallery-head"><span>螺旋 / DÒNG XOẮN TÁC PHẨM</span><span>{japanPosters[japanActive].subtitle}</span></div>
             <div className="poster-japan-frame" id="poster-japan-stage">
-              <Swiper className="poster-japan-swiper" modules={[EffectFade, Keyboard]} effect="fade" fadeEffect={{ crossFade: true }} speed={reducedMotion ? 0 : 600} keyboard={{ enabled: true, onlyInViewport: true }} onSwiper={(swiper) => { japanSwiperRef.current = swiper }} onSlideChange={(swiper) => setJapanActive(swiper.activeIndex)}>
-                {japanPosters.map((poster) => (
-                  <SwiperSlide key={poster.number}>
-                    <button className="poster-japan-art" type="button" onClick={() => setJapanZoom(poster)} aria-label={`Phóng to poster ${poster.title}`}>
-                      <img src={poster.image} alt={poster.alt} loading="eager" draggable="false" />
-                      <span>XEM TÁC PHẨM ↗</span>
-                    </button>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <AnimatePresence>
-                {japanInView && !reducedMotion && <motion.div className="poster-japan-shoji" key={japanActive} aria-hidden="true">
-                  <motion.span className="is-left" initial={{ x: 0 }} animate={{ x: '-104%' }} transition={{ duration: 1, delay: 0.06, ease: [0.76, 0, 0.24, 1] }} />
-                  <motion.span className="is-right" initial={{ x: 0 }} animate={{ x: '104%' }} transition={{ duration: 1, delay: 0.13, ease: [0.76, 0, 0.24, 1] }} />
-                </motion.div>}
-              </AnimatePresence>
+              <JapanSpiralStream
+                ref={japanStreamRef}
+                posters={japanPosters}
+                activeIndex={japanActive}
+                onActiveChange={setJapanActive}
+                onOpen={setJapanZoom}
+                playing={japanInView && japanIntroComplete && !japanZoom}
+                reducedMotion={reducedMotion}
+                compact={vietnamCompact}
+              />
             </div>
             <div className="poster-japan-gallery-foot">
               <div><strong>{japanPosters[japanActive].number}</strong><span> / 05</span><i /> <span>{japanPosters[japanActive].title}</span></div>
-              <div className="poster-japan-actions"><button type="button" aria-label="Poster Nhật Bản trước" disabled={japanActive === 0} onClick={() => japanSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Nhật Bản tiếp theo" disabled={japanActive === japanPosters.length - 1} onClick={() => japanSwiperRef.current?.slideNext()}>→</button></div>
+              <div className="poster-japan-actions"><button type="button" aria-label="Poster Nhật Bản trước" onClick={() => japanStreamRef.current?.step(-1)}>←</button><button type="button" aria-label="Poster Nhật Bản tiếp theo" onClick={() => japanStreamRef.current?.step(1)}>→</button></div>
             </div>
           </div>
         </div>

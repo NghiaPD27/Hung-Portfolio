@@ -4,6 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { MeshGradient } from '@paper-design/shaders-react'
 import { AnimatePresence, LayoutGroup, motion, useAnimate, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { logoCatalog, logoCategories } from './logoCatalog'
+import BackButton from './BackButton'
 import './LogoProject.css'
 
 function LogoArtwork({ logo, eager = false }) {
@@ -161,7 +162,7 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
         />
       </div>
       <div className="logo-topbar">
-        <button className="logo-back" type="button" onClick={onBack} aria-label="Quay lại danh mục sản phẩm">← <span>WORKS</span></button>
+        <BackButton className="logo-back" onClick={onBack} ariaLabel="Quay lại danh mục sản phẩm" reducedMotion={reducedMotion} />
         <span className="logo-topbar-label">HÙNG TRƯƠNG / VISUAL DESIGN</span>
         <motion.span className="logo-reading-progress" style={{ scaleX: scrollYProgress }} aria-hidden="true" />
       </div>

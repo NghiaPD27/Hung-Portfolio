@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import BackButton from './BackButton'
 import Tilt from 'react-parallax-tilt'
 import { A11y, Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -315,9 +316,7 @@ export default function ArtClownProject({ onBack, onFireworkBoom, onFireworkSoun
         }
       }}
     >
-      <button className="art-clown-back" onClick={onBack} type="button" aria-label="Quay về trang portfolio">
-        <img src={`${ASSET}/back.svg`} alt="" />
-      </button>
+      <BackButton className="art-clown-back" onClick={onBack} ariaLabel="Quay về trang portfolio" reducedMotion={reducedMotion} />
 
       <Swiper
         className="art-clown-swiper"

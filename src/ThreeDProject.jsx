@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import BackButton from './BackButton'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCreative, Navigation, Pagination } from 'swiper/modules'
@@ -172,7 +173,7 @@ export default function ThreeDProject({ onBack, onDetailOpenChange }) {
         <button type="button" onClick={() => setIntroVisible(false)} aria-label="Bỏ qua intro">BỎ QUA ↗</button>
       </motion.div>}
     </AnimatePresence>
-    <nav className="three-d-topbar" aria-label="Điều hướng trang 3D"><button type="button" onClick={onBack}>← <span>WORKS</span></button><span>HÙNG TRƯƠNG / OBJECT STUDIES</span></nav>
+    <nav className="three-d-topbar" aria-label="Điều hướng trang 3D"><BackButton className="three-d-back" onClick={onBack} ariaLabel="Quay lại danh mục sản phẩm" reducedMotion={reducedMotion} /><span>HÙNG TRƯƠNG / OBJECT STUDIES</span></nav>
     <header className="three-d-hero">
       <div className="three-d-hero-copy"><p>SELECTED 3D WORKS &nbsp; / &nbsp; 2026</p><h1>FORM<br /><em>IN</em> MOTION<span>.</span></h1><div className="three-d-hero-bottom"><p>Ba thế giới, ba chất liệu.<br />Chạm để bước vào từng mô hình.</p><a href="#three-d-collection">KHÁM PHÁ TÁC PHẨM ↓</a></div></div>
       <div className="three-d-hero-stage" style={{ '--hero-accent': heroProject.color }}>

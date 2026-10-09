@@ -578,6 +578,15 @@
   }
 }
 
+@media (max-width: 768px) {
+  .about-page.is-mobile-view button.about-sound-toggle {
+    top: auto;
+    right: max(16px, env(safe-area-inset-right, 16px));
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    left: auto;
+  }
+}
+
 /* Figma Mobile / About (390 × 844). The desktop artboard above is unchanged. */
 @media (max-width: 768px) {
   .about-page.is-mobile-view .about-background-layer {
