@@ -4,11 +4,10 @@ import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, EffectCoverflow, EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
+import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
-import 'swiper/css/effect-coverflow'
 import 'swiper/css/effect-fade'
 import './PosterProject.css'
 
@@ -67,6 +66,20 @@ const vietnamPosters = [
   { number: '05', image: '/assets/poster/vietnam/5.webp', thumbnail: '/assets/poster/vietnam/5-thumb.webp', alt: 'Poster Hoa Nhiên với áo Nhật Bình thời Nguyễn trên nền xanh và họa tiết mây vàng', title: 'Hoa Nhiên', category: 'ÁO NHẬT BÌNH / TRIỀU NGUYỄN', color: '#176b83' },
 ]
 
+function vietnamCardSlot(index, active) {
+  const distance = (index - active + vietnamPosters.length) % vietnamPosters.length
+  return distance > 2 ? distance - vietnamPosters.length : distance
+}
+
+function vietnamCardMotion(slot, active, compact) {
+  const offset = compact ? '66%' : '82%'
+  const rise = active % 2 === 0 ? -1 : 1
+  if (slot === 0) return { x: '0%', y: '0%', scale: 1, opacity: 1, zIndex: 3 }
+  if (slot === -1) return { x: `-${offset}`, y: `${rise * 15}%`, scale: 0.5, opacity: 1, zIndex: 2 }
+  if (slot === 1) return { x: offset, y: `${rise * -15}%`, scale: 0.5, opacity: 1, zIndex: 2 }
+  return { x: slot < 0 ? '-145%' : '145%', y: '0%', scale: 0.35, opacity: 0, zIndex: 0 }
+}
+
 const japanPosters = [
   { number: '01', image: '/assets/poster/japan/1.webp', title: 'Yōmeimon', subtitle: 'NIKKŌ / DI SẢN', japanese: '陽明門', alt: 'Poster Yōmeimon với cổng đền Nikkō Tōshō-gū dưới bầu trời xanh' },
   { number: '02', image: '/assets/poster/japan/2.webp', title: 'Wa no Bi', subtitle: 'TRANG PHỤC / THẨM MỸ', japanese: '和の美', alt: 'Poster Wa no Bi với trang phục Nhật trên nền đỏ son' },
@@ -111,7 +124,6 @@ const japanIntroPetals = Array.from({ length: 20 }, (_, index) => {
 function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }) {
   const reducedMotion = useReducedMotion()
   const swiperRef = useRef(null)
-  const vietnamSwiperRef = useRef(null)
   const japanSwiperRef = useRef(null)
   const japanIntroAudioRef = useRef(null)
   const vietnamIntroAudioRef = useRef(null)
@@ -133,6 +145,8 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   const [vietnamZoom, setVietnamZoom] = useState(null)
   const [japanZoom, setJapanZoom] = useState(null)
   const [vietnamActive, setVietnamActive] = useState(0)
+  const [vietnamPaused, setVietnamPaused] = useState(false)
+  const [vietnamCompact, setVietnamCompact] = useState(() => window.matchMedia('(max-width: 700px)').matches)
   const [vietnamPaperAtTop, setVietnamPaperAtTop] = useState(false)
   const [japanActive, setJapanActive] = useState(0)
   const [vietnamIntroComplete, setVietnamIntroComplete] = useState(false)
@@ -198,11 +212,17 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
   }, [onMenuToneChange, vietnamInView, vietnamPaperAtTop])
 
   useEffect(() => {
-    const autoplay = vietnamSwiperRef.current?.autoplay
-    if (!autoplay || reducedMotion) return
-    if (vietnamInView && vietnamIntroComplete && !vietnamZoom) autoplay.start()
-    else autoplay.stop()
-  }, [vietnamInView, vietnamIntroComplete, vietnamZoom, reducedMotion])
+    const query = window.matchMedia('(max-width: 700px)')
+    const update = () => setVietnamCompact(query.matches)
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion || !vietnamInView || !vietnamIntroComplete || vietnamZoom || vietnamPaused) return undefined
+    const timer = window.setTimeout(() => setVietnamActive((current) => (current + 1) % vietnamPosters.length), 2200)
+    return () => window.clearTimeout(timer)
+  }, [vietnamActive, vietnamInView, vietnamIntroComplete, vietnamZoom, vietnamPaused, reducedMotion])
 
   useEffect(() => {
     const container = posterProjectRef.current
@@ -492,41 +512,39 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
           </motion.header>
           <div className="poster-vietnam-exhibition">
             <div className="poster-vietnam-exhibition-head"><span>HÌNH ẢNH KỂ CHUYỆN</span><span>CHỌN MỘT TÁC PHẨM ĐỂ XEM CẬN ↗</span></div>
-            <div className="poster-vietnam-display" aria-label="Năm poster Việt Nam chuyển động theo chiều sâu">
-              <Swiper
-                className="poster-vietnam-swiper"
-                modules={[Autoplay, EffectCoverflow, Keyboard]}
-                effect={reducedMotion ? 'slide' : 'coverflow'}
-                coverflowEffect={{ rotate: 0, stretch: 12, depth: 155, scale: 0.78, modifier: 1, slideShadows: false }}
-                centeredSlides
-                loop
-                grabCursor
-                slideToClickedSlide
-                speed={reducedMotion ? 0 : 900}
-                autoplay={reducedMotion ? false : { delay: 3800, disableOnInteraction: false, pauseOnMouseEnter: true }}
-                keyboard={{ enabled: true, onlyInViewport: true }}
-                slidesPerView="auto"
-                onSwiper={(swiper) => { vietnamSwiperRef.current = swiper; swiper.autoplay?.stop() }}
-                onSlideChange={(swiper) => setVietnamActive(swiper.realIndex)}
-              >
-                {vietnamPosters.map((poster, index) => (
-                  <SwiperSlide key={poster.number}>
-                    <button className="poster-vietnam-print" type="button" style={{ '--vietnam-accent': poster.color }} onClick={() => { if (vietnamActive === index) setVietnamZoom(poster) }} aria-label={`Phóng to poster ${poster.title}`}>
-                      <span className="poster-vietnam-print-index">{poster.number} / 05</span>
-                      <span className="poster-vietnam-print-art">
-                        <img src={poster.thumbnail} alt={poster.alt} loading="lazy" draggable="false" />
-                        {vietnamInView && vietnamActive === index && !reducedMotion && <motion.span className="poster-vietnam-ink-pass" initial={{ x: '-105%' }} animate={{ x: '105%' }} transition={{ duration: 0.76, ease: [0.76, 0, 0.24, 1] }} aria-hidden="true" />}
-                      </span>
-                      <span className="poster-vietnam-print-caption"><strong>{poster.title}</strong><small>{poster.category}</small></span>
-                      {vietnamInView && vietnamActive === index && <motion.span className="poster-vietnam-seal" initial={reducedMotion ? false : { opacity: 0, scale: 1.7, rotate: -24 }} animate={{ opacity: 1, scale: 1, rotate: -8 }} transition={{ type: 'spring', stiffness: 210, damping: 17, delay: reducedMotion ? 0 : 0.36 }} aria-hidden="true">✦</motion.span>}
-                    </button>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+            <div
+              className="poster-vietnam-display"
+              aria-label="Năm poster Việt Nam chuyển động đổi vị trí"
+              onMouseEnter={() => setVietnamPaused(true)}
+              onMouseLeave={() => setVietnamPaused(false)}
+              onFocusCapture={() => setVietnamPaused(true)}
+              onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setVietnamPaused(false) }}
+            >
+              {vietnamPosters.map((poster, index) => {
+                const slot = vietnamCardSlot(index, vietnamActive)
+                return (
+                  <motion.button
+                    key={poster.number}
+                    className={`poster-vietnam-focus-card${slot === 0 ? ' is-active' : ''}`}
+                    type="button"
+                    initial={false}
+                    animate={vietnamCardMotion(slot, vietnamActive, vietnamCompact)}
+                    transition={reducedMotion ? { duration: 0 } : { duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ pointerEvents: Math.abs(slot) > 1 ? 'none' : 'auto' }}
+                    tabIndex={Math.abs(slot) > 1 ? -1 : 0}
+                    aria-hidden={Math.abs(slot) > 1}
+                    aria-label={slot === 0 ? `Phóng to poster ${poster.title}` : `Xem poster ${poster.title}`}
+                    onClick={() => { if (slot === 0) setVietnamZoom(poster); else setVietnamActive(index) }}
+                  >
+                    <img src={poster.thumbnail} alt="" loading="lazy" draggable="false" />
+                  </motion.button>
+                )
+              })}
             </div>
             <div className="poster-vietnam-exhibition-foot">
               <button className="poster-vietnam-next" type="button" onClick={() => scrollToSection('poster-japan')}>TIẾP THEO / NHẬT BẢN ↓</button>
-              <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" onClick={() => vietnamSwiperRef.current?.slidePrev()}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" onClick={() => vietnamSwiperRef.current?.slideNext()}>→</button></div>
+              <span className="poster-vietnam-current-title">{vietnamPosters[vietnamActive].title}</span>
+              <div className="poster-vietnam-controls"><span>{String(vietnamActive + 1).padStart(2, '0')} / 05</span><button type="button" aria-label="Poster Việt Nam trước" onClick={() => setVietnamActive((current) => (current - 1 + vietnamPosters.length) % vietnamPosters.length)}>←</button><button type="button" aria-label="Poster Việt Nam tiếp theo" onClick={() => setVietnamActive((current) => (current + 1) % vietnamPosters.length)}>→</button></div>
             </div>
           </div>
         </div>
