@@ -5,6 +5,7 @@ import { Observer } from 'gsap/Observer'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCreative, EffectFade, Keyboard } from 'swiper/modules'
+import { MeshGradient } from '@paper-design/shaders-react'
 import '@fontsource/dela-gothic-one/latin-400.css'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
@@ -520,6 +521,18 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
               onFocusCapture={() => setVietnamPaused(true)}
               onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setVietnamPaused(false) }}
             >
+              <div className="poster-vietnam-display-art" aria-hidden="true">
+                <MeshGradient
+                  width="100%"
+                  height="100%"
+                  colors={['#f3dfbc', '#e88b63', '#e7bf70', '#79a8a0', '#f5d6bf']}
+                  distortion={0.48}
+                  swirl={0.24}
+                  grainOverlay={0.1}
+                  speed={reducedMotion || vietnamCompact || !vietnamInView ? 0 : 0.08}
+                  maxPixelCount={vietnamCompact ? 180000 : 450000}
+                />
+              </div>
               {vietnamPosters.map((poster, index) => {
                 const slot = vietnamCardSlot(index, vietnamActive)
                 return (

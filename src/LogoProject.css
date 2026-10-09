@@ -135,7 +135,7 @@
 @media (prefers-reduced-motion: reduce) { .logo-dialog, .logo-dialog-overlay { animation: none; } .logo-card, .logo-card-arrow, .logo-card-guide, .logo-card-view { transition: none; } }
 
 /* Kinetic identity archive — deliberately hard-edged, high-contrast framing. */
-.logo-project { --logo-blue: #d9ff32; background: #111425; color: #f6f5ec; }
+.logo-project { --logo-blue: #d9ff32; background: #111425; color: #f6f5ec; padding-top: 82px; }
 .logo-atmosphere { background: #1728a8; opacity: .65; }
 .logo-project button:focus-visible, .logo-project a:focus-visible { outline-color: #d9ff32; }
 .logo-topbar { background: #111425ed; border-color: #f6f5ec38; color: #f6f5ec; height: 82px; }
