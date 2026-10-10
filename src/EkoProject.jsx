@@ -1,4 +1,4 @@
-import { Children, useCallback, useEffect, useRef, useState } from 'react'
+import { Children, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { cleanupSensors } from './ekoCleanupSensors.js'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
@@ -107,7 +107,9 @@ function Reveal({ active, children, className = '', delay = 0 }) {
   )
 }
 
-function EkoHero({ active, reducedMotion }) {
+const EkoHero = memo(function EkoHero({ active, reducedMotion }) {
+  const pointerFrame = useRef(0)
+  const latestPointer = useRef(null)
   const pointerX = useMotionValue(0)
   const pointerY = useMotionValue(0)
   const smoothX = useSpring(pointerX, { stiffness: 90, damping: 24, mass: 0.7 })
@@ -120,15 +122,32 @@ function EkoHero({ active, reducedMotion }) {
 
   const updatePointer = (event) => {
     if (reducedMotion || event.pointerType === 'touch') return
-    const bounds = event.currentTarget.getBoundingClientRect()
-    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2)
-    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2)
+    latestPointer.current = {
+      target: event.currentTarget,
+      x: event.clientX,
+      y: event.clientY,
+    }
+    if (pointerFrame.current) return
+    pointerFrame.current = window.requestAnimationFrame(() => {
+      pointerFrame.current = 0
+      const pointer = latestPointer.current
+      if (!pointer?.target.isConnected) return
+      const bounds = pointer.target.getBoundingClientRect()
+      if (!bounds.width || !bounds.height) return
+      pointerX.set(((pointer.x - bounds.left) / bounds.width - 0.5) * 2)
+      pointerY.set(((pointer.y - bounds.top) / bounds.height - 0.5) * 2)
+    })
   }
 
   const resetPointer = () => {
+    window.cancelAnimationFrame(pointerFrame.current)
+    pointerFrame.current = 0
+    latestPointer.current = null
     pointerX.set(0)
     pointerY.set(0)
   }
+
+  useEffect(() => () => window.cancelAnimationFrame(pointerFrame.current), [])
 
   return (
     <section
@@ -164,7 +183,7 @@ function EkoHero({ active, reducedMotion }) {
       </div>
     </section>
   )
-}
+})
 
 function DraggableTrash({ item, collected }) {
   const { ref, isDragging } = useDraggable({ id: item.id, disabled: collected })
@@ -435,7 +454,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
       const match = window.location.hash.match(/#eko-(\d+)/)
       if (match) {
         const target = Math.max(0, Math.min(TOTAL_SLIDES - 1, parseInt(match[1], 10)))
-        if (target !== activeSlide) {
+        if (target !== swiperRef.current?.activeIndex) {
           if (swiperRef.current) {
             swiperRef.current.allowSlideNext = true
             swiperRef.current.allowSlidePrev = true
@@ -447,7 +466,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
     }
     window.addEventListener('hashchange', handleHash)
     return () => window.removeEventListener('hashchange', handleHash)
-  }, [activeSlide])
+  }, [])
 
   useEffect(() => {
     onHeroAudioStateChange?.(activeSlide === 0)
@@ -481,7 +500,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
     setGameComplete(complete)
   }, [])
 
-  const setGameDragging = (dragging) => setGameDraggingState(dragging)
+  const setGameDragging = useCallback((dragging) => setGameDraggingState(dragging), [])
 
   useEffect(() => {
     const swiper = swiperRef.current
@@ -694,7 +713,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                         aria-hidden="true"
                         initial={false}
                         animate={activeSlide === 6 && !reducedMotion ? { opacity: [0, 0.34, 0], scale: [0.72, 1.15, 1.34] } : { opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 2.8, delay: 0.35 + index * 0.24, repeat: Infinity, ease: 'easeOut' }}
+                        transition={{ duration: 2.8, delay: 0.35 + index * 0.24, repeat: activeSlide === 6 && !reducedMotion ? Infinity : 0, ease: 'easeOut' }}
                       />
                       <div className="eko-sign-image">
                         <picture style={{ display: 'contents' }}>
@@ -703,7 +722,7 @@ export default function EkoProject({ onBack, onHeroAudioStateChange, onMenuToneC
                           src={`${ASSET}/${sign.src}`}
                           alt={sign.caption}
                           animate={activeSlide === 6 && !reducedMotion ? { y: [0, mobile ? -8 : -1.5, 0] } : { y: 0 }}
-                          transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: Infinity, ease: 'easeInOut' }}
+                          transition={{ duration: 3.8 + index * 0.18, delay: index * 0.16, repeat: activeSlide === 6 && !reducedMotion ? Infinity : 0, ease: 'easeInOut' }}
                         />
                         </picture>
                       </div>

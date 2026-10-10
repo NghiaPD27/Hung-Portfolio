@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { memo, useState, useCallback, useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import BackButton from './BackButton'
 import Tilt from 'react-parallax-tilt'
@@ -32,6 +32,7 @@ function MobileGalleryControls({ className, onPrevious, onNext }) {
 
 function useImageSkeleton() {
   const [loadedKeys, setLoadedKeys] = useState(() => new Set())
+  const imageRefs = useRef(new Map())
 
   const markLoaded = useCallback((key) => {
     setLoadedKeys((prev) => {
@@ -42,16 +43,14 @@ function useImageSkeleton() {
     })
   }, [])
 
-  const registerRef = useCallback((key) => (element) => {
-    if (element && element.complete && element.naturalWidth > 0) {
-      setLoadedKeys((prev) => {
-        if (prev.has(key)) return prev
-        const next = new Set(prev)
-        next.add(key)
-        return next
+  const registerRef = useCallback((key) => {
+    if (!imageRefs.current.has(key)) {
+      imageRefs.current.set(key, (element) => {
+        if (element && element.complete && element.naturalWidth > 0) markLoaded(key)
       })
     }
-  }, [])
+    return imageRefs.current.get(key)
+  }, [markLoaded])
 
   const isLoaded = useCallback((key) => loadedKeys.has(key), [loadedKeys])
 
@@ -118,7 +117,7 @@ const sparkAnimate = {
   y: ['14.583cqw', '14.583cqw', '0cqw', '-0.417cqw', '14.583cqw'],
 }
 
-function Firework({ className, src, timing, reducedMotion }) {
+const Firework = memo(function Firework({ className, src, timing, reducedMotion }) {
   return (
     <motion.div
       className={`art-firework ${className}`}
@@ -126,12 +125,12 @@ function Firework({ className, src, timing, reducedMotion }) {
       animate={reducedMotion ? { opacity: 1, scaleX: 1, scaleY: 1 } : burstAnimate}
       transition={reducedMotion ? { duration: 0 } : burstTransitions[timing]}
     >
-      <img src={`${ASSET}/${src}`} alt="" />
+      <img src={`${ASSET}/${src}`} alt="" decoding="async" />
     </motion.div>
   )
-}
+})
 
-function PeakGlow({ className, src, timing, reducedMotion }) {
+const PeakGlow = memo(function PeakGlow({ className, src, timing, reducedMotion }) {
   return (
     <motion.div
       className={`art-peak-glow ${className}`}
@@ -139,12 +138,12 @@ function PeakGlow({ className, src, timing, reducedMotion }) {
       animate={reducedMotion ? { opacity: 0.7, scaleX: 1, scaleY: 1 } : glowAnimate}
       transition={reducedMotion ? { duration: 0 } : glowTransitions[timing]}
     >
-      <img src={`${ASSET}/${src}`} alt="" />
+      <img src={`${ASSET}/${src}`} alt="" decoding="async" />
     </motion.div>
   )
-}
+})
 
-function LaunchSpark({ className, src, timing, reducedMotion }) {
+const LaunchSpark = memo(function LaunchSpark({ className, src, timing, reducedMotion }) {
   return (
     <motion.div
       className={`art-launch-spark ${className}`}
@@ -152,12 +151,12 @@ function LaunchSpark({ className, src, timing, reducedMotion }) {
       animate={reducedMotion ? { opacity: 1, scaleX: 1, scaleY: 1, y: 0 } : sparkAnimate}
       transition={reducedMotion ? { duration: 0 } : sparkTransitions[timing]}
     >
-      <img src={`${ASSET}/${src}`} alt="" />
+      <img src={`${ASSET}/${src}`} alt="" decoding="async" />
     </motion.div>
   )
-}
+})
 
-function ArtClownTitle() {
+const ArtClownTitle = memo(function ArtClownTitle() {
   return (
     <h1 id="art-clown-title" className="art-hero-title" aria-label="ART CLOWN">
       <span className="art-title-main" aria-hidden="true">ART CLOWN</span>
@@ -172,7 +171,7 @@ function ArtClownTitle() {
       ))}
     </h1>
   )
-}
+})
 
 function ValuesWordmark({ reducedMotion }) {
   return (

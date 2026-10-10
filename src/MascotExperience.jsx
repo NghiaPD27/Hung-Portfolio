@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import './MascotExperience.css'
@@ -17,7 +17,7 @@ const poses = [
   { src: 'mascot-pose-8.png', label: 'Ý tưởng tiếp theo?', scale: 0.89 },
 ]
 
-export default function MascotExperience({ reducedMotion, active }) {
+function MascotExperience({ reducedMotion, active }) {
   const root = useRef(null)
   const previousIndex = useRef(0)
   const [index, setIndex] = useState(0)
@@ -91,3 +91,5 @@ export default function MascotExperience({ reducedMotion, active }) {
     </section>
   )
 }
+
+export default memo(MascotExperience)

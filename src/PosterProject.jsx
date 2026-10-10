@@ -230,16 +230,22 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     const container = posterProjectRef.current
     const intro = vietnamIntroRef.current
     if (!container || !intro) return undefined
+    let menuSurfaceFrame = null
     const updateMenuSurface = () => {
+      menuSurfaceFrame = null
       const onPaper = intro.getBoundingClientRect().bottom <= 70
       setVietnamPaperAtTop((current) => current === onPaper ? current : onPaper)
     }
-    container.addEventListener('scroll', updateMenuSurface, { passive: true })
-    window.addEventListener('resize', updateMenuSurface)
+    const scheduleMenuSurface = () => {
+      if (menuSurfaceFrame === null) menuSurfaceFrame = window.requestAnimationFrame(updateMenuSurface)
+    }
+    container.addEventListener('scroll', scheduleMenuSurface, { passive: true })
+    window.addEventListener('resize', scheduleMenuSurface)
     updateMenuSurface()
     return () => {
-      container.removeEventListener('scroll', updateMenuSurface)
-      window.removeEventListener('resize', updateMenuSurface)
+      container.removeEventListener('scroll', scheduleMenuSurface)
+      window.removeEventListener('resize', scheduleMenuSurface)
+      window.cancelAnimationFrame(menuSurfaceFrame)
     }
   }, [])
 
@@ -281,6 +287,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     media.add('(pointer: fine)', () => {
       const sections = [...container.querySelectorAll('section[id^="poster-"]')]
       const step = (direction) => {
+        if (scrollTweenRef.current?.isActive() || performance.now() < wheelCooldownRef.current) return
         const current = sections.reduce((closest, section, index) =>
           Math.abs(section.offsetTop - container.scrollTop) < Math.abs(sections[closest].offsetTop - container.scrollTop) ? index : closest, 0)
         const next = Math.min(sections.length - 1, Math.max(0, current + direction))

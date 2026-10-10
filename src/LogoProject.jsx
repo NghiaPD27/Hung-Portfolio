@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import * as Dialog from '@radix-ui/react-dialog'
 import { MeshGradient } from '@paper-design/shaders-react'
@@ -7,7 +7,7 @@ import { logoCatalog, logoCategories } from './logoCatalog'
 import BackButton from './BackButton'
 import './LogoProject.css'
 
-function LogoArtwork({ logo, eager = false }) {
+const LogoArtwork = memo(function LogoArtwork({ logo, eager = false }) {
   const [x, y, width, height] = logo.bounds
   return (
     <div className="logo-artwork" style={{ aspectRatio: `${width} / ${height}`, '--logo-ratio': width / height }}>
@@ -15,12 +15,12 @@ function LogoArtwork({ logo, eager = false }) {
         style={{ width: `${1920 / width * 100}%`, height: `${1080 / height * 100}%`, left: `${-x / width * 100}%`, top: `${-y / height * 100}%` }} />
     </div>
   )
-}
+})
 
 const featuredLogos = [0, 4, 7, 10, 13].map(index => logoCatalog[index])
 const cardAccents = ['#d9ff32', '#ff643d', '#3764ff', '#ffcc33']
 
-function LogoOrbit({ running, reducedMotion }) {
+const LogoOrbit = memo(function LogoOrbit({ running, reducedMotion }) {
   const [scope, animate] = useAnimate()
   const playback = useRef(null)
   useEffect(() => {
@@ -35,9 +35,9 @@ function LogoOrbit({ running, reducedMotion }) {
     else playback.current?.pause()
   }, [running, reducedMotion])
   return <div ref={scope} className="logo-showcase-orbit" aria-hidden="true"><i /><i /></div>
-}
+})
 
-function LogoShowcase({ reducedMotion, paused }) {
+const LogoShowcase = memo(function LogoShowcase({ reducedMotion, paused }) {
   const ref = useRef(null)
   const inView = useInView(ref, { amount: .3 })
   const [index, setIndex] = useState(0)
@@ -85,9 +85,10 @@ function LogoShowcase({ reducedMotion, paused }) {
       </div></div>
     </div>
   )
-}
+})
 
-function LogoCard({ logo, index, onSelect, reducedMotion }) {
+const LogoCard = memo(function LogoCard({ logo, index, onSelect, reducedMotion }) {
+  const stageRef = useRef(null)
   const x = useMotionValue(50), y = useMotionValue(50)
   const guideX = useSpring(x, { stiffness: 220, damping: 28 })
   const guideY = useSpring(y, { stiffness: 220, damping: 28 })
@@ -98,7 +99,7 @@ function LogoCard({ logo, index, onSelect, reducedMotion }) {
   const reset = () => { x.set(50); y.set(50) }
   const track = event => {
     if (reducedMotion || event.pointerType !== 'mouse') return
-    const stage = event.currentTarget.querySelector('.logo-card-stage').getBoundingClientRect()
+    const stage = stageRef.current.getBoundingClientRect()
     x.set(Math.max(8, Math.min(92, (event.clientX - stage.left) / stage.width * 100)))
     y.set(Math.max(8, Math.min(92, (event.clientY - stage.top) / stage.height * 100)))
   }
@@ -106,9 +107,9 @@ function LogoCard({ logo, index, onSelect, reducedMotion }) {
     <motion.div className="logo-card-entry" initial={reducedMotion ? false : { opacity: 0, y: 48, rotate: index % 2 ? 2 : -2 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true, amount: .12 }} transition={{ duration: .65, delay: index % 3 * .07, ease: [.22, 1, .36, 1] }}>
       <Dialog.Trigger asChild>
         <motion.button type="button" className={`logo-card logo-card--${logo.shape}`} style={{ '--logo-panel': logo.background, '--logo-ink': logo.color, '--logo-accent': cardAccents[index % cardAccents.length] }} whileHover={reducedMotion ? undefined : { y: -9, rotate: index % 2 ? 1 : -1 }} whileTap={reducedMotion ? undefined : { scale: .985 }}
-          aria-label={`Xem logo ${logo.name}`} onClick={onSelect} onPointerMove={track} onPointerLeave={reset} onBlur={reset}>
+          aria-label={`Xem logo ${logo.name}`} onClick={event => onSelect(index, event)} onPointerMove={track} onPointerLeave={reset} onBlur={reset}>
           <span className="logo-card-top"><span>IDENTITY / {logo.number}</span><span>{logo.category}</span></span>
-          <span className="logo-card-stage">
+          <span className="logo-card-stage" ref={stageRef}>
             <motion.span className="logo-card-guide logo-card-guide--x" style={{ left }} aria-hidden="true" /><motion.span className="logo-card-guide logo-card-guide--y" style={{ top }} aria-hidden="true" />
             <motion.span className="logo-card-art" style={reducedMotion ? undefined : { x: artX, y: artY }}><LogoArtwork logo={logo} eager={index < 3} /></motion.span>
             <span className="logo-card-view" aria-hidden="true">XEM LOGO ↗</span>
@@ -118,7 +119,17 @@ function LogoCard({ logo, index, onSelect, reducedMotion }) {
       </Dialog.Trigger>
     </motion.div>
   )
-}
+})
+
+const LogoGrid = memo(function LogoGrid({ filtered, reducedMotion, onSelect }) {
+  return <motion.div className="logo-gallery-grid" style={{ maxWidth: filtered.length === 1 ? 520 : filtered.length === 2 ? 1060 : undefined }} initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35 }}>
+    <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 650: Math.min(2, filtered.length), 1080: Math.min(3, filtered.length) }} gutterBreakPoints={{ 0: '16px', 650: '20px', 1080: '24px' }}>
+      <Masonry sequential>
+        {filtered.map((logo, index) => <LogoCard key={logo.id} logo={logo} index={index} reducedMotion={reducedMotion} onSelect={onSelect} />)}
+      </Masonry>
+    </ResponsiveMasonry>
+  </motion.div>
+})
 
 export default function LogoProject({ onBack, onDetailOpenChange }) {
   const reducedMotion = useReducedMotion()
@@ -132,13 +143,17 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
   const [category, setCategory] = useState('Tất cả')
   const [activeIndex, setActiveIndex] = useState(null)
   const originRef = useRef(null)
-  const filtered = logoCatalog.filter(logo => category === 'Tất cả' || logo.category === category)
+  const filtered = useMemo(() => logoCatalog.filter(logo => category === 'Tất cả' || logo.category === category), [category])
   const active = activeIndex === null ? null : filtered[activeIndex]
   const changeDetail = open => {
     if (!open) setActiveIndex(null)
     onDetailOpenChange(open)
   }
   const move = direction => setActiveIndex(index => (index + direction + filtered.length) % filtered.length)
+  const selectLogo = useCallback((index, event) => {
+    originRef.current = event.currentTarget
+    setActiveIndex(index)
+  }, [])
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 700px)')
@@ -198,15 +213,7 @@ export default function LogoProject({ onBack, onDetailOpenChange }) {
           <span className="logo-gallery-count">{String(filtered.length).padStart(2, '0')} / {String(logoCatalog.length).padStart(2, '0')}</span>
         </div>
         <Dialog.Root open={active !== null} onOpenChange={changeDetail}>
-          <motion.div className="logo-gallery-grid" key={category} style={{ maxWidth: filtered.length === 1 ? 520 : filtered.length === 2 ? 1060 : undefined }} initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35 }}>
-          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 650: Math.min(2, filtered.length), 1080: Math.min(3, filtered.length) }} gutterBreakPoints={{ 0: '16px', 650: '20px', 1080: '24px' }}>
-            <Masonry sequential>
-              {filtered.map((logo, index) => (
-                <LogoCard key={logo.id} logo={logo} index={index} reducedMotion={reducedMotion} onSelect={event => { originRef.current = event.currentTarget; setActiveIndex(index) }} />
-              ))}
-            </Masonry>
-          </ResponsiveMasonry>
-          </motion.div>
+          <LogoGrid key={category} filtered={filtered} reducedMotion={reducedMotion} onSelect={selectLogo} />
           <Dialog.Portal>
             <Dialog.Overlay className="logo-dialog-overlay" />
             <Dialog.Content className="logo-dialog" onCloseAutoFocus={event => { event.preventDefault(); originRef.current?.focus({ preventScroll: true }) }}

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { gsap } from 'gsap'
 import { Observer } from 'gsap/Observer'
 import { MeshGradient } from '@paper-design/shaders-react'
@@ -11,9 +11,11 @@ const rows = [-1, 0, 1]
 const JapanSpiralStream = forwardRef(function JapanSpiralStream({ posters, activeIndex, onActiveChange, onOpen, playing, reducedMotion, compact }, ref) {
   const stageRef = useRef(null)
   const cardsRef = useRef([])
+  const cardRenderersRef = useRef([])
   const phaseRef = useRef({ value: 0 })
   const tweenRef = useRef(null)
   const dragRef = useRef({ pressed: false, moved: false })
+  const releaseTimerRef = useRef(null)
   const metricsRef = useRef({ width: 800, height: 600 })
   const activeRef = useRef(0)
   const openRef = useRef(onOpen)
@@ -32,19 +34,35 @@ const JapanSpiralStream = forwardRef(function JapanSpiralStream({ posters, activ
       const row = Math.floor(cardIndex / count) - 1
       const posterIndex = cardIndex % count
       const angle = (posterIndex - phase + row * 1.35) * turns / count
-      const front = (Math.cos(angle) + 1) / 2
-      gsap.set(card, {
-        xPercent: -50,
-        yPercent: -50,
-        x: Math.sin(angle) * orbit + row * width * 0.022,
-        y: row * rowGap + Math.sin(angle + row * 0.55) * height * 0.07,
-        z: Math.cos(angle) * depth,
-        rotationY: -Math.sin(angle) * 76,
-        rotationZ: row * 2.2,
-        scale: 0.69 + front * 0.32,
-        opacity: 0.28 + front * 0.72,
-        zIndex: Math.round(front * 100) + (row === 0 ? 2 : 0),
-      })
+      const sine = Math.sin(angle)
+      const cosine = Math.cos(angle)
+      const front = (cosine + 1) / 2
+      let renderer = cardRenderersRef.current[cardIndex]
+      if (!renderer || renderer.card !== card) {
+        // Static transforms belong to the card, not the per-frame ticker.
+        // quickSetter avoids creating 15 zero-duration tweens every frame.
+        gsap.set(card, { xPercent: -50, yPercent: -50, rotationZ: row * 2.2 })
+        renderer = {
+          card,
+          apply: gsap.quickSetter(card, 'css'),
+          vars: { x: 0, y: 0, z: 0, rotationY: 0, scale: 1, opacity: 1 },
+          zIndex: null,
+        }
+        cardRenderersRef.current[cardIndex] = renderer
+      }
+      const vars = renderer.vars
+      vars.x = sine * orbit + row * width * 0.022
+      vars.y = row * rowGap + Math.sin(angle + row * 0.55) * height * 0.07
+      vars.z = cosine * depth
+      vars.rotationY = -sine * 76
+      vars.scale = 0.69 + front * 0.32
+      vars.opacity = 0.28 + front * 0.72
+      renderer.apply(vars)
+      const zIndex = Math.round(front * 100) + (row === 0 ? 2 : 0)
+      if (renderer.zIndex !== zIndex) {
+        card.style.zIndex = zIndex
+        renderer.zIndex = zIndex
+      }
     })
 
     const nearest = ((Math.round(phase) % count) + count) % count
@@ -115,23 +133,32 @@ const JapanSpiralStream = forwardRef(function JapanSpiralStream({ posters, activ
       tolerance: 3,
       onPress: () => {
         tweenRef.current?.kill()
+        tweenRef.current = null
+        window.clearTimeout(releaseTimerRef.current)
         dragRef.current = { pressed: true, moved: false }
       },
       onDrag: (self) => {
         if (self.axis !== 'x') return
         dragRef.current.moved = true
-        phaseRef.current.value -= self.deltaX / Math.max(stage.clientWidth, 1) * posters.length * 1.2
+        phaseRef.current.value -= self.deltaX / Math.max(metricsRef.current.width, 1) * posters.length * 1.2
         renderSpiral()
       },
       onRelease: () => {
         dragRef.current.pressed = false
-        window.setTimeout(() => { dragRef.current.moved = false }, 100)
+        window.clearTimeout(releaseTimerRef.current)
+        releaseTimerRef.current = window.setTimeout(() => { dragRef.current.moved = false }, 100)
       },
     })
-    return () => observer.kill()
+    return () => {
+      observer.kill()
+      window.clearTimeout(releaseTimerRef.current)
+    }
   }, [posters.length, renderSpiral])
 
-  useEffect(() => () => { tweenRef.current?.kill() }, [])
+  useEffect(() => () => {
+    tweenRef.current?.kill()
+    cardRenderersRef.current = []
+  }, [])
 
   return (
     <div className="poster-japan-stream" ref={stageRef} role="group" aria-label="Poster Nhật Bản chuyển động xoắn 3D; kéo ngang để khám phá">
@@ -175,4 +202,4 @@ const JapanSpiralStream = forwardRef(function JapanSpiralStream({ posters, activ
   )
 })
 
-export default JapanSpiralStream
+export default memo(JapanSpiralStream)

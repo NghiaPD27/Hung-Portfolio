@@ -1,16 +1,25 @@
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
-import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from 'framer-motion'
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import ArtClownProject from './ArtClownProject'
 import AboutPage from './AboutPage'
 import EkoProject from './EkoProject'
 import PosterProject from './PosterProject'
 import './App.css'
 
-const LogoProject = lazy(() => import('./LogoProject'))
-const ThreeDProject = lazy(() => import('./ThreeDProject'))
+const loadLogoProject = () => import('./LogoProject')
+const loadThreeDProject = () => import('./ThreeDProject')
+const LogoProject = lazy(loadLogoProject)
+const ThreeDProject = lazy(loadThreeDProject)
+
+function warmProjectRoute(id) {
+  if (id === 'logo') loadLogoProject().catch(() => {})
+  if (id === '3d') loadThreeDProject().catch(() => {})
+}
 
 function BrandingProjectCard({ className, image, imageAlt, name, tagline, index, onClick }) {
   const cardRef = useRef(null)
+  const pointerFrameRef = useRef(null)
+  const latestPointerRef = useRef(null)
   const pointerX = useMotionValue(50)
   const pointerY = useMotionValue(50)
   const tiltXTarget = useMotionValue(0)
@@ -21,22 +30,35 @@ function BrandingProjectCard({ className, image, imageAlt, name, tagline, index,
 
   const handlePointerMove = (event) => {
     if (event.pointerType === 'touch') return
-    const bounds = cardRef.current?.getBoundingClientRect()
-    if (!bounds) return
-    const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width))
-    const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height))
-    pointerX.set(x * 100)
-    pointerY.set(y * 100)
-    tiltXTarget.set((0.5 - y) * 8)
-    tiltYTarget.set((x - 0.5) * 10)
+    latestPointerRef.current = { x: event.clientX, y: event.clientY }
+    if (pointerFrameRef.current !== null) return
+    pointerFrameRef.current = requestAnimationFrame(() => {
+      pointerFrameRef.current = null
+      const bounds = cardRef.current?.getBoundingClientRect()
+      const pointer = latestPointerRef.current
+      if (!bounds || !pointer) return
+      const x = Math.min(1, Math.max(0, (pointer.x - bounds.left) / bounds.width))
+      const y = Math.min(1, Math.max(0, (pointer.y - bounds.top) / bounds.height))
+      pointerX.set(x * 100)
+      pointerY.set(y * 100)
+      tiltXTarget.set((0.5 - y) * 8)
+      tiltYTarget.set((x - 0.5) * 10)
+    })
   }
 
   const resetTilt = () => {
+    if (pointerFrameRef.current !== null) cancelAnimationFrame(pointerFrameRef.current)
+    pointerFrameRef.current = null
+    latestPointerRef.current = null
     pointerX.set(50)
     pointerY.set(50)
     tiltXTarget.set(0)
     tiltYTarget.set(0)
   }
+
+  useEffect(() => () => {
+    if (pointerFrameRef.current !== null) cancelAnimationFrame(pointerFrameRef.current)
+  }, [])
 
   return (
     <motion.button
@@ -162,7 +184,16 @@ function App() {
   const [logoDetailOpen, setLogoDetailOpen] = useState(false)
   const [is3DOpen, setIs3DOpen] = useState(() => window.location.hash === '#3d')
   const [threeDDetailOpen, setThreeDDetailOpen] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const lotusX = useTransform(mouseX, (value) => value * -16)
+  const lotusY = useTransform(mouseY, (value) => value * -10)
+  const personX = useTransform(mouseX, (value) => value * 8)
+  const flowerX = useTransform(mouseX, (value) => value * 16)
+  const flowerY = useTransform(mouseY, (value) => value * 12)
+  const lotusTransform = useMotionTemplate`translate(calc(-50% + ${lotusX}px), ${lotusY}px)`
+  const personTransform = useMotionTemplate`translateX(calc(-48% + ${personX}px))`
+  const flowerTransform = useMotionTemplate`translate(${flowerX}px, ${flowerY}px)`
   const [showCurtain, setShowCurtain] = useState(() => !window.location.search.includes('nocurtain') && !window.location.hash.includes('nocurtain'))
   const [isAboutTransitioning, setIsAboutTransitioning] = useState(false)
   const [projectTransition, setProjectTransition] = useState(null)
@@ -175,11 +206,14 @@ function App() {
   const projectTransitionTimer = useRef(null)
   const aboutAudioRef = useRef(null)
   const aboutAudioFade = useRef(null)
+  const aboutAudioRequestedActive = useRef(false)
   const ekoHeroAudioRef = useRef(null)
   const ekoHeroAudioFade = useRef(null)
+  const ekoHeroAudioRequestedActive = useRef(false)
   const artClownFireworksAudioRef = useRef(null)
   const artClownCircusAudioRef = useRef(null)
   const artClownCircusAudioFade = useRef(null)
+  const artClownCircusAudioRequestedActive = useRef(false)
   const artClownValuesAudioRef = useRef(null)
   const artClownValuesAudioFade = useRef(null)
   const artClownValuesAudioRequestedActive = useRef(false)
@@ -208,6 +242,7 @@ function App() {
   }
 
   const startAboutAudio = () => {
+    aboutAudioRequestedActive.current = true
     if (!aboutAudioRef.current) {
       const audio = new Audio('/assets/about/relaxation-05.mp3')
       audio.loop = true
@@ -217,12 +252,14 @@ function App() {
     }
     const audio = aboutAudioRef.current
     audio.play().then(() => {
+      if (!aboutAudioRequestedActive.current) return
       setIsAboutSoundOn(true)
       fadeAboutAudio(0.18, 1200)
     }).catch(() => setIsAboutSoundOn(false))
   }
 
   const stopAboutAudio = () => {
+    aboutAudioRequestedActive.current = false
     setIsAboutSoundOn(false)
     fadeAboutAudio(0, 480, true)
   }
@@ -274,6 +311,7 @@ function App() {
   }, [ensureEkoHeroAudio])
 
   const setEkoHeroAudioActive = useCallback((active) => {
+    ekoHeroAudioRequestedActive.current = active
     if (!active) {
       fadeEkoHeroAudio(0, 420, true)
       return
@@ -281,7 +319,7 @@ function App() {
 
     const audio = ensureEkoHeroAudio()
     audio.play()
-      .then(() => fadeEkoHeroAudio(0.07, 1800))
+      .then(() => { if (ekoHeroAudioRequestedActive.current) fadeEkoHeroAudio(0.07, 1800) })
       .catch(() => {})
   }, [ensureEkoHeroAudio, fadeEkoHeroAudio])
 
@@ -355,6 +393,7 @@ function App() {
   }, [ensureArtClownCircusAudio])
 
   const setArtClownCircusAudioActive = useCallback((active) => {
+    artClownCircusAudioRequestedActive.current = active
     if (!active) {
       fadeArtClownCircusAudio(0, 360, true)
       return
@@ -363,7 +402,7 @@ function App() {
     const audio = ensureArtClownCircusAudio()
     if (audio.volume === 0) audio.currentTime = 0
     audio.play()
-      .then(() => fadeArtClownCircusAudio(0.22, 950))
+      .then(() => { if (artClownCircusAudioRequestedActive.current) fadeArtClownCircusAudio(0.22, 950) })
       .catch(() => {})
   }, [ensureArtClownCircusAudio, fadeArtClownCircusAudio])
 
@@ -494,6 +533,9 @@ function App() {
     if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
     if (artClownValuesAudioFade.current) cancelAnimationFrame(artClownValuesAudioFade.current)
     if (posterAudioFade.current) cancelAnimationFrame(posterAudioFade.current)
+    aboutAudioRequestedActive.current = false
+    ekoHeroAudioRequestedActive.current = false
+    artClownCircusAudioRequestedActive.current = false
     artClownValuesAudioRequestedActive.current = false
     posterAudioRequestedActive.current = false
     aboutAudioRef.current?.pause()
@@ -506,27 +548,52 @@ function App() {
 
   // Hiệu ứng Parallax 3D tương tác theo chuột (tạm dừng khi menu mở hoặc trên thiết bị cảm ứng)
   useEffect(() => {
-    if (reducedMotion) return
+    if (reducedMotion || menuOpen || isAboutOpen || isArtClownOpen || isEkoOpen || isPosterOpen || isLogoOpen || is3DOpen) return undefined
+    const hero = document.getElementById('hero')
+    if (!hero) return undefined
+    const hoverQuery = window.matchMedia('(hover: none)')
+    let heroVisible = true
+    let frame = null
+    let pointer = null
+    let width = window.innerWidth
+    let height = window.innerHeight
+    const visibility = new IntersectionObserver(([entry]) => { heroVisible = entry.isIntersecting })
+    visibility.observe(hero)
+    const measure = () => { width = window.innerWidth; height = window.innerHeight }
+    const update = () => {
+      frame = null
+      if (!pointer || !heroVisible) return
+      mouseX.set((pointer.x - width / 2) / (width / 2))
+      mouseY.set((pointer.y - height / 2) / (height / 2))
+    }
     const handleMouseMove = (e) => {
-      if (menuOpen || window.matchMedia('(hover: none)').matches) return
-      const { innerWidth, innerHeight } = window
-      const x = (e.clientX - innerWidth / 2) / (innerWidth / 2)
-      const y = (e.clientY - innerHeight / 2) / (innerHeight / 2)
-      setMousePos({ x, y })
+      if (!heroVisible || hoverQuery.matches) return
+      pointer = { x: e.clientX, y: e.clientY }
+      if (frame === null) frame = requestAnimationFrame(update)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [menuOpen, reducedMotion])
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('resize', measure, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', measure)
+      visibility.disconnect()
+      if (frame !== null) cancelAnimationFrame(frame)
+    }
+  }, [menuOpen, reducedMotion, isAboutOpen, isArtClownOpen, isEkoOpen, isPosterOpen, isLogoOpen, is3DOpen, mouseX, mouseY])
 
   useEffect(() => {
     if (menuOpen) {
-      setMousePos({ x: 0, y: 0 })
+      mouseX.set(0)
+      mouseY.set(0)
     }
-  }, [menuOpen])
+  }, [menuOpen, mouseX, mouseY])
 
   useEffect(() => {
     const syncProjectRoute = () => {
+      window.clearTimeout(aboutTransitionTimer.current)
+      window.clearTimeout(projectTransitionTimer.current)
+      setIsAboutTransitioning(false)
       const projectIsOpen = window.location.hash.startsWith('#art-clown')
       const aboutIsOpen = window.location.hash.startsWith('#about')
       const ekoIsOpen = window.location.hash.startsWith('#eko')
@@ -542,18 +609,22 @@ function App() {
       setLogoDetailOpen(false)
       setThreeDDetailOpen(false)
       setProjectTransition(null)
+      if (!aboutIsOpen) aboutAudioRequestedActive.current = false
       if (!aboutIsOpen && aboutAudioRef.current && !aboutAudioRef.current.paused) {
+        if (aboutAudioFade.current) cancelAnimationFrame(aboutAudioFade.current)
         aboutAudioRef.current.pause()
         aboutAudioRef.current.currentTime = 0
         setIsAboutSoundOn(false)
       }
       if (!ekoIsOpen && ekoHeroAudioRef.current) {
+        ekoHeroAudioRequestedActive.current = false
         if (ekoHeroAudioFade.current) cancelAnimationFrame(ekoHeroAudioFade.current)
         ekoHeroAudioRef.current.pause()
         ekoHeroAudioRef.current.currentTime = 0
         ekoHeroAudioRef.current.volume = 0
       }
       if (!projectIsOpen) {
+        artClownCircusAudioRequestedActive.current = false
         stopArtClownFireworks()
         artClownValuesAudioRequestedActive.current = false
         if (artClownCircusAudioFade.current) cancelAnimationFrame(artClownCircusAudioFade.current)
@@ -1085,6 +1156,7 @@ function App() {
         {/* Nền tím gradient tràn toàn màn hình */}
         <motion.img 
           src="/assets/purple-glow.png" 
+          decoding="async"
           alt="Purple Atmospheric Glow" 
           className="hero-fullscreen-bg"
           initial={reducedMotion ? false : { opacity: 0 }}
@@ -1118,52 +1190,57 @@ function App() {
           {/* Lớp 2: Hoa sen pha lê hồng */}
           <motion.img 
             src="/assets/crystal-lotus.png" 
+            decoding="async"
             alt="Pink Iridescent Crystal Lotus" 
             className="visual-layer layer-lotus"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.3 }}
             style={{
-              transform: `translate(calc(-50% + ${mousePos.x * -16}px), ${mousePos.y * -10}px)`
+              transform: lotusTransform
             }}
           />
 
           {/* Lớp 3: Chân dung chàng trai đứng liền sát đáy */}
           <motion.img 
             src="/assets/person.png" 
+            decoding="async"
+            fetchPriority="high"
             alt="Young Designer Silhouette Portrait" 
             className="visual-layer layer-person"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.4 }}
             style={{
-              transform: `translateX(calc(-48% + ${mousePos.x * 8}px))`
+              transform: personTransform
             }}
           />
 
           {/* Lớp 4: Hoa dâm bụt xanh ôm sát lưng bên trái */}
           <motion.img 
             src="/assets/blue-flower.png" 
+            decoding="async"
             alt="Blue Glass Hibiscus Flower" 
             className="visual-layer layer-blue-flower"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.5 }}
             style={{
-              transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
+              transform: flowerTransform
             }}
           />
 
           {/* Lớp 5: Hoa hồng hổ phách ôm sát vạt áo bên phải */}
           <motion.img 
             src="/assets/amber-rose.png" 
+            decoding="async"
             alt="Amber Crystal Rose" 
             className="visual-layer layer-amber-rose"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: reducedMotion ? 0 : 1.0, delay: reducedMotion ? 0 : 0.55 }}
             style={{
-              transform: `translate(${mousePos.x * 16}px, ${mousePos.y * 12}px)`
+              transform: flowerTransform
             }}
           />
         </div>
@@ -1227,6 +1304,9 @@ function App() {
               key={project.id} 
               className="folder-card-wrapper"
               type="button"
+              onPointerEnter={() => warmProjectRoute(project.id)}
+              onFocus={() => warmProjectRoute(project.id)}
+              onTouchStart={() => warmProjectRoute(project.id)}
               onClick={() => {
                 if (project.id === 'poster') openPosterProject()
                 else if (project.id === 'logo') openLogoProject()

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import BackButton from './BackButton'
 import './AboutPage.css'
@@ -153,7 +153,7 @@ const withTimeline = (propertyTransition) => ({
   ...propertyTransition,
 })
 
-function AirParticle({ particle, index, reducedMotion }) {
+const AirParticle = memo(function AirParticle({ particle, index, reducedMotion }) {
   const animate = reducedMotion
     ? { opacity: particle.opacity[0], x: 0, y: 0 }
     : {
@@ -187,14 +187,15 @@ function AirParticle({ particle, index, reducedMotion }) {
       />
     </motion.div>
   )
-}
+})
 
-function Dandelion({ item, reducedMotion }) {
+const Dandelion = memo(function Dandelion({ item, reducedMotion }) {
   const staticImage = (
     <img
       className="about-dandelion-image"
       src="/assets/about/dandelion.png"
       alt=""
+      decoding="async"
       style={{
         width: item.imageWidth,
         height: item.imageHeight,
@@ -257,7 +258,7 @@ function Dandelion({ item, reducedMotion }) {
       </motion.div>
     </motion.div>
   )
-}
+})
 
 function useArtboardLayout() {
   const getLayout = () => {
@@ -277,9 +278,27 @@ function useArtboardLayout() {
   const [layout, setLayout] = useState(getLayout)
 
   useEffect(() => {
-    const updateLayout = () => setLayout(getLayout())
+    let frame = 0
+    const updateLayout = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        const next = getLayout()
+        setLayout((current) => (
+          (current.isMobile && next.isMobile)
+          || (current.isMobile === next.isMobile
+            && current.scale === next.scale
+            && current.ffWidth === next.ffWidth)
+            ? current
+            : next
+        ))
+      })
+    }
     window.addEventListener('resize', updateLayout)
-    return () => window.removeEventListener('resize', updateLayout)
+    return () => {
+      window.removeEventListener('resize', updateLayout)
+      window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   return layout

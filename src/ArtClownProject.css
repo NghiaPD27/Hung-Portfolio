@@ -611,7 +611,10 @@
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none;
+  animation-play-state: paused;
 }
+
+.art-skeleton.is-hidden::after { animation-play-state: paused; }
 
 /* Skeleton color variants matched to slide contexts */
 .art-skeleton-light {
