@@ -604,24 +604,35 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="poster-japan-sun" aria-hidden="true" />
-        <div className="poster-japan-topline"><span>CHƯƠNG 03 / BỘ SƯU TẬP POSTER</span><span>日本 · JAPAN</span></div>
         <div className="poster-japan-layout">
-          <div className="poster-japan-story">
-            <span className="poster-japan-eyebrow">MỞ CÁNH CỬA / BƯỚC VÀO NHẬT BẢN</span>
-            <h2 id="poster-japan-title"><span lang="ja">日本</span><strong>JAPAN<span>.</span></strong></h2>
-            <p>Từ sắc son đền cổ đến bảng hiệu ga tàu và nhịp phố hôm nay — năm góc nhìn cùng mở ra một Nhật Bản nhiều lớp.</p>
+          <motion.div
+            className="poster-japan-story"
+            initial={reducedMotion ? false : 'hidden'}
+            animate={reducedMotion || (japanInView && japanIntroComplete) ? 'visible' : 'hidden'}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: reducedMotion ? 0 : 0.07 } } }}
+          >
+            <motion.div className="poster-japan-topline" variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : 0.5 } } }}><span>CHƯƠNG 03 / POSTER</span><span>五景 · 2026</span></motion.div>
+            <motion.div className="poster-japan-story-copy" variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] } } }}>
+              <span className="poster-japan-eyebrow">MỞ CÁNH CỬA / BƯỚC VÀO NHẬT BẢN</span>
+              <h2 id="poster-japan-title"><span lang="ja">日本</span><strong>JAPAN<span>.</span></strong></h2>
+              <p>Từ sắc son đền cổ đến bảng hiệu ga tàu và nhịp phố hôm nay — năm góc nhìn cùng mở ra một Nhật Bản nhiều lớp.</p>
+            </motion.div>
             <div className="poster-japan-stations" role="group" aria-label="Chọn poster Nhật Bản">
               {japanPosters.map((poster, index) => (
-                <button className={`poster-japan-station${japanActive === index ? ' is-active' : ''}`} type="button" aria-pressed={japanActive === index} key={poster.number} onClick={() => japanStreamRef.current?.goTo(index)}>
+                <motion.button className={`poster-japan-station${japanActive === index ? ' is-active' : ''}`} type="button" aria-pressed={japanActive === index} key={poster.number} onClick={() => japanStreamRef.current?.goTo(index)} whileHover={reducedMotion ? undefined : { x: 4 }} whileTap={reducedMotion ? undefined : { scale: 0.98 }}>
                   {japanActive === index && <motion.span className="poster-japan-station-marker" layoutId="japan-station-marker" transition={{ type: 'spring', stiffness: 350, damping: 32 }} aria-hidden="true" />}
                   <span>{poster.number}</span><strong>{poster.title}</strong><small lang="ja">{poster.japanese}</small>
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+            <div className="poster-japan-gallery-foot">
+              <div><strong>{japanPosters[japanActive].number}</strong><span> / 05</span><i /> <button className="poster-japan-open" type="button" aria-label={`Xem tác phẩm ${japanPosters[japanActive].title}`} onClick={() => setJapanZoom(japanPosters[japanActive])}>{japanPosters[japanActive].title}<span aria-hidden="true"> ↗</span></button></div>
+              <div className="poster-japan-actions"><motion.button type="button" aria-label="Poster Nhật Bản trước" onClick={() => japanStreamRef.current?.step(-1)} whileHover={reducedMotion ? undefined : { scale: 1.08 }} whileTap={reducedMotion ? undefined : { scale: 0.92 }}>←</motion.button><motion.button type="button" aria-label="Poster Nhật Bản tiếp theo" onClick={() => japanStreamRef.current?.step(1)} whileHover={reducedMotion ? undefined : { scale: 1.08 }} whileTap={reducedMotion ? undefined : { scale: 0.92 }}>→</motion.button></div>
+            </div>
+            <div className="poster-japan-footer"><span>FIVE VIEWS, ONE JAPAN</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU ↑</button></div>
+          </motion.div>
           <div className="poster-japan-gallery">
-            <div className="poster-japan-gallery-head"><span>螺旋 / DÒNG XOẮN TÁC PHẨM</span><span>{japanPosters[japanActive].subtitle}</span></div>
+            <div className="poster-japan-gallery-head"><span lang="ja">日本 · 五つの視点</span><span>{japanPosters[japanActive].subtitle}</span></div>
             <div className="poster-japan-frame" id="poster-japan-stage">
               <JapanSpiralStream
                 ref={japanStreamRef}
@@ -629,18 +640,13 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
                 activeIndex={japanActive}
                 onActiveChange={setJapanActive}
                 onOpen={setJapanZoom}
-                playing={japanInView && japanIntroComplete && !japanZoom}
+                playing={japanInView && (japanIntroComplete || reducedMotion) && !japanZoom}
                 reducedMotion={reducedMotion}
                 compact={vietnamCompact}
               />
             </div>
-            <div className="poster-japan-gallery-foot">
-              <div><strong>{japanPosters[japanActive].number}</strong><span> / 05</span><i /> <span>{japanPosters[japanActive].title}</span></div>
-              <div className="poster-japan-actions"><button type="button" aria-label="Poster Nhật Bản trước" onClick={() => japanStreamRef.current?.step(-1)}>←</button><button type="button" aria-label="Poster Nhật Bản tiếp theo" onClick={() => japanStreamRef.current?.step(1)}>→</button></div>
-            </div>
           </div>
         </div>
-        <div className="poster-japan-footer"><span>FIVE VIEWS, ONE JAPAN · 2026</span><button type="button" onClick={() => scrollToSection('poster-index')}>VỀ ĐẦU BỘ SƯU TẬP ↑</button></div>
       </section>
 
       <AnimatePresence>

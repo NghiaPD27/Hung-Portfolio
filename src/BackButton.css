@@ -6,21 +6,21 @@ button.portfolio-back.portfolio-back {
   position: relative;
   display: inline-flex;
   width: max-content;
-  min-width: 136px;
-  height: 54px;
-  min-height: 54px;
+  min-width: 118px;
+  height: 47px;
+  min-height: 47px;
   aspect-ratio: auto;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 0 19px 0 15px;
+  gap: 8px;
+  padding: 0 16px 0 12px;
   overflow: hidden;
   border: 1px solid #ffffff9c;
   border-radius: 999px;
   background: var(--back-base);
   color: var(--back-text);
-  box-shadow: 0 9px 22px #071a2730, inset 0 1px #ffffff8c;
-  font: 900 12px 'Montserrat', sans-serif;
+  box-shadow: 0 7px 18px #071a2730, inset 0 1px #ffffff8c;
+  font: 900 11px 'Montserrat', sans-serif;
   letter-spacing: 0.12em;
   line-height: 1;
   text-decoration: none;
@@ -47,7 +47,7 @@ button.portfolio-back.portfolio-back:hover,
 button.portfolio-back.portfolio-back:focus-visible {
   border-color: var(--back-hover);
   color: var(--back-hover-text);
-  box-shadow: 0 15px 28px #071a2740, inset 0 1px #ffffff99;
+  box-shadow: 0 12px 24px #071a2740, inset 0 1px #ffffff99;
 }
 
 button.portfolio-back.portfolio-back:hover::before,
@@ -64,8 +64,8 @@ button.portfolio-back.portfolio-back:focus-visible {
   position: relative;
   z-index: 1;
   display: block;
-  width: 36px;
-  height: 24px;
+  width: 31px;
+  height: 21px;
   flex: none;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -81,7 +81,7 @@ button.portfolio-back.portfolio-back:focus-visible .portfolio-back-arrow {
   white-space: nowrap;
 }
 
-button.portfolio-back .portfolio-back-text { font-size: 11px; font-weight: 900; letter-spacing: 0.14em; }
+button.portfolio-back .portfolio-back-text { font-size: 10px; font-weight: 900; letter-spacing: 0.14em; }
 
 button.portfolio-back.about-back {
   position: absolute;
@@ -164,24 +164,24 @@ button.portfolio-back.portfolio-back:disabled::before { transform: translateX(-1
 
 @media (max-width: 768px) {
   button.portfolio-back.portfolio-back {
-    min-width: 116px;
-    height: 46px;
-    min-height: 46px;
-    gap: 7px;
-    padding: 0 15px 0 11px;
+    min-width: 102px;
+    height: 44px;
+    min-height: 44px;
+    gap: 6px;
+    padding: 0 12px 0 9px;
   }
 
-  .portfolio-back-arrow { width: 30px; height: 20px; }
-  button.portfolio-back .portfolio-back-text { font-size: 10px; }
+  button.portfolio-back .portfolio-back-arrow { width: 26px; height: 18px; }
+  button.portfolio-back .portfolio-back-text { font-size: 9px; }
 
   .about-page.is-mobile-view button.portfolio-back.about-back {
     position: fixed;
     top: max(16px, env(safe-area-inset-top, 16px));
     left: max(16px, env(safe-area-inset-left, 16px));
     width: max-content;
-    min-width: 116px;
-    height: 46px;
-    min-height: 46px;
+    min-width: 102px;
+    height: 44px;
+    min-height: 44px;
     border-radius: 999px;
     background: var(--back-base);
   }
@@ -190,14 +190,14 @@ button.portfolio-back.portfolio-back:disabled::before { transform: translateX(-1
     top: max(10.427dvh, env(safe-area-inset-top));
     left: 20px;
     width: max-content;
-    min-width: 116px;
-    height: 46px;
-    min-height: 46px;
-    padding: 0 15px 0 11px;
+    min-width: 102px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 12px 0 9px;
     border: 1px solid #ffffff9c;
     border-radius: 999px;
     background: var(--back-base);
-    box-shadow: 0 9px 22px #071a2730, inset 0 1px #ffffff8c;
+    box-shadow: 0 7px 18px #071a2730, inset 0 1px #ffffff8c;
   }
 }
 
