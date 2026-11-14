@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fffbe4">
+  <meta name="description" content="Một lời chúc sinh nhật dành cho Phương Nghi.">
+  <title>Happy Birthday Phương Nghi</title>
+  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="end-scenes.css?v=8">
+  <script defer src="vendor/gsap-3.13.0.min.js"></script>
+  <script defer src="firework-audio.js?v=8"></script>
+  <script defer src="app.js?v=8"></script>
+</head>
+<body data-screen="intro">
+  <main id="viewport">
+    <div id="stage">
+      <section id="screen1" class="screen screen-one" aria-label="Chúc mừng sinh nhật">
+        <div class="design">
+          <img class="letter b" src="assets/type-b.svg" alt="">
+          <img class="letter i" src="assets/type-i.svg" alt="">
+          <img class="letter r" src="assets/type-r.svg" alt="">
+          <img class="letter t" src="assets/type-t.svg" alt="">
+          <img class="letter d" src="assets/type-d.svg" alt="">
+          <img class="letter y" src="assets/type-y.svg" alt="">
+          <img class="letter a" src="assets/type-a.svg" alt="">
+          <img class="letter h" src="assets/type-h.svg" alt="">
+          <button id="happy" class="happy" aria-label="Bấm HAPPY để bắt đầu">
+            <img src="assets/type-happy.svg" alt="">
+          </button>
+          <div class="character" aria-hidden="true">
+            <img class="char-base" src="assets/character.svg" alt="">
+            <img class="g1" src="assets/g1.svg" alt="">
+            <img class="g2" src="assets/g2.svg" alt="">
+            <img class="g3" src="assets/g3.svg" alt="">
+            <img class="g4" src="assets/g4.svg" alt="">
+            <img class="g5" src="assets/g5.svg" alt="">
+            <img class="g6" src="assets/g6.svg" alt="">
+            <img class="g7" src="assets/g7.svg" alt="">
+            <img class="g8" src="assets/g8.svg" alt="">
+            <img class="g9" src="assets/g9.svg" alt="">
+            <img class="g10" src="assets/g10.svg" alt="">
+          </div>
+        </div>
+      </section>
+
+      <section id="screen2" class="screen screen-two" aria-label="Ước và lắc điện thoại" tabindex="-1" hidden>
+        <div class="design">
+          <div class="candle-position">
+            <div class="candle">
+              <img src="assets/candle.png" alt="Ngọn nến sinh nhật đang cháy">
+              <span class="flame-origin" aria-hidden="true"></span>
+              <span class="flame-glow" aria-hidden="true"></span>
+            </div>
+          </div>
+          <img class="wish" src="assets/type-wish.png" alt="wish and Shake your phone" lang="en">
+          <div class="motion-controls">
+            <button id="permission" class="permission" hidden>Cho phép cảm biến</button>
+            <p id="status" class="status" role="status"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen3" class="screen screen-three" aria-label="Bánh sinh nhật" tabindex="-1" hidden>
+        <div class="design">
+          <div class="ground">
+            <img src="assets/ground.svg" alt="">
+          </div>
+          <img class="shadow" src="assets/shadow.svg" alt="">
+          <div class="birthday-title" role="img" aria-label="Happy Birthday">
+            <img src="assets/title.svg" alt="">
+            <img class="title-overlay" src="assets/title2.svg" alt="">
+          </div>
+          <h1 class="name"><img src="assets/type-name.svg" alt="Đào Phương Nghi"></h1>
+          <div class="cake"><img src="assets/cake.png" alt="Bánh sinh nhật màu hồng"></div>
+          <button id="next" class="next" aria-label="bấm qua"><img src="assets/type-next.png" alt=""></button>
+        </div>
+      </section>
+
+      <section id="screen4" class="screen screen-four" aria-label="Lời chúc sinh nhật" tabindex="-1" hidden>
+        <div class="design">
+          <div class="greeting-date" role="img" aria-label="14 tháng 11">
+            <img class="date-one" src="assets/birthday-date-one.svg" alt="">
+            <img class="date-four" src="assets/birthday-date-four.svg" alt="">
+            <img class="date-eleven" src="assets/birthday-date-eleven.svg" alt="">
+          </div>
+          <img class="greeting-portrait" src="assets/birthday-portrait.png" alt="Phương Nghi đội mũ sinh nhật">
+          <img class="greeting-age" src="assets/type-age.svg" alt="">
+          <img class="greeting-intro" src="assets/type-greeting1.png" alt="Chúc mừng sinh nhật tuổi 22! 🎂 Chúc Nghi bước sang tuổi mới với thật nhiều niềm vui, sức khỏe và may mắn.">
+          <img class="greeting-message" src="assets/type-greeting2.png" alt="Chúc Nghi luôn giữ được nụ cười, sự tự tin để theo đuổi những điều mình yêu thích. Chúc Nghi một tuổi 22 thật rực rỡ, bình an và ngập tràn hạnh phúc nhé!">
+          <img class="greeting-future" src="assets/type-greeting3.png" alt="Mong rằng, những dự định còn dang dở sẽ dần thành hiện thực, những cố gắng đều được đền đáp xứng đáng 🎉">
+        </div>
+      </section>
+
+      <div class="reveal-light" aria-hidden="true" hidden>
+        <div class="reveal-halo"></div>
+        <div class="reveal-wash"></div>
+      </div>
+      <div class="fireworks" aria-hidden="true"></div>
+    </div>
+  </main>
+</body>
+</html>

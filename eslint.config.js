@@ -4,7 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['**/dist/**', '**/.deploy-repo/**', 'public/assets/3d/draco/**'] },
+  { ignores: ['**/dist/**', '**/.deploy-repo/**', 'public/assets/3d/draco/**', 'public/secret-22/vendor/**'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
@@ -31,5 +31,17 @@ export default [
         { allowConstantExport: true },
       ],
     },
+  },
+  {
+    files: ['public/secret-22/*.js'],
+    languageOptions: { sourceType: 'script' },
+  },
+  {
+    files: ['public/secret-22/app.js'],
+    languageOptions: { globals: { gsap: 'readonly', fireworkAudio: 'readonly' } },
+  },
+  {
+    files: ['public/secret-22/firework-audio.js'],
+    rules: { 'no-unused-vars': ['error', { varsIgnorePattern: '^fireworkAudio$' }] },
   },
 ]
