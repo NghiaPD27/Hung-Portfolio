@@ -684,17 +684,6 @@
 }
 
 @media (max-width: 768px) {
-  .art-clown-back {
-    top: max(14px, env(safe-area-inset-top, 14px));
-    left: max(14px, env(safe-area-inset-left, 14px));
-    width: 44px;
-    height: 44px;
-    background: rgba(48, 0, 12, 0.45);
-    border-radius: 50%;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
   .art-clown-swiper .swiper-pagination-vertical.swiper-pagination-bullets {
     right: max(8px, env(safe-area-inset-right, 8px));
     width: 24px;
@@ -1682,25 +1671,6 @@
 /* The six 390 × 844 Art Clown frames on Figma's Mobile page. Desktop stays above. */
 @media (max-width: 768px) {
   .art-clown-swiper .swiper-pagination-vertical.swiper-pagination-bullets { display: none; }
-
-  .art-clown-back {
-    top: max(16px, env(safe-area-inset-top));
-    left: max(20px, env(safe-area-inset-left));
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
-  .art-clown-project:has(.swiper-slide-active .art-hero) .art-clown-back {
-    top: max(10dvh, env(safe-area-inset-top));
-  }
-
-  .art-clown-project:has(.swiper-slide-active .art-logo-applications) .art-clown-back {
-    top: auto;
-    bottom: max(12px, env(safe-area-inset-bottom));
-  }
 
   /* Hero: the separate tent image is the exact transparent mobile artwork. */
   .art-slide-hero {

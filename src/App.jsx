@@ -93,7 +93,7 @@ function GlobalMenu({ open, tone, current, locked, hidden, onOpen, onClose, onNa
   return (
     <>
       <AnimatePresence>
-      {!hidden && !open && !locked && <motion.header key="menu-trigger" className="app-header global-menu-header" exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.15 }}>
+      {!hidden && !open && !locked && <motion.header key="menu-trigger" className={`app-header global-menu-header${current === 'home' ? '' : ' is-project-menu'}`} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.15 }}>
         <motion.button
           className={`menu-trigger is-${tone}`}
           onClick={onOpen}

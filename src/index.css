@@ -24,6 +24,11 @@
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
+  --mobile-nav-touch: 44px;
+  --mobile-nav-top: calc(var(--sat) + 4px);
+  --mobile-nav-height: calc(var(--mobile-nav-top) + var(--mobile-nav-touch) + 4px);
+  --mobile-nav-left: calc(var(--sal) + 16px);
+  --mobile-nav-right: calc(var(--sar) + 16px);
 }
 
 html {

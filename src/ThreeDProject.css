@@ -92,9 +92,13 @@
 .three-d-room-nav button[aria-pressed=true] { background: #c7f45f; border-color: #c7f45f; color: #111822; }
 .three-d-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (max-width: 950px) { .three-d-hero { min-height: 690px; } .three-d-hero h1 { font-size: clamp(64px, 8vw, 100px); } .three-d-project { gap: 35px; } .three-d-project h2 { font-size: clamp(46px, 6.5vw, 80px); } }
+@media (max-width: 768px) {
+  .three-d-topbar { height: var(--mobile-nav-height); padding: var(--sat) calc(var(--mobile-nav-right) + 80px) 0 calc(var(--mobile-nav-left) + 100px); }
+  .three-d-collection { scroll-margin-top: var(--mobile-nav-height); }
+}
 @media (max-width: 700px) {
-  .three-d-topbar { height: 72px; padding-left: 18px; padding-right: 110px; } .three-d-topbar > span { display: none; }
-  .three-d-hero { display: block; min-height: 0; padding: 112px 18px 72px; }
+  .three-d-topbar > span { display: none; }
+  .three-d-hero { display: block; min-height: 0; padding: calc(var(--mobile-nav-height) + 40px) 18px 72px; }
   .three-d-hero-copy > p { margin-bottom: 30px; font-size: 9px; }
   .three-d-hero h1 { font-size: clamp(57px, 15.6vw, 100px); }
   .three-d-hero-model { width: min(76vw, 430px); height: min(76vw, 430px); min-height: 0; margin: 60px auto 20px; }

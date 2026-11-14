@@ -589,6 +589,8 @@
 
 /* Figma Mobile / About (390 × 844). The desktop artboard above is unchanged. */
 @media (max-width: 768px) {
+  .about-page.is-mobile-view { border-block-start: var(--mobile-nav-height) solid #1296f4; }
+
   .about-page.is-mobile-view .about-background-layer {
     display: block;
     inset: 0;
@@ -602,7 +604,9 @@
   .about-page.is-mobile-view .about-artboard.is-mobile-artboard {
     width: 100%;
     max-width: 600px;
-    min-height: max(844px, 100dvh);
+    min-height: max(844px, calc(100dvh - var(--sat) - 8px));
+    /* Bù phần trống sẵn có trong artboard, vẫn chừa đủ chỗ dưới vùng tai thỏ. */
+    margin-block-start: calc(var(--sat) + 8px - var(--mobile-nav-height));
     padding: 0;
     display: block;
     overflow: hidden;

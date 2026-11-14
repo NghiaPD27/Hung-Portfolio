@@ -31,7 +31,8 @@ button.portfolio-back.portfolio-back {
   transition: color 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
 }
 
-button.portfolio-back.portfolio-back::before {
+button.portfolio-back.portfolio-back::before,
+.portfolio-back-face::before {
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -59,6 +60,9 @@ button.portfolio-back.portfolio-back:focus-visible {
   outline: 3px solid var(--back-hover);
   outline-offset: 3px;
 }
+
+.portfolio-back-face { display: contents; }
+.portfolio-back-face::before { content: none; }
 
 .portfolio-back-arrow {
   position: relative;
@@ -163,46 +167,73 @@ button.portfolio-back.portfolio-back:disabled {
 button.portfolio-back.portfolio-back:disabled::before { transform: translateX(-105%) skewX(-18deg); }
 
 @media (max-width: 768px) {
-  button.portfolio-back.portfolio-back {
-    min-width: 102px;
-    height: 44px;
-    min-height: 44px;
-    gap: 6px;
-    padding: 0 12px 0 9px;
-  }
-
-  button.portfolio-back .portfolio-back-arrow { width: 26px; height: 18px; }
-  button.portfolio-back .portfolio-back-text { font-size: 9px; }
-
+  button.portfolio-back.portfolio-back,
   .about-page.is-mobile-view button.portfolio-back.about-back {
-    position: fixed;
-    top: max(16px, env(safe-area-inset-top, 16px));
-    left: max(16px, env(safe-area-inset-left, 16px));
+    flex: none;
     width: max-content;
-    min-width: 102px;
-    height: 44px;
-    min-height: 44px;
-    border-radius: 999px;
-    background: var(--back-base);
+    min-width: var(--mobile-nav-touch);
+    height: var(--mobile-nav-touch);
+    min-height: var(--mobile-nav-touch);
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    touch-action: manipulation;
   }
 
-  .eko-project:has(.swiper-slide-active .eko-hero) button.portfolio-back.eko-back {
-    top: max(10.427dvh, env(safe-area-inset-top));
-    left: 20px;
-    width: max-content;
-    min-width: 102px;
-    height: 44px;
-    min-height: 44px;
-    padding: 0 12px 0 9px;
+  button.portfolio-back.portfolio-back:is(:hover, :focus-visible) { box-shadow: none; }
+  button.portfolio-back.portfolio-back:focus-visible { outline-offset: 1px; }
+  button.portfolio-back.portfolio-back::before,
+  button.portfolio-back.portfolio-back::after { content: none; }
+
+  /* Hình nút nhỏ hơn vùng chạm. Chỉ nền viên thuốc nhận hiệu ứng quét màu. */
+  .portfolio-back-face {
+    position: relative;
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 9px;
+    overflow: hidden;
+    isolation: isolate;
     border: 1px solid #ffffff9c;
     border-radius: 999px;
     background: var(--back-base);
-    box-shadow: 0 7px 18px #071a2730, inset 0 1px #ffffff8c;
+    pointer-events: none;
+  }
+
+  .portfolio-back-face::before { content: ''; }
+
+  button.portfolio-back:not(:disabled):is(:hover, :focus-visible) .portfolio-back-face::before {
+    transform: translateX(0) skewX(0);
+  }
+
+  button.portfolio-back .portfolio-back-arrow { width: 19px; height: 14px; }
+  button.portfolio-back .portfolio-back-text { font-size: 9px; line-height: 1; letter-spacing: 0.1em; }
+
+  button.portfolio-back.portfolio-back:is(:hover, :focus-visible) .portfolio-back-arrow { transform: translateX(-2px); }
+  button.portfolio-back.portfolio-back:disabled { color: var(--back-text); }
+
+  .about-page.is-mobile-view button.portfolio-back.about-back,
+  button.portfolio-back:is(.art-clown-back, .eko-back, .poster-back) {
+    position: fixed;
+    inset: var(--mobile-nav-top) auto auto var(--mobile-nav-left);
+  }
+
+  button.portfolio-back:is(.logo-back, .three-d-back) {
+    position: absolute;
+    inset: var(--mobile-nav-top) auto auto var(--mobile-nav-left);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   button.portfolio-back.portfolio-back,
   button.portfolio-back.portfolio-back::before,
+  .portfolio-back-face::before,
   .portfolio-back-arrow { transition-duration: 0.01ms; }
 }

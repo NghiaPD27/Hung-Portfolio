@@ -125,7 +125,10 @@ const ThreeDHero = memo(function ThreeDHero({ reducedMotion }) {
   const heroProject = projects[heroIndex]
   const changeHero = direction => setHeroIndex(index => (index + direction + projects.length) % projects.length)
   return <header className="three-d-hero">
-    <div className="three-d-hero-copy"><p>SELECTED 3D WORKS &nbsp; / &nbsp; 2026</p><h1>FORM<br /><em>IN</em> MOTION<span>.</span></h1><div className="three-d-hero-bottom"><p>Ba thế giới, ba chất liệu.<br />Chạm để bước vào từng mô hình.</p><a href="#three-d-collection">KHÁM PHÁ TÁC PHẨM ↓</a></div></div>
+    <div className="three-d-hero-copy"><p>SELECTED 3D WORKS &nbsp; / &nbsp; 2026</p><h1>FORM<br /><em>IN</em> MOTION<span>.</span></h1><div className="three-d-hero-bottom"><p>Ba thế giới, ba chất liệu.<br />Chạm để bước vào từng mô hình.</p><a href="#three-d-collection" onClick={event => {
+      event.preventDefault()
+      document.getElementById('three-d-collection')?.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth' })
+    }}>KHÁM PHÁ TÁC PHẨM ↓</a></div></div>
     <div className="three-d-hero-stage" style={{ '--hero-accent': heroProject.color }}>
       <motion.div className={`three-d-hero-model three-d-hero-model--${heroProject.id}`} animate={reducedMotion ? undefined : { y: [0, -13, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
         <AnimatePresence mode="wait">

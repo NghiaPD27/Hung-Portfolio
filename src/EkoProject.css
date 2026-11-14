@@ -1314,19 +1314,6 @@
   .eko-project:has(.swiper-slide-active :is(.eko-hero, .eko-cleanup, .eko-logo-stage)) .eko-progress,
   .eko-project:has(.swiper-slide-active :is(.eko-hero, .eko-cleanup, .eko-logo-stage)) .swiper-pagination { display: none; }
 
-  .eko-project:has(.swiper-slide-active .eko-hero) .eko-back {
-    top: max(10.427dvh, env(safe-area-inset-top));
-    left: 20px;
-    min-width: 30px;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    backdrop-filter: none;
-  }
-  .eko-project:has(.swiper-slide-active .eko-hero) .eko-back::after { display: none; }
   .eko-hero-background { inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .eko-hero-wave { top: 45.498%; bottom: auto; width: 100%; height: auto; aspect-ratio: 390 / 163; }
   .eko-hero-logo-anchor { top: 45.438%; left: 49.487%; width: 43.59%; height: auto; aspect-ratio: 200 / 171; overflow: hidden; }

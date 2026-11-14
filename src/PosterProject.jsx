@@ -230,10 +230,11 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     const container = posterProjectRef.current
     const intro = vietnamIntroRef.current
     if (!container || !intro) return undefined
+    const mobileNavigation = window.matchMedia('(max-width: 768px)')
     let menuSurfaceFrame = null
     const updateMenuSurface = () => {
       menuSurfaceFrame = null
-      const onPaper = intro.getBoundingClientRect().bottom <= 70
+      const onPaper = !mobileNavigation.matches && intro.getBoundingClientRect().bottom <= 70
       setVietnamPaperAtTop((current) => current === onPaper ? current : onPaper)
     }
     const scheduleMenuSurface = () => {
@@ -322,12 +323,20 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [zoomOpen, vietnamZoom, japanZoom, onBack])
 
+  const chapter = japanInView ? 'japan' : vietnamInView ? 'vietnam' : dreamcoreInView ? 'dreamcore' : 'index'
+
   return (
     <main
-      ref={posterProjectRef}
-      className={`poster-project${zoomOpen || vietnamZoom || japanZoom ? ' has-lightbox' : ''}`}
+      className={`poster-project is-${chapter}${zoomOpen || vietnamZoom || japanZoom ? ' has-lightbox' : ''}`}
       aria-label="Bộ sưu tập poster"
     >
+      <BackButton
+        className={`poster-back is-${chapter}`}
+        onClick={onBack}
+        ariaLabel="Quay về trang sản phẩm"
+        reducedMotion={reducedMotion}
+      />
+      <div className="poster-chapters" ref={posterProjectRef}>
       <section className="poster-index" id="poster-index" aria-labelledby="poster-index-title">
         <div className="poster-index-grid" aria-hidden="true" />
         <motion.div className="poster-index-copy" initial={reducedMotion ? false : { opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
@@ -425,12 +434,6 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
         ))}
       </Swiper>
 
-      <BackButton
-        className={`poster-back ${japanInView ? 'is-japan' : vietnamInView ? 'is-vietnam' : dreamcoreInView ? 'is-dreamcore' : 'is-index'}`}
-        onClick={onBack}
-        ariaLabel="Quay về trang sản phẩm"
-        reducedMotion={reducedMotion}
-      />
       <div className="poster-topline" aria-hidden="true"><span>POSTER / DREAMCORE</span><span>CHAPTER 01 — 02</span></div>
 
       <div className="poster-bottom-rail">
@@ -655,6 +658,7 @@ function PosterProject({ onBack, onDreamcoreVisibilityChange, onMenuToneChange }
           </div>
         </div>
       </section>
+      </div>
 
       <AnimatePresence>
         {zoomOpen && (

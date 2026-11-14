@@ -1083,6 +1083,20 @@
   justify-content: flex-end;
 }
 
+@media (max-width: 768px) {
+  .app-header.global-menu-header.is-project-menu {
+    top: var(--mobile-nav-top);
+    right: var(--mobile-nav-right);
+  }
+
+  .app-header.global-menu-header.is-project-menu .menu-trigger {
+    min-height: var(--mobile-nav-touch);
+    touch-action: manipulation;
+  }
+
+  .app-header.global-menu-header.is-project-menu .menu-trigger:focus-visible { outline-offset: 1px; }
+}
+
 @media (max-width: 900px) {
   .app-header.global-menu-header {
     top: max(16px, env(safe-area-inset-top, 16px));

@@ -20,19 +20,25 @@
   z-index: 1000;
   width: 100%;
   height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: auto;
-  scroll-snap-type: y mandatory;
+  overflow: hidden;
   background: #a7c9ed;
   color: #11192a;
   font-family: 'Montserrat', sans-serif;
   isolation: isolate;
 }
 
+.poster-chapters {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
+}
+
 .poster-project.has-lightbox { z-index: 6000; }
 .poster-index, .poster-dreamcore-section, .poster-vietnam-section, .poster-japan-section { scroll-snap-align: start; scroll-snap-stop: always; }
-@media (pointer: fine) { .poster-project { scroll-snap-type: none; } }
+@media (pointer: fine) { .poster-chapters { scroll-snap-type: none; } }
 
 .poster-index {
   position: relative;
@@ -698,6 +704,23 @@
   .poster-japan-stations { margin-top: 10px; }
   .poster-japan-gallery-foot { min-height: 45px; padding-top: 6px; }
   .poster-japan-footer { display: none; }
+}
+
+@media (max-width: 768px) {
+  .poster-project.is-index { background: #f0eee6; }
+  .poster-project.is-vietnam { background: #146ba3; }
+  .poster-project.is-japan { background: #f0eadf; }
+
+  /* Giữ hàng điều hướng ở ngoài vùng cuộn để không đè lên tiêu đề giữa hai chương. */
+  .poster-chapters { inset-block-start: var(--mobile-nav-height); }
+  .poster-index, .poster-vietnam-section { min-height: calc(100dvh - var(--mobile-nav-height)); }
+  .poster-dreamcore-section, .poster-japan-section { height: calc(100dvh - var(--mobile-nav-height)); }
+  .poster-index { padding-block-start: 36px; }
+  .poster-scene { padding-block-start: 28px; }
+  .poster-vietnam-section { padding-block-start: 16px; }
+  .poster-vietnam-layout { min-height: calc(100dvh - var(--mobile-nav-height) - 54px); }
+  .poster-japan-story { padding-block-start: 28px; }
+  .poster-vietnam-umbrella-skip, .poster-japan-intro-skip { inset-block-start: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
